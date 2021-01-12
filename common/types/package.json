@@ -1,0 +1,14 @@
+{
+  "name": "@area-common/types",
+  "version": "1.0.0",
+  "description": "Common types for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "typings": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build/",
+    "fclean": "rm -rf build/ node_modules/"
+  }
+}

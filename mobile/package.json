@@ -1,0 +1,31 @@
+{
+  "name": "area-mobile",
+  "version": "1.0.0",
+  "description": "Mobile client for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "postinstall": "expo-yarn-workspaces postinstall",
+    "start": "expo start",
+    "start:android": "expo start --android",
+    "start:ios": "expo start --ios",
+    "clean": "rm -rf .expo/ build/",
+    "fclean": "rm -rf .expo/ build/ node_modules/"
+  },
+  "dependencies": {
+    "@area-common/blocs": "*",
+    "@felangel/react-bloc": "^0.3.0",
+    "expo": "^40.0.0",
+    "react": "^16.14.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@babel/core": "^7.12.10",
+    "@types/react": "^16.14.2",
+    "@types/react-native": "^0.63.45",
+    "expo-yarn-workspaces": "^1.3.0",
+    "metro-config": "^0.64.0",
+    "react-native-unimodules": "^0.12.0"
+  }
+}

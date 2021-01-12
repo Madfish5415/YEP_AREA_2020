@@ -1,0 +1,23 @@
+{
+  "name": "area-server",
+  "version": "1.0.0",
+  "description": "Server of AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "build/index.js",
+    "clean": "rm -rf build/",
+    "fclean": "rm -rf build/ node_modules/"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.9",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.9",
+    "ts-node": "^9.1.1"
+  }
+}
