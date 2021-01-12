@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "packages": [
+    "common/**",
+    "server/**",
+    "mobile/**",
+    "web/**"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true
+}

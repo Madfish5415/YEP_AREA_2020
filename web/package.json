@@ -1,0 +1,31 @@
+{
+  "name": "area-web",
+  "version": "1.0.0",
+  "description": "Web client for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "clean": "rm -rf .next/ build/",
+    "fclean": "yarn clean && rm -rf node_modules/"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.3.0",
+    "@area-common/blocs": "*",
+    "@area-common/components": "*",
+    "@felangel/react-bloc": "^0.3.0",
+    "antd": "^4.10.2",
+    "next": "^10.0.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^6.0.0"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "area-mobile",
+  "version": "1.0.0",
+  "description": "Mobile client for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "next build",
+    "export": "next export",
+    "dev": "next dev",
+    "start": "next start",
+    "sync:android": "cap sync android",
+    "sync:ios": "cap sync ios",
+    "sync": "yarn sync:android && yarn sync:ios",
+    "clean": "rm -rf .next/ build/ out/",
+    "clean:android": "cd android/ && ./gradlew clean",
+    "clean:ios": "cd ios/ && pod clean",
+    "clean:all": "yarn clean:root && yarn clean:android && yarn clean:ios",
+    "fclean": "yarn clean && rm -rf node_modules/",
+    "fclean:all": "yarn clean && rm -rf node_modules/"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.3.0",
+    "@area-common/blocs": "*",
+    "@capacitor/android": "^2.4.5",
+    "@capacitor/cli": "^2.4.5",
+    "@capacitor/core": "^2.4.5",
+    "@capacitor/ios": "^2.4.5",
+    "@felangel/react-bloc": "^0.3.0",
+    "antd": "^4.10.2",
+    "next": "^10.0.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^6.0.0"
+  }
+}
