@@ -1,7 +1,7 @@
 import { Core } from "./core/core";
 
 async function main() {
-  const core = new Core("localhost", 1234);
+  const core = new Core("localhost", 8080);
 
   process.on("SIGINT", () => core.stop());
   process.on("SIGTERM", () => core.stop());

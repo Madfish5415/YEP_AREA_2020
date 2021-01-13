@@ -1,6 +1,19 @@
-const withPlugins = require('next-compose-plugins');
-const withTM = require("next-transpile-modules")(["@area-common/components"]);
+const {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} = require("next/constants");
+const { withPlugins, optional } = require("next-compose-plugins");
 
-module.exports = withPlugins([withTM], {
+const nextConfiguration = {
   assetPrefix: ".",
-});
+};
+
+module.exports = withPlugins([
+  [
+    optional(() =>
+      require("next-transpile-modules")(["@area-common/components"])
+    ),
+    nextConfiguration,
+    [PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD],
+  ],
+]);

@@ -1,0 +1,7 @@
+{
+  "appId": "eu.epitech.area",
+  "appName": "AREA",
+  "webDir": "out",
+  "bundledWebRuntime": true,
+  "npmClient": "yarn"
+}

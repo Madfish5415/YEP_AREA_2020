@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AREA</string>
+    <string name="title_activity_main">AREA</string>
+    <string name="package_name">eu.epitech.area</string>
+    <string name="custom_url_scheme">eu.epitech.area</string>
+</resources>

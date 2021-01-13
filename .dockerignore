@@ -1,0 +1,33 @@
+# Ignore all
+**
+
+# Except
+!common/
+!server/
+!mobile/
+!web/
+!lerna.json
+!package.json
+!tsconfig.json
+!yarn.lock
+
+# Ignore specifics
+
+# Build
+**/build/
+**/out/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Next
+**/.next/
+
+# Android
+
+## Gradle
+**/.gradle/
+
+## Local configuration file
+**/local.properties
