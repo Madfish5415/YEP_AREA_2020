@@ -36,25 +36,22 @@ RUN yarn build
 FROM build AS build-android
 
 ENV OPEN_JDK_VERSION=8
-ENV ANDROID_TOOLS_VERSION=6858069
 
-RUN wget https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -O /etc/apk/keys/sgerrand.rsa.pub
-RUN echo https://apkproxy.herokuapp.com/sgerrand/alpine-pkg-glibc >> /etc/apk/repositories
+RUN apk add --no-cache openjdk${OPEN_JDK_VERSION}
 
-RUN apk add --no-cache glibc glibc-bin openjdk${OPEN_JDK_VERSION}
+COPY ./scripts/mobile ./scripts/mobile
+
+RUN ./scripts/mobile/install-alpine-glibc.sh
+RUN ./scripts/mobile/install-alpine-android-tools.sh
 
 ENV ANDROID_SDK_ROOT="/opt/android-sdk-linux"
 ENV ANDROID_HOME=${ANDROID_SDK_ROOT}
 
-ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/bin:${ANDROID_SDK_ROOT}/tools:${ANDROID_SDK_ROOT}/platform-tools"
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/bin"
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/platform-tools"
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/tools"
 
-RUN wget "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_TOOLS_VERSION}_latest.zip" -O "commandlinetools.zip"
-
-RUN mkdir -p ${ANDROID_SDK_ROOT} \
- && unzip "commandlinetools.zip" -d "${ANDROID_SDK_ROOT}" \
- && rm "commandlinetools.zip"
-
-RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
+RUN yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses
 
 RUN yarn workspace area-mobile sync:android
 RUN yarn workspace area-mobile build:android

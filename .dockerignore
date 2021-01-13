@@ -6,6 +6,7 @@
 !server/
 !mobile/
 !web/
+!scripts/
 !lerna.json
 !package.json
 !tsconfig.json
