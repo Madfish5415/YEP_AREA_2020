@@ -1,0 +1,28 @@
+# Ignore all
+**
+
+# Except
+!common/
+!server/
+!mobile/
+!web/
+!lerna.json
+!package.json
+!tsconfig.json
+!yarn.lock
+
+# Ignore specifics
+
+# Build
+**/build/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Expo
+**/.expo/
+**/@anonymous/
+
+# Next
+**/.next/
