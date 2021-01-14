@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import { Server } from "http";
 import { indexRouter } from "../routes";
+import {sleepMiddleware} from "../_development/middlewares";
 
 export class Core {
   hostname: string;
@@ -15,6 +16,8 @@ export class Core {
     this.port = port;
 
     this.express = express();
+
+    this.express.use(sleepMiddleware(1000));
 
     this.express.use(cors());
     this.express.use(indexRouter);

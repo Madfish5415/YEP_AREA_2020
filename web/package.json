@@ -9,18 +9,21 @@
     "dev": "next dev",
     "start": "next start",
     "clean": "rm -rf .next/ build/",
-    "fclean": "rm -rf .next/ build/ node_modules/"
+    "fclean": "yarn clean && rm -rf node_modules/"
   },
   "dependencies": {
     "@area-common/blocs": "*",
+    "@area-common/styles": "*",
     "@felangel/react-bloc": "^0.3.0",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "next": "^10.0.5",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@area-common/types": "*",
-    "@types/react": "^16.14.2",
-    "@types/react-dom": "^16.9.10"
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0"
   }
 }

@@ -8,6 +8,19 @@ import {
   UserRepository,
 } from "@area-common/blocs";
 import { User } from "@area-common/types";
+import { CircularProgress, makeStyles } from "@material-ui/core";
+import { IconTextComponent } from "../components/icon/icon-text";
+import {Person, Warning} from "@material-ui/icons";
+
+const styles = makeStyles({
+  container: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 const IndexPage: FC = () => {
   const bloc = new UserBloc(new UserRepository("http://localhost:1234"));
@@ -33,11 +46,25 @@ const IndexPage: FC = () => {
 };
 
 const DefaultState: FC = () => {
-  return <p>Loading...</p>;
+  const classes = styles();
+
+  return (
+    <div className={classes.container}>
+      <CircularProgress />
+    </div>
+  );
 };
 
 const ErrorState: FC = () => {
-  return <p>An error occurred</p>;
+  const classes = styles();
+
+  const text = "An error has occurred";
+
+  return (
+    <div className={classes.container}>
+      <IconTextComponent icon={Warning} text={text} />
+    </div>
+  );
 };
 
 type GetProps = {
@@ -45,12 +72,14 @@ type GetProps = {
 };
 
 const GetState: FC<GetProps> = (props) => {
+  const classes = styles();
+
   const { user } = props;
+  const text = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div>
-      <p>First name: {user.firstName}</p>
-      <p>Last name: {user.lastName}</p>
+    <div className={classes.container}>
+      <IconTextComponent icon={Person} text={text} />
     </div>
   );
 };

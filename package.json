@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "build:common": "lerna run --scope @area-common/* build",
     "clean": "lerna run clean",
     "fclean": "lerna run fclean && rm -rf node_modules/",
     "start:server": "yarn workspace area-server start",
@@ -19,15 +20,14 @@
     "dev:web": "yarn workspace area-web dev"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
-    "@typescript-eslint/parser": "^4.12.0",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
     "lerna": "^3.22.1",
     "prettier": "^2.2.1",
-    "typescript": "^4.1.3",
-    "sharp": "^0.27.0"
+    "typescript": "^4.1.3"
   }
 }

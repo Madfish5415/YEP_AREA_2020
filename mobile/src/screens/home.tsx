@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   UserBloc,
   UserErrorState,
@@ -9,6 +9,18 @@ import {
 } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { User } from "@area-common/types";
+import { IconTextComponent } from "../components/icon/icon-text";
+import {ActivityIndicator} from "react-native-paper";
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 const HomeScreen: FC = () => {
   const bloc = new UserBloc(new UserRepository("http://localhost:1234"));
@@ -34,11 +46,21 @@ const HomeScreen: FC = () => {
 };
 
 const DefaultState: FC = () => {
-  return <Text>Loading...</Text>;
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator animating={true} size={"large"} />
+    </View>
+  );
 };
 
 const ErrorState: FC = () => {
-  return <Text>An error occurred</Text>;
+  const text = "An error has occurred";
+
+  return (
+    <View style={styles.container}>
+      <IconTextComponent icon={"alert"} text={text} />
+    </View>
+  );
 };
 
 type GetProps = {
@@ -47,11 +69,11 @@ type GetProps = {
 
 const GetState: FC<GetProps> = (props) => {
   const { user } = props;
+  const text = `${user.firstName} ${user.lastName}`;
 
   return (
-    <View>
-      <Text>First name: {user.firstName}</Text>
-      <Text>Last name: {user.lastName}</Text>
+    <View style={styles.container}>
+      <IconTextComponent icon={"account"} text={text} />
     </View>
   );
 };

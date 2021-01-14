@@ -3,6 +3,12 @@
     "name": "area-mobile",
     "slug": "area-mobile",
     "version": "1.0.0",
-    "entryPoint": "./src/app.tsx"
+    "entryPoint": "./src/app.tsx",
+    "android": {
+      "package": "eu.epitech.area"
+    },
+    "ios": {
+      "bundleIdentifier": "eu.epitech.area"
+    }
   }
 }

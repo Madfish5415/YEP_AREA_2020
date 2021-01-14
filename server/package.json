@@ -9,7 +9,7 @@
     "dev": "ts-node src/index.ts",
     "start": "build/index.js",
     "clean": "rm -rf build/",
-    "fclean": "rm -rf build/ node_modules/"
+    "fclean": "yarn clean && rm -rf node_modules/"
   },
   "dependencies": {
     "@types/cors": "^2.8.9",
