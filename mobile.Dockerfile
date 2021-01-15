@@ -6,8 +6,8 @@ ARG PLATFORM_TARGET="android"
 
 LABEL eu.epitech.image.created="${IMAGE_CREATION}"
 LABEL eu.epitech.image.authors="EPITECH <project@epitech.eu>"
-LABEL eu.epitech.image.url="https://github.com/MrSquaare/YEP_AREA_2020/server/README.md"
-LABEL eu.epitech.image.source="https://github.com/MrSquaare/YEP_AREA_2020/server"
+LABEL eu.epitech.image.url="https://github.com/MrSquaare/YEP_AREA_2020/mobile/README.md"
+LABEL eu.epitech.image.source="https://github.com/MrSquaare/YEP_AREA_2020/mobile"
 LABEL eu.epitech.image.version="${IMAGE_VERSION}"
 LABEL eu.epitech.image.vendor="Epitech"
 LABEL eu.epitech.image.licenses="MIT"
@@ -43,18 +43,18 @@ RUN yarn workspace area-mobile build:serve &
 
 FROM build as build-android
 
-#ENV GLIBC_VERSION="2.32-r0"
+ENV GLIBC_VERSION="2.32-r0"
 
-#RUN wget "https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub" -O /etc/apk/keys/sgerrand.rsa.pub
-#RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" -O glibc.apk
-#RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" -O glibc-bin.apk
+RUN wget "https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub" -O /etc/apk/keys/sgerrand.rsa.pub
+RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" -O glibc.apk
+RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" -O glibc-bin.apk
 
-#RUN apk add --no-cache glibc.apk glibc-bin.apk
+RUN apk add --no-cache glibc.apk glibc-bin.apk
 
-#RUN rm glibc.apk glibc-bin.apk
+RUN rm glibc.apk glibc-bin.apk
 
 ENV OPEN_JDK_VERSION=8
 
 RUN apk add --no-cache bash openjdk${OPEN_JDK_VERSION}
 
-#RUN yarn workspace area-mobile build:android
+RUN yarn workspace area-mobile build:android
