@@ -14,12 +14,12 @@ Discord
 Github
 
 Actions / Reactions :
-  - Mail de TA du projet P ou de tout les projets (Outlook) -> Post la trace dans un dossier one drive (One drive)
-  - Inscription d'un projet fermés dans J jours (intra epitech) -> Envoie un mail d'alerte (Outlook)
-  - Post sur un groupe G -> S'inscrire à un projet P sur l'intra (Intra epitech)
-  - Upload d'image dans un dossier D (Dropbox) -> Poster l'image upload avec le nom du dosser D en # (Insta)
-  - Post d'une image sur Insta d'un compte C (Insta) -> Download de l'image dans un dossier C (Dropbox)  
-                                                     -> Liker la photo (Insta)
-  - PR sur le projet P (Github) -> Post sur un channel C sur un serveur S (Discord)
-  - Si un youtuber Y sort une nouvelle vidéo (Youtube) -> Ajouter la vidéo dans la playlist A Regarder Plus tard (Youtube)  
-                                                       -> Commenter "First" sous la vidéo (Youtube)
+  - TA mail of project P or all projects (Outlook) -> Post the trace in a one drive folder (One drive)
+  - Registration of a project closed in D days (Intra epitech) -> Send an alert email (Outlook)
+  - Post on a group G (Yammer) -> Subscribe to a P project on the intra (Intra epitech)
+  - Upload image to a D folder (Dropbox) -> Post the upload image with the name of folder D in # (Insta)
+  - Posting an image on Insta of a C account (Insta) -> Download the image to a C folder (Dropbox)  
+                                                     -> Like the photo (Insta)
+  - PR on Project P (Github) -> Post on a C channel on an S server (Discord)
+  - If a youtuber Y releases a new video (Youtube) -> Add the video to the To Watch Later playlist  (Youtube)  
+                                                   -> Comment "First" under the video (Youtube)
