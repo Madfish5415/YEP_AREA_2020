@@ -1,7 +1,7 @@
 # YEP_AREA_2020
 Automation platform of his digital life
 
-Services :
+## Services :
   - Intra epitech
   - Yammer
   - Insta
@@ -13,7 +13,7 @@ Services :
   - Github
   - (Twitter)
 
-Actions / Reactions :
+## Actions / Reactions :
   - TA mail of project P or all projects (Outlook) -> Post the trace in a one drive folder (One drive)
   - Registration of a project closed in D days (Intra epitech) -> Send an alert email (Outlook)
   - Post on a group G (Yammer) -> Subscribe to a P project on the intra (Intra epitech)
