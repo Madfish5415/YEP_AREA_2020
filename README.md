@@ -2,16 +2,16 @@
 Automation platform of his digital life
 
 Services :
-Intra epitech
-Yammer
-Insta
-One drive
-Dropbox
-Outlook
-Youtube
-(Twitter)
-Discord
-Github
+  - Intra epitech
+  - Yammer
+  - Insta
+  - One drive
+  - Dropbox
+  - Outlook
+  - Youtube
+  - Discord
+  - Github
+  - (Twitter)
 
 Actions / Reactions :
   - TA mail of project P or all projects (Outlook) -> Post the trace in a one drive folder (One drive)
