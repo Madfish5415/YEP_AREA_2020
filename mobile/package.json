@@ -6,7 +6,6 @@
   "main": "build/index.js",
   "scripts": {
     "build:android": "cd android/ && ./gradlew build",
-    "build:ios": "cd android/ && xcodebuild build",
     "start": "react-native start",
     "start:android": "react-native run-android",
     "start:ios": "react-native run-ios",

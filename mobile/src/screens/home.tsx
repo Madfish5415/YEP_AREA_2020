@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen: FC = () => {
-  const bloc = new UserBloc(new UserRepository("http://localhost:1234"));
+  const bloc = new UserBloc(new UserRepository("http://localhost:8080"));
 
   bloc.add(new UserGetEvent("1"));
 
