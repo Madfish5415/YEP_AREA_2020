@@ -1,4 +1,4 @@
-import users from "../../../../data/users.json";
+import users from "../../../data/users.json";
 
 import { Router } from "express";
 
