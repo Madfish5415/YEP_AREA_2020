@@ -6,8 +6,8 @@
   "main": "build/index.js",
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
-    "start": "next start",
+    "dev": "next dev -H ${HOSTNAME:-localhost} -p ${PORT:-8081}",
+    "start": "next start -H ${HOSTNAME:-localhost} -p ${PORT:-8081}",
     "clean": "rm -rf .next/ build/",
     "fclean": "yarn clean && rm -rf node_modules/"
   },

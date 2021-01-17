@@ -10,7 +10,7 @@ import {
 import { User } from "@area-common/types";
 import { CircularProgress, makeStyles } from "@material-ui/core";
 import { IconTextComponent } from "../components/icon/icon-text";
-import {Person, Warning} from "@material-ui/icons";
+import { Person, Warning } from "@material-ui/icons";
 
 const styles = makeStyles({
   container: {
@@ -23,7 +23,7 @@ const styles = makeStyles({
 });
 
 const IndexPage: FC = () => {
-  const bloc = new UserBloc(new UserRepository("http://localhost:1234"));
+  const bloc = new UserBloc(new UserRepository("http://localhost:8080"));
 
   bloc.add(new UserGetEvent("1"));
 
