@@ -1,0 +1,85 @@
+@startuml Common
+
+folder types {
+  folder models {
+    interface Workflow {
+      + readonly id: string
+      + name: string
+      + description: string
+      + action: Action
+      + reaction: Reaction
+      + conditions?: Condition[]
+    }
+
+    interface User {
+      + readonly id: string
+      + username: string
+      + firstName?: string
+      + lastName?: string
+    }
+  }
+
+  folder condition {
+    interface Condition<T> {
+      + readonly id: string
+      + readonly name: string
+      + readonly description: string
+      + readonly valuesType: Type
+
+      + verify(value1: T, value2: T)
+    }
+  }
+
+  folder service {
+    interface Service {
+      + readonly id: string
+      + readonly name: string
+      + readonly description: string
+      + readonly version: string
+      + readonly actions: Action[]
+      + readonly reactions: Reaction[]
+    }
+
+    interface Action {
+      + readonly id: string
+      + readonly name: string
+      + readonly description: string
+      + readonly parameters: Parameter[]
+      + readonly values: Value[]
+
+      + receive(response: Response): Promise<Record<string, unknown>>
+    }
+
+    interface Reaction {
+      + readonly id: string
+      + readonly name: string
+      + readonly description: string
+      + readonly parameters: Parameter[]
+
+      + execute(parameters: Record<string, unknown>): Promise<void>
+    }
+
+    interface Variable {
+      + readonly id: string
+      + readonly name: string
+      + readonly description: string
+    }
+
+    interface Parameter extends Variable {
+      + readonly regex: Regex
+    }
+
+    interface Value extends Variable {
+      + readonly type: Type
+    }
+
+    enum Type {
+      ARRAY,
+      BOOLEAN,
+      NUMBER,
+      STRING,
+    }
+  }
+}
+
+@enduml
