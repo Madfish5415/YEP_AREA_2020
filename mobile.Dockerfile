@@ -53,3 +53,10 @@ ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/tools"
 RUN yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses
 
 RUN yarn workspace area-mobile build:android
+
+
+FROM base
+
+COPY --from=build-android ${APP_DIRECTORY}/mobile/android/app/build/ ./mobile/android/app/build
+
+CMD cp ./mobile/android/app/build/outputs/apk/release/app-release.apk $CLIENT_APK_PATH
