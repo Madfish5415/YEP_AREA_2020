@@ -1,0 +1,106 @@
+name: Push
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+env:
+  REPOSITORY_HOST: github.com
+  REPOSITORY_OWNER: EpitechIT2020
+  REPOSITORY_NAME: B-YEP-500-TLS-5-1-area-lucas.mathieux
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+jobs:
+
+  push:
+    name: Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: SSH Setup
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: ${{ env.REPOSITORY_HOST }}
+          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Push
+        run: |
+          git push git@$REPOSITORY_HOST:/$REPOSITORY_OWNER/$REPOSITORY_NAME --force
+
+
+  server:
+    name: "Server: Build and Deploy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: "Build"
+        run: |
+          docker build . -f server.Dockerfile -t madfish5415/epitech-area-server:latest -t madfish5415/epitech-area-server:${GITHUB_SHA}
+
+      - name: "Push"
+        run: |
+          docker push madfish5415/epitech-area-server
+
+
+  mobile:
+    name: "Mobile: Build and Deploy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: "Build"
+        run: |
+          docker build . -f mobile.Dockerfile -t madfish5415/epitech-area-mobile:latest -t madfish5415/epitech-area-mobile:${GITHUB_SHA}
+
+      - name: "Push"
+        run: |
+          docker push madfish5415/epitech-area-mobile
+
+
+  web:
+    name: "Web: Build and Deploy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: "Build"
+        run: |
+          docker build . -f web.Dockerfile -t madfish5415/epitech-area-web:latest -t madfish5415/epitech-area-web:${GITHUB_SHA}
+
+      - name: "Push"
+        run: |
+          docker push madfish5415/epitech-area-web
