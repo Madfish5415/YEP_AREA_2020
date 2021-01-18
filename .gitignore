@@ -1,0 +1,21 @@
+# Build
+build/
+
+# Node
+node_modules/
+
+# Expo
+.expo/
+@anonymous/
+
+# Next
+.next/
+
+# Resources
+resources/
+
+# Jetbrains
+.idea/
+
+# Visual Studio Code
+.vscode/

@@ -1,0 +1,8 @@
+# Build
+build/
+
+# CocoaPods
+Pods/
+
+# Local configuration
+xcuserdata/
