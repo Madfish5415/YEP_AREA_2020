@@ -2,7 +2,6 @@ FROM node:alpine AS base
 
 ARG IMAGE_CREATION
 ARG IMAGE_VERSION
-ARG PLATFORM_TARGET="android"
 
 LABEL eu.epitech.image.created="${IMAGE_CREATION}"
 LABEL eu.epitech.image.authors="EPITECH <project@epitech.eu>"
@@ -34,21 +33,31 @@ RUN yarn build
 
 FROM build as build-android
 
-ENV OPEN_JDK_VERSION=8
-
-RUN apk add --no-cache bash openjdk${OPEN_JDK_VERSION}
-
-COPY ./scripts/mobile ./scripts/mobile
-
-RUN ./scripts/mobile/install-alpine-glibc.sh
-RUN ./scripts/mobile/install-alpine-android-tools.sh
+ENV OPEN_JDK_VERSION="8"
+ENV GLIBC_VERSION="2.32-r0"
+ENV ANDROID_TOOLS_VERSION="6858069"
 
 ENV ANDROID_SDK_ROOT="/opt/android-sdk-linux"
-ENV ANDROID_HOME=${ANDROID_SDK_ROOT}
 
 ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/bin"
 ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/platform-tools"
 ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/tools"
+
+RUN apk add --no-cache bash openjdk${OPEN_JDK_VERSION} unzip wget
+
+RUN wget "https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub" -O /etc/apk/keys/sgerrand.rsa.pub
+RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" -O glibc.apk
+RUN wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" -O glibc-bin.apk
+
+RUN apk add --no-cache glibc.apk glibc-bin.apk
+
+RUN rm glibc.apk glibc-bin.apk
+
+RUN wget "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_TOOLS_VERSION}_latest.zip" -O commandlinetools.zip
+
+RUN unzip commandlinetools.zip -d "${ANDROID_SDK_ROOT}"
+
+RUN rm commandlinetools.zip
 
 RUN yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses
 
