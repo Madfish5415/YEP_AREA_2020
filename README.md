@@ -1,25 +1,99 @@
 # YEP_AREA_2020
+
 Automation platform of his digital life
 
-## Services :
-  - Intra epitech
-  - Yammer
-  - Insta
-  - One drive
-  - Dropbox
-  - Outlook
-  - Youtube
-  - Discord
-  - Github
-  - (Twitter)
+## About
 
-## Actions / Reactions :
-  - TA mail of project P or all projects (Outlook) -> Post the trace in a one drive folder (One drive)
-  - Registration of a project closed in D days (Intra epitech) -> Send an alert email (Outlook)
-  - Post on a group G (Yammer) -> Subscribe to a P project on the intra (Intra epitech)
-  - Upload image to a D folder (Dropbox) -> Post the upload image with the name of folder D in # (Insta)
-  - Posting an image on Insta of a C account (Insta) -> Download the image to a C folder (Dropbox)  
-                                                     -> Like the photo (Insta)
-  - PR on Project P (Github) -> Post on a C channel on an S server (Discord)
-  - If a youtuber Y releases a new video (Youtube) -> Add the video to the To Watch Later playlist  (Youtube)  
-                                                   -> Comment "First" under the video (Youtube)
+The project is divided into three main packages:
+
+- [Server](server): the application server
+- [Mobile](mobile): a mobile client
+- [Web](web): a web client
+
+In addition, several packages common to all three projects are shared and available in [Common](common).
+
+### Tools
+
+Code quality:
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io)
+
+Mono-repository:
+- [Lerna](https://lerna.js.org/)
+- [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)
+
+## Getting started
+
+### Docker
+
+#### Prerequisites
+
+1. [Install Docker](https://docs.docker.com/get-docker/)
+2. [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+### Yarn
+
+#### Prerequisites
+
+1. [Install Yarn](https://classic.yarnpkg.com/en/docs/install)
+
+#### Installation
+
+1. Install dependencies
+
+```shell
+yarn install
+```
+
+iOS only:
+```shell
+(cd mobile/ios/ && pod install)
+```
+
+2. Build the packages
+
+```shell
+yarn build
+```
+
+## Using
+
+### Docker
+
+#### Server & Web
+
+1. Start Docker Compose
+
+```shell
+docker-compose up
+```
+
+### Yarn
+
+#### Server & Web
+
+1. Start the server
+
+```shell
+yarn start:server
+```
+
+2. Start the web client
+
+```shell
+yarn start:web
+```
+
+#### Mobile
+
+**Android**:
+
+```shell
+yarn build:android
+```
+
+**iOS**:
+
+```shell
+yarn build:ios
+```

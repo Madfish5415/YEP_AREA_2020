@@ -1,0 +1,38 @@
+version: "3"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    environment:
+      - "HOSTNAME=0.0.0.0"
+      - "PORT=8080"
+    ports:
+      - "8080:8080"
+  client_mobile:
+    depends_on:
+      - server
+    build:
+      context: .
+      dockerfile: mobile.Dockerfile
+    environment:
+      - "CLIENT_APK_PATH=/usr/share/app/client.apk"
+    volumes:
+      - client_volume:/usr/share/app
+  client_web:
+    depends_on:
+      - server
+      - client_mobile
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    environment:
+      - "HOSTNAME=0.0.0.0"
+      - "PORT=8081"
+      - "CLIENT_APK_PATH=/usr/share/app/client.apk"
+    ports:
+      - "8081:8081"
+    volumes:
+      - client_volume:/usr/share/app
+volumes:
+  client_volume:
