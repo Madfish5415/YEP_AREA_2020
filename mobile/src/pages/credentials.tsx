@@ -1,15 +1,25 @@
 import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Credentials from "../components/credentials/credentials";
+import CredentialsScreen from "../components/credentials/credentials";
+import { Appbar, useTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
 
-const CredentialsScreen: FC = () => {
+const CredentialsAppBar = () => {
+  const { colors, fonts } = useTheme();
   return (
-    <Stack.Navigator>
-      <Stack.Screen name={"Credentials"} component={Credentials} />
+    <Appbar.Header style={{ backgroundColor: colors.background }}>
+      <Appbar.Content title="Credentials" titleStyle={fonts.headerBarTitle} />
+    </Appbar.Header>
+  );
+};
+
+const CredentialsStack: FC = () => {
+  return (
+    <Stack.Navigator screenOptions={{ header: CredentialsAppBar }}>
+      <Stack.Screen name={"Credentials"} component={CredentialsScreen} />
     </Stack.Navigator>
   );
 };
 
-export default CredentialsScreen;
+export default CredentialsStack;

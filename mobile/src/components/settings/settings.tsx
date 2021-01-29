@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { Text } from "react-native";
+import { Text } from "react-native-paper";
 
-const Settings: FC = () => {
+const SettingsScreen: FC = () => {
   return <Text>Settings</Text>;
 };
 
-export default Settings;
+export default SettingsScreen;

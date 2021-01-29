@@ -1,15 +1,43 @@
 import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Workflows from "../components/workflows/workflows";
+import WorkflowsScreen from "../components/workflows/workflows";
+import { Appbar, useTheme, Text } from "react-native-paper";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { TouchableOpacity } from "react-native";
 
 const Stack = createStackNavigator();
 
-const WorkflowsScreen: FC = () => {
+const add = ({ color }) => <MaterialIcons name="add" size={25} color={color} />;
+
+const pencil = ({ color }) => (
+  <MaterialIcons name="edit" size={25} color={color} />
+);
+
+const WorkflowsAppBar = () => {
+  const { colors, fonts } = useTheme();
   return (
-    <Stack.Navigator>
-      <Stack.Screen name={"Workflow"} component={Workflows} />
+    <Appbar.Header style={{ backgroundColor: colors.background }}>
+      <Appbar.Action
+        icon={pencil}
+        onPress={() => alert("Todo!")}
+        color={colors.primary}
+      />
+      <Appbar.Content title="Workflows" titleStyle={fonts.headerBarTitle} />
+      <Appbar.Action
+        icon={add}
+        onPress={() => alert("Todo!")}
+        color={colors.primary}
+      />
+    </Appbar.Header>
+  );
+};
+
+const WorkflowsStack: FC = () => {
+  return (
+    <Stack.Navigator screenOptions={{ header: WorkflowsAppBar }}>
+      <Stack.Screen name={"Workflows"} component={WorkflowsScreen} />
     </Stack.Navigator>
   );
 };
 
-export default WorkflowsScreen;
+export default WorkflowsStack;

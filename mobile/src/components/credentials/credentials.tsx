@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { Text } from "react-native";
+import { Text } from "react-native-paper";
 
-const Credentials: FC = () => {
+const CredentialsScreen: FC = () => {
   return <Text>Credentials</Text>;
 };
 
-export default Credentials;
+export default CredentialsScreen;

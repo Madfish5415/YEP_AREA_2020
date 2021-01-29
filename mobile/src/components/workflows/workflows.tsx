@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { Text } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
-const Workflows: FC = () => {
-  return <Text>Workflows</Text>;
+const WorkflowsScreen: FC = () => {
+  const { fonts } = useTheme();
+  return <Text style={fonts.nodeLabel}>Workflows</Text>;
 };
 
-export default Workflows;
+export default WorkflowsScreen;

@@ -1,15 +1,25 @@
 import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Settings from "../components/settings/settings";
+import SettingsScreen from "../components/settings/settings";
+import { Appbar, useTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
 
-const SettingsScreen: FC = () => {
+const SettingsAppBar = () => {
+  const { colors, fonts } = useTheme();
   return (
-    <Stack.Navigator>
-      <Stack.Screen name={"Settings"} component={Settings} />
+    <Appbar.Header style={{ backgroundColor: colors.background }}>
+      <Appbar.Content title="Settings" titleStyle={fonts.headerBarTitle} />
+    </Appbar.Header>
+  );
+};
+
+const SettingsStack: FC = () => {
+  return (
+    <Stack.Navigator screenOptions={{ header: SettingsAppBar }}>
+      <Stack.Screen name={"Settings"} component={SettingsScreen} />
     </Stack.Navigator>
   );
 };
 
-export default SettingsScreen;
+export default SettingsStack;
