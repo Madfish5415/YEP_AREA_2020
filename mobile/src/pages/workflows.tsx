@@ -1,9 +1,8 @@
 import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import WorkflowsScreen from "../components/workflows/workflows";
-import { Appbar, useTheme, Text } from "react-native-paper";
+import { Appbar, useTheme } from "react-native-paper";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { TouchableOpacity } from "react-native";
 
 const Stack = createStackNavigator();
 
