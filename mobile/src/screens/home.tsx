@@ -1,81 +1,57 @@
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
-import {
-  UserBloc,
-  UserErrorState,
-  UserGetEvent,
-  UserGetState,
-  UserRepository,
-} from "@area-common/blocs";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { User } from "@area-common/types";
-import { IconTextComponent } from "../components/icon/icon-text";
-import {ActivityIndicator} from "react-native-paper";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import WorkflowsStack from "../pages/workflows";
+import CredentialsStack from "../pages/credentials";
+import SettingsStack from "../pages/settings";
+import { useTheme } from "react-native-paper";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Entypo from "react-native-vector-icons/Entypo";
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const Tab = createMaterialBottomTabNavigator();
 
-const HomeScreen: FC = () => {
-  const bloc = new UserBloc(new UserRepository("http://localhost:8080"));
-
-  bloc.add(new UserGetEvent("1"));
-
+const HomeStack: FC = () => {
+  const { colors } = useTheme();
   return (
-    <BlocBuilder
-      bloc={bloc}
-      builder={(state) => {
-        if (state instanceof UserErrorState) {
-          return <ErrorState />;
-        }
-
-        if (state instanceof UserGetState) {
-          return <GetState user={state.user} />;
-        }
-
-        return <DefaultState />;
-      }}
-    />
+    <Tab.Navigator
+      activeColor={colors.primary}
+      inactiveColor={colors.inactive}
+      barStyle={{ backgroundColor: colors.background }}
+      labeled={false}
+    >
+      <Tab.Screen
+        name={"Workflows"}
+        component={WorkflowsStack}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="sitemap" size={25} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={"Credentials"}
+        component={CredentialsStack}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="key-variant"
+              size={25}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={"Settings"}
+        component={SettingsStack}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="cog" size={24} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
-const DefaultState: FC = () => {
-  return (
-    <View style={styles.container}>
-      <ActivityIndicator animating={true} size={"large"} />
-    </View>
-  );
-};
-
-const ErrorState: FC = () => {
-  const text = "An error has occurred";
-
-  return (
-    <View style={styles.container}>
-      <IconTextComponent icon={"alert"} text={text} />
-    </View>
-  );
-};
-
-type GetProps = {
-  user: User;
-};
-
-const GetState: FC<GetProps> = (props) => {
-  const { user } = props;
-  const text = `${user.firstName} ${user.lastName}`;
-
-  return (
-    <View style={styles.container}>
-      <IconTextComponent icon={"account"} text={text} />
-    </View>
-  );
-};
-
-export default HomeScreen;
+export default HomeStack;
