@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* Project Options */
+    "outDir": "./build",
+    "rootDir": "./src",
+    "declaration": true,
+
+    /* Module Options */
+    "baseUrl": "./src"
+  }
+}

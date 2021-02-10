@@ -3,6 +3,8 @@
   "private": true,
   "workspaces": [
     "common/**",
+    "services/**",
+    "api-server",
     "server",
     "mobile",
     "web"
@@ -10,14 +12,17 @@
   "scripts": {
     "build": "lerna run build",
     "build:common": "lerna run --scope @area-common/* build",
+    "build:services": "lerna run --scope @area-service/* build",
     "build:android": "yarn workspace area-mobile build:android",
     "build:ios": "yarn workspace area-mobile build:ios",
     "clean": "lerna run clean",
     "fclean": "lerna run fclean && rm -rf node_modules/",
+    "start:api-server": "yarn workspace area-api-server start",
     "start:server": "yarn workspace area-server start",
     "start:android": "yarn workspace area-mobile start:android",
     "start:ios": "yarn workspace area-mobile start:ios",
     "start:web": "yarn workspace area-web start",
+    "dev:api-server": "yarn workspace area-api-server dev",
     "dev:server": "yarn workspace area-server dev",
     "dev:web": "yarn workspace area-web dev"
   },

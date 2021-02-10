@@ -12,11 +12,14 @@
     "fclean": "yarn clean && rm -rf node_modules/"
   },
   "dependencies": {
-    "@types/cors": "^2.8.9",
+    "@area-service/dummy": "*",
     "cors": "^2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@area-common/service": "*",
+    "@area-common/types": "*",
+    "@types/cors": "^2.8.9",
     "@types/express": "^4.17.9",
     "ts-node": "^9.1.1"
   }
