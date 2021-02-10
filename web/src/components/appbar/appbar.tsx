@@ -7,10 +7,13 @@ import {
   AppBar,
   Typography,
   Tabs,
-  Tab,
   withStyles,
+  Link,
+  LinkProps
 } from "@material-ui/core";
+import { default as Tab, TabProps } from '@material-ui/core/Tab';
 import { gray, primary, white } from "@area-common/styles";
+import { useRouter } from "next/dist/client/router";
 
 interface StyledTabsProps {
   value: number;
@@ -29,7 +32,7 @@ const StyledTabs = withStyles({
     },
   },
 })((props: StyledTabsProps) => (
-  <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />
+  <Tabs {...props} />
 ));
 
 interface StyledTabProps {
@@ -80,10 +83,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AppBarComponent: FC = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const router = useRouter();
+  const [value, setValue] = React.useState(router.pathname === "/settings" ? 2 : router.pathname === "/credentials" ? 1 : 0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const linksTab = [
+      "/workflows",
+      "/credentials",
+      "/settings"
+    ];
     setValue(newValue);
+    router.push(linksTab[newValue]);
   };
 
   return (
