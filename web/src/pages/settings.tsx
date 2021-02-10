@@ -1,10 +1,10 @@
 import React, {FC} from "react";
 import AppBarComponent from "../components/appbar/appbar";
 
-const IndexPage: FC = () => {
+const SettingsPage: FC = () => {
     return (
         <AppBarComponent/>
     );
 };
 
-export default IndexPage;
+export default SettingsPage;
