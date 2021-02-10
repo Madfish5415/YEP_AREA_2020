@@ -4,6 +4,7 @@
 # Except
 !common/
 !server/
+!services/
 !mobile/
 !web/
 !scripts/
