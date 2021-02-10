@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import {Avatar, makeStyles, Typography} from "@material-ui/core";
 import { SvgIconComponent } from "@material-ui/icons";
-import {red} from "@area-common/styles";
 
 const styles = makeStyles({
   container: {
@@ -12,7 +11,7 @@ const styles = makeStyles({
   avatar: {
     width: "64px",
     height: "64px",
-    backgroundColor: red[500]
+    backgroundColor: "#FF0000"
   },
   text: {
     fontSize: 16,

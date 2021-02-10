@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "name": "Workflow 1",
+    "description": "Description of Workflow 1",
+    "active": true,
+    "action": {
+      "service": "dummy",
+      "id": "service",
+      "parameters": {
+        "id": "1"
+      }
+    },
+    "reactions": [
+      {
+        "service": "dummy",
+        "id": "alert",
+        "parameters": {
+          "message": "${outputs.name} is ${outputs.status}"
+        },
+        "operator": "3"
+      }
+    ],
+    "operators": [
+      {
+        "id": "2",
+        "type": "not",
+        "parameters": {
+          "value1": "${operators.1}"
+        }
+      },
+      {
+        "id": "1",
+        "type": "equal",
+        "parameters": {
+          "value1": "${outputs.status}",
+          "value2": "up"
+        }
+      },
+      {
+        "id": "4",
+        "type": "equal",
+        "parameters": {
+          "value1": "${outputs.name}",
+          "value2": "Web"
+        }
+      },
+      {
+        "id": "3",
+        "type": "and",
+        "parameters": {
+          "value1": "${operators.2}",
+          "value2": "${operators.4}"
+        }
+      }
+    ]
+  }
+]
