@@ -64,7 +64,7 @@ const SignUp: FC = () => {
       <View style={{ marginTop: 15 }} />
       <TouchableOpacity style={styles.createAccountContainer}>
         <Text style={[fonts.main, { color: white }]}>First time?</Text>
-        <Text style={[fonts.main, { color: primary.main }]}> Sign In</Text>
+        <Text style={[fonts.main, { color: primary.main }]}> Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
