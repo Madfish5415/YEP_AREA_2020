@@ -95,6 +95,6 @@ export class WorkflowRepository {
   delete(id: string) {
     const index = this.workflows.findIndex((workflow) => workflow.id === id);
 
-    this.workflows.slice(index, 1);
+    this.workflows.splice(index, 1);
   }
 }
