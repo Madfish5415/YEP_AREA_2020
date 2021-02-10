@@ -29,7 +29,7 @@ String.prototype.matchAll = function (regexp: RegExp): RegExpExecArray[] {
   }
 
   return allMatches;
-}
+};
 
 function calculateOperatorsValues(
   operator: WorkflowOperator,
@@ -84,7 +84,9 @@ function calculateOperatorsValues(
     }
   }
 
-  operatorsValues[operator.id] = operator.operator.verify(parameters);
+  if (operator.id !== "__proto__") {
+    operatorsValues[operator.id] = operator.operator.verify(parameters);
+  }
 
   return operatorsValues;
 }
@@ -100,10 +102,7 @@ function executeReaction(
     const allMatches = parameter.matchAll(/\${outputs.(.+?)}/g);
 
     for (const matches of allMatches) {
-      parameter = parameter.replace(
-        matches[0],
-        `${outputsValues[matches[1]]}`
-      );
+      parameter = parameter.replace(matches[0], `${outputsValues[matches[1]]}`);
     }
 
     parameters[entry[0]] = parameter;
