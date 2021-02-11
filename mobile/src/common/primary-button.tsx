@@ -1,10 +1,17 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 import { useTheme } from "react-native-paper";
 import { primary } from "@area-common/styles";
 
 const styles = StyleSheet.create({
-  signInContainer: {
+  container: {
     width: "100%",
   },
   signInButton: {
@@ -18,6 +25,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
+  style?: StyleProp<ViewStyle>;
   label: string;
   submitFunction: () => void;
 };
@@ -26,7 +34,7 @@ export const PrimaryButton: FC<Props> = (props: Props) => {
   const { fonts } = useTheme();
 
   return (
-    <View style={styles.signInContainer}>
+    <View style={[styles.container, props.style]}>
       <TouchableOpacity
         onPress={props.submitFunction}
         style={styles.signInButton}

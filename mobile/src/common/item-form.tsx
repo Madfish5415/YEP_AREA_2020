@@ -1,5 +1,12 @@
 import React, { FC } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ViewStyle,
+} from "react-native";
 import { gray, white } from "@area-common/styles";
 
 const styles = StyleSheet.create({
@@ -28,23 +35,25 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
+  style?: StyleProp<ViewStyle>;
   label: string;
   formId: string;
   placeholder: string;
   setter: (value: string, text: string) => void;
 };
 
-export const ItemForm: FC = (props: Props) => {
+export const ItemForm: FC<Props> = (props: Props) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>{props.label}</Text>
       </View>
       <TextInput
-        style={[styles.textInput]}
+        style={styles.textInput}
         placeholder={props.placeholder}
         placeholderTextColor={gray.light3}
         onChangeText={(text) => props.setter(props.formId, text)}
+        secureTextEntry={props.formId === "password"}
       />
     </View>
   );

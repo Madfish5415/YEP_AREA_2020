@@ -1,11 +1,14 @@
 import React, { FC, useEffect } from "react";
 import { StyleSheet, View, Alert, TouchableOpacity, Text } from "react-native";
-import { Title } from "../common/title";
-import { ItemForm } from "../common/item-form";
+import { Title } from "../../common/title";
+import { ItemForm } from "../../common/item-form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { primary, white } from "@area-common/styles";
-import { PrimaryButton } from "../common/primary-button";
+import { gray, primary, white } from "@area-common/styles";
+import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
+import { ExternalSignInButton } from "./external-signin-button";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const styles = StyleSheet.create({
   container: {
@@ -14,10 +17,17 @@ const styles = StyleSheet.create({
     marginTop: 150,
   },
   createAccountContainer: {
+    marginTop: 15,
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  divider: {
+    marginVertical: 20,
+    width: "100%",
+    height: 1,
+    backgroundColor: gray.light2,
   },
 });
 
@@ -26,7 +36,7 @@ type FormValues = {
   password: string;
 };
 
-const SignUp: FC = () => {
+const SignIn: FC = () => {
   const { fonts } = useTheme();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -49,25 +59,49 @@ const SignUp: FC = () => {
         placeholder={"example@gmail.com"}
         setter={setValue}
       />
-      <View style={{ marginTop: 15 }} />
       <ItemForm
+        style={{ marginTop: 15 }}
         label={"Password"}
         formId={"password"}
         placeholder={"..."}
         setter={setValue}
       />
-      <View style={{ marginTop: 20 }} />
       <PrimaryButton
+        style={{ marginTop: 20 }}
         label={"Sign In"}
         submitFunction={handleSubmit(onSubmit)}
       />
-      <View style={{ marginTop: 15 }} />
-      <TouchableOpacity style={styles.createAccountContainer}>
+      <TouchableOpacity
+        style={styles.createAccountContainer}
+        onPress={() => alert("todo!")}
+      >
         <Text style={[fonts.main, { color: white }]}>First time?</Text>
         <Text style={[fonts.main, { color: primary.main }]}> Sign Up</Text>
       </TouchableOpacity>
+      <View style={styles.divider} />
+      <ExternalSignInButton
+        externalServiceName={"GitHub"}
+        externalServiceColor={white}
+        externalServiceIcon={
+          <AntDesign name="github" size={18} color={white} />
+        }
+        submitFunction={() => alert("Todo !")}
+      />
+      <ExternalSignInButton
+        style={{ marginTop: 15 }}
+        externalServiceName={"Office 365"}
+        externalServiceColor={"#D53A00"}
+        externalServiceIcon={
+          <MaterialCommunityIcons
+            name="microsoft-office"
+            size={18}
+            color={"#D53A00"}
+          />
+        }
+        submitFunction={() => alert("Todo !")}
+      />
     </View>
   );
 };
 
-export default SignUp;
+export default SignIn;
