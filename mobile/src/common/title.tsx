@@ -1,12 +1,11 @@
 import React, { FC } from "react";
 import { useTheme } from "react-native-paper";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40,
   },
   titleArea: {
     fontSize: 52,
@@ -19,11 +18,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Title: FC = () => {
+type Props = {
+  style: StyleProp<ViewStyle>;
+};
+
+export const Title: FC<Props> = (props: Props) => {
   const { colors } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <Text style={[styles.titleArea, { color: colors.primary }]}>AREA</Text>
       <Text style={[styles.titleNumber, { color: colors.primary }]}>51</Text>
     </View>

@@ -53,7 +53,9 @@ export const ItemForm: FC<Props> = (props: Props) => {
         placeholder={props.placeholder}
         placeholderTextColor={gray.light3}
         onChangeText={(text) => props.setter(props.formId, text)}
-        secureTextEntry={props.formId === "password"}
+        secureTextEntry={
+          props.formId === "password" || props.formId === "confirmPassword"
+        }
       />
     </View>
   );
