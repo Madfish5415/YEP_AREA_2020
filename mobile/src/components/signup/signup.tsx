@@ -18,6 +18,7 @@ import { gray, primary, white } from "@area-common/styles";
 import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { useSignUp } from "../../hooks/authentication/signup";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,16 +47,28 @@ const styles = StyleSheet.create({
 });
 
 type FormValues = {
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 const Signup: FC = () => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
+  const { loading, signedUp, error, signUp } = useSignUp();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    Alert.alert("Data", JSON.stringify(data));
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await signUp(
+      data.username,
+      data.password,
+      data.confirmPassword,
+      data.email,
+      data.firstName,
+      data.lastName
+    );
   };
 
   const { register, handleSubmit, setValue } = useForm();
@@ -78,6 +91,13 @@ const Signup: FC = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
+            {error ? Alert.alert("Error", error) : null}
+            {signedUp
+              ? Alert.alert(
+                  "Success",
+                  "an email has been sent to verify your account"
+                )
+              : null}
             <ItemForm
               label={"Username"}
               formId={"username"}
