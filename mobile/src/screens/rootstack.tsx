@@ -6,7 +6,12 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import SignUpScreen from "./signup";
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  SignUp: undefined;
+  Home: { userId: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const RootStack: FC = () => {
   return (

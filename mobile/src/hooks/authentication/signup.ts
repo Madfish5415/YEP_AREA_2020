@@ -24,10 +24,14 @@ async function apiSignUp(
       body: JSON.stringify({
         username: username,
         password: password,
-        confirmPassword: password,
+        confirmPassword: confirmPassword,
         email: email,
         firstName: firstName,
         lastName: lastName,
+        custom: {
+          baseURL: `${window.location.origin}/authentication/verify`,
+          URL: `${window.location.origin}/authentication/verify?username=:username&id=:id`,
+        },
       }),
     });
 
