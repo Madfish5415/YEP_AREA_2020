@@ -3,7 +3,6 @@ import React, { FC, useState } from "react";
 import { View, StyleSheet, Switch } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { gray } from "@area-common/styles";
-import { Workflow } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
