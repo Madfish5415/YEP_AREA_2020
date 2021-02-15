@@ -1,9 +1,10 @@
 import { Bloc } from "@felangel/bloc";
-import { WorkflowEvent, WorkflowGetEvent } from "./event";
+import { WorkflowEvent, WorkflowGetEvent, WorkflowListEvent } from "./event";
 import {
   WorkflowErrorState,
   WorkflowGetState,
   WorkflowInitialState,
+  WorkflowListState,
   WorkflowLoadingState,
   WorkflowState,
 } from "./state";
@@ -38,6 +39,16 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     } catch (err) {
       console.log(err);
 
+      yield new WorkflowErrorState();
+    }
+  }
+
+  async *list(event: WorkflowListEvent) {
+    try {
+      const workflows = await this.repository.list();
+
+      yield new WorkflowListState(workflows);
+    } catch (e) {
       yield new WorkflowErrorState();
     }
   }

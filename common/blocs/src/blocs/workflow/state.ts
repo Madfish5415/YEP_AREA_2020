@@ -17,3 +17,13 @@ export class WorkflowGetState extends WorkflowState {
     this.workflow = workflow;
   }
 }
+
+export class WorkflowListState extends WorkflowState {
+  workflows: Workflow[];
+
+  constructor(workflows: Workflow[]) {
+    super();
+
+    this.workflows = workflows;
+  }
+}

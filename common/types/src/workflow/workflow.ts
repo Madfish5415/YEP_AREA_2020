@@ -6,7 +6,7 @@ import { WorkflowOperator } from "./operator";
 export interface Workflow {
   readonly id: string;
   readonly name: string;
-  readonly description: string;
+  isActive: boolean;
   readonly action: WorkflowAction;
   readonly reactions: WorkflowReaction[];
   readonly operators: WorkflowOperator[];
