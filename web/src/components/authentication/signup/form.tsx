@@ -13,7 +13,8 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import {emailRegex} from "../../../constants/regexs";
 import {useSignUp} from "../../../hooks";
-import {primary, secondary} from "@area-common/styles";
+import {gray, primary, secondary} from "@area-common/styles";
+import {SignUpSignIn} from "./buttons/signin";
 
 const useStyle = makeStyles({
     container: {
@@ -41,7 +42,14 @@ const theme = createMuiTheme({
         secondary: {
             main: secondary.main,
         },
-
+        grey: {
+            50: gray.main,
+            100: gray.light1,
+            200: gray.light2,
+            300: gray.light3,
+            400: gray.light4,
+            500: gray.light5,
+        },
     },
 });
 
@@ -214,6 +222,9 @@ export const SignUpForm: React.FC = () => {
                             >
                                 Sign Up
                             </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <SignUpSignIn/>
                         </Grid>
                     </Grid>
                 </form>
