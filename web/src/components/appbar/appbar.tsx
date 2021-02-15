@@ -9,9 +9,10 @@ import {
   Tabs,
   withStyles,
   Link,
-  LinkProps
+  LinkProps,
+  Box,
 } from "@material-ui/core";
-import { default as Tab, TabProps } from '@material-ui/core/Tab';
+import { default as Tab, TabProps } from "@material-ui/core/Tab";
 import { gray, primary, white } from "@area-common/styles";
 import { useRouter } from "next/dist/client/router";
 
@@ -31,9 +32,7 @@ const StyledTabs = withStyles({
       backgroundColor: "transparent",
     },
   },
-})((props: StyledTabsProps) => (
-  <Tabs {...props} />
-));
+})((props: StyledTabsProps) => <Tabs {...props} />);
 
 interface StyledTabProps {
   label: string;
@@ -84,32 +83,36 @@ const useStyles = makeStyles((theme: Theme) =>
 const AppBarComponent: FC = () => {
   const classes = useStyles();
   const router = useRouter();
-  const [value, setValue] = React.useState(router.pathname === "/settings" ? 2 : router.pathname === "/credentials" ? 1 : 0);
+  const [value, setValue] = React.useState(
+    router.pathname === "/settings"
+      ? 2
+      : router.pathname === "/credentials"
+      ? 1
+      : 0
+  );
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    const linksTab = [
-      "/workflows",
-      "/credentials",
-      "/settings"
-    ];
+    const linksTab = ["/workflows", "/credentials", "/settings"];
     setValue(newValue);
     router.push(linksTab[newValue]);
   };
 
   return (
     <div className={classes.root}>
-      <AppBar position={"static"} className={classes.appbar}>
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.titleDivider}>
-            <Typography className={classes.title}>AREA 51</Typography>
-          </div>
-          <StyledTabs value={value} onChange={handleChange}>
-            <StyledTab label="Workflows" />
-            <StyledTab label="Credentials" />
-            <StyledTab label="Settings" />
-          </StyledTabs>
-        </Toolbar>
-      </AppBar>
+      <Box boxShadow={1} m={1}>
+        <AppBar position={"static"} className={classes.appbar}>
+          <Toolbar className={classes.toolbar}>
+            <div className={classes.titleDivider}>
+              <Typography className={classes.title}>AREA 51</Typography>
+            </div>
+            <StyledTabs value={value} onChange={handleChange}>
+              <StyledTab label="Workflows" />
+              <StyledTab label="Credentials" />
+              <StyledTab label="Settings" />
+            </StyledTabs>
+          </Toolbar>
+        </AppBar>
+      </Box>
     </div>
   );
 };
