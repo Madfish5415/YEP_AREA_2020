@@ -1,5 +1,6 @@
 import { DefaultTheme } from "react-native-paper";
 import { gray, primary, secondary, white } from "@area-common/styles";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 declare global {
   namespace ReactNativePaper {
@@ -23,6 +24,7 @@ declare global {
       headerBarLabel: Partial<ThemeFont>;
       description: Partial<ThemeFont>;
       headerBarTitle: Partial<ThemeFont>;
+      serviceName: Partial<ThemeFont>;
     }
   }
 }
