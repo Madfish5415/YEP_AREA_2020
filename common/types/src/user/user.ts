@@ -1,4 +1,6 @@
 export type User = {
-  firstName: string;
-  lastName: string;
+  readonly id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
 };
