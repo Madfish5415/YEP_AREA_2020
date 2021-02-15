@@ -5,7 +5,11 @@ import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  Home: { userId: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const RootStack: FC = () => {
   return (
