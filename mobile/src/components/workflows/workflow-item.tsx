@@ -28,6 +28,7 @@ type Props = {
 export const WorkflowItem: FC<Props> = (props) => {
   const [toggle, setToggle] = useState(props.isActive);
   const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
       <Text>{props.label}</Text>

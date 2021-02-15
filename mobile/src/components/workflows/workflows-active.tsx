@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { Text, useTheme } from "react-native-paper";
 import { WorkflowItem } from "./workflow-item";
 import { View, StyleSheet } from "react-native";
 
@@ -9,7 +8,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const WorkflowsScreen: FC = () => {
+const WorkflowsActiveScreen: FC = () => {
   return (
     <View style={styles.container}>
       <WorkflowItem label={"Workflow 1"} isActive={true} />
@@ -19,4 +18,4 @@ const WorkflowsScreen: FC = () => {
   );
 };
 
-export default WorkflowsScreen;
+export default WorkflowsActiveScreen;
