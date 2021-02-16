@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { WorkflowItem } from "./workflow-item";
 import { View, StyleSheet } from "react-native";
 import { WorkflowsActiveStackRouteParamsList } from "../../pages/workflows";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
   WorkflowErrorState,
@@ -13,6 +13,7 @@ import {
 import { BlocBuilder } from "@felangel/react-bloc";
 import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
+import { Workflow } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
@@ -25,13 +26,14 @@ type WorkflowsActiveRouteProps = RouteProp<
   "WorkflowsActive"
 >;
 
-type Props = {
+type WorkflowsActiveScreenProps = {
   route: WorkflowsActiveRouteProps;
 };
 
-const WorkflowsActiveScreen: FC<Props> = (props) => {
+const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
   const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
   workflowsBloc.add(new WorkflowListEvent());
+  useIsFocused();
   return (
     <BlocBuilder
       bloc={workflowsBloc}
@@ -40,21 +42,29 @@ const WorkflowsActiveScreen: FC<Props> = (props) => {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
         if (state instanceof WorkflowListState) {
-          return (
-            <View style={styles.container}>
-              {state.workflows.map((workflow) => (
-                <WorkflowItem
-                  key={workflow.id}
-                  label={workflow.name}
-                  isActive={workflow.isActive}
-                />
-              ))}
-            </View>
-          );
+          return <WorkflowsActive workflows={state.workflows} />;
         }
         return <DefaultState />;
       }}
     />
+  );
+};
+
+type Props = {
+  workflows: Workflow[];
+};
+
+const WorkflowsActive: FC<Props> = (props) => {
+  return (
+    <View style={styles.container}>
+      {props.workflows.map((workflow) => (
+        <WorkflowItem
+          key={workflow.id}
+          label={workflow.name}
+          isActive={workflow.isActive}
+        />
+      ))}
+    </View>
   );
 };
 
