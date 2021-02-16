@@ -43,6 +43,7 @@ export const EditWorkflowItem: FC<Props> = (props) => {
     <TouchableWithoutFeedback
       onPress={() =>
         navigate("Workflow", {
+          workflow: props.workflow,
           screen: "Workflow",
           params: { workflow: props.workflow },
         })

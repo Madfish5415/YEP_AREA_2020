@@ -29,7 +29,6 @@ const RootStack: FC = () => {
             name={"Workflow"}
             component={WorkflowStack}
             options={{ headerShown: false }}
-            initialParams={{ workflow: undefined }}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { StyleSheet, TextInput } from "react-native";
 import { RootStackParamList } from "./rootstack";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,19 +7,36 @@ import { Workflow } from "@area-common/types";
 import WorkflowScreen from "../components/workflow/workflow";
 import { Appbar, useTheme } from "react-native-paper";
 
+const styles = StyleSheet.create({
+  headerTextInput: {
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    color: "white",
+  },
+});
+
 export type WorkflowStackParamsList = {
   Workflow: { workflow: Workflow };
 };
 
 const Stack = createStackNavigator<WorkflowStackParamsList>();
 
-const AppBar = () => {
+type AppBarProps = {
+  name: string;
+};
+
+const AppBar: FC<AppBarProps> = (props) => {
   const { colors, fonts } = useTheme();
   const { goBack } = useNavigation();
   return (
     <Appbar.Header style={{ backgroundColor: colors.background }}>
       <Appbar.BackAction color={colors.primary} onPress={goBack} />
-      <Appbar.Content title="Workflows" titleStyle={fonts.headerBarTitle} />
+      <TextInput
+        defaultValue={props.name}
+        style={[styles.headerTextInput, fonts.headerBarTitle]}
+      />
     </Appbar.Header>
   );
 };
@@ -31,12 +49,12 @@ type Props = {
 
 const WorkflowStack: FC<Props> = (props) => {
   return (
-    <Stack.Navigator screenOptions={{ header: AppBar }}>
-      <Stack.Screen
-        name={"Workflow"}
-        component={WorkflowScreen}
-        initialParams={{ workflow: props.route.params.workflow }}
-      />
+    <Stack.Navigator
+      screenOptions={{
+        header: () => <AppBar name={props.route.params.workflow.name} />,
+      }}
+    >
+      <Stack.Screen name={"Workflow"} component={WorkflowScreen} />
     </Stack.Navigator>
   );
 };
