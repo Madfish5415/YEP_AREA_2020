@@ -2,7 +2,6 @@ import React, { FC, useEffect } from "react";
 import {
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   TouchableOpacity,
   Text,
   Platform,
@@ -69,6 +68,7 @@ const Signup: FC = () => {
       data.firstName,
       data.lastName
     );
+    navigate("SignIn");
   };
 
   const { register, handleSubmit, setValue } = useForm();
@@ -91,13 +91,6 @@ const Signup: FC = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
-            {error ? Alert.alert("Error", error) : null}
-            {signedUp
-              ? Alert.alert(
-                  "Success",
-                  "an email has been sent to verify your account"
-                )
-              : null}
             <ItemForm
               label={"Username"}
               formId={"username"}
