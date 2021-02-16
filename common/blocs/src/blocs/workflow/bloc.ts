@@ -22,7 +22,6 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   async *mapEventToState(
     event: WorkflowEvent
   ): AsyncIterableIterator<WorkflowState> {
-    console.log("SEXXE");
     yield new WorkflowLoadingState();
 
     if (event instanceof WorkflowGetEvent) {
@@ -30,7 +29,6 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     }
 
     if (event instanceof WorkflowListEvent) {
-      console.log("BITEEEEE");
       yield* this.list(event);
     }
   }
