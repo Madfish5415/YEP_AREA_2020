@@ -50,7 +50,7 @@ export class Core {
   start(): Promise<void> {
     this.workflowRepository
       .list()
-      .forEach((workflow: Workflow) => workflow.runner.start());
+      .forEach((workflow: Workflow) => workflow.runner?.start());
 
     return new Promise<void>((resolve) => {
       this.server = this.express.listen(this.port, this.hostname, () => {
@@ -62,7 +62,7 @@ export class Core {
   stop(): Promise<void> {
     this.workflowRepository
       .list()
-      .forEach((workflow: Workflow) => workflow.runner.stop());
+      .forEach((workflow: Workflow) => workflow.runner?.stop());
 
     return new Promise<void>((resolve, reject) => {
       this.server?.close((err) => {

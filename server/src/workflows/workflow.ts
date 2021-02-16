@@ -115,6 +115,7 @@ export class BaseWorkflow implements Workflow {
   readonly id: string;
   readonly name: string;
   readonly description: string;
+  readonly isActive: boolean;
   readonly action: WorkflowAction;
   readonly reactions: WorkflowReaction[];
   readonly operators: WorkflowOperator[];
@@ -131,6 +132,7 @@ export class BaseWorkflow implements Workflow {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.isActive = true;
     this.action = action;
     this.reactions = reactions;
     this.operators = operators;

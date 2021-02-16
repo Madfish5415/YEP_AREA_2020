@@ -19,6 +19,7 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   async *mapEventToState(event: UserEvent): AsyncIterableIterator<UserState> {
+    console.log("UserLoadgnState");
     yield new UserLoadingState();
 
     if (event instanceof UserGetEvent) {
@@ -32,9 +33,11 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       const user = await this.repository.get(event.id);
 
+      console.log("reussi");
       yield new UserGetState(user);
     } catch (err) {
       console.log(err);
+      console.log("fail");
 
       yield new UserErrorState();
     }
