@@ -36,7 +36,6 @@ export class WorkflowRepository extends Repository {
 
     if (index !== -1) {
       workflows.splice(index, 1);
-      console.log("WORKFLOWS:", workflows);
     } else {
       throw Error("Workflow not found");
     }
