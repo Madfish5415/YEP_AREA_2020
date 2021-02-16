@@ -10,6 +10,7 @@ import { Workflow } from "@area-common/types";
 import { gray } from "@area-common/styles";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useTheme } from "react-native-paper";
+import { DeleteAlert } from "./alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
+  delete: (workflow: Workflow) => void;
 };
 
 export const EditWorkflowItem: FC<Props> = (props) => {
@@ -38,10 +40,13 @@ export const EditWorkflowItem: FC<Props> = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => alert("Todo !")}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.delete} onPress={() => alert("Todo !")}>
+        <TouchableOpacity
+          style={styles.delete}
+          onPress={() => DeleteAlert(props.workflow, props.delete)}
+        >
           <Icon name="ios-remove-circle" size={23} color={colors.primary} />
         </TouchableOpacity>
-        <Text style={{ flexGrow: 1 }}>Workflow 1</Text>
+        <Text style={{ flexGrow: 1 }}>{props.workflow.name}</Text>
         <Icon name="ios-chevron-forward" size={23} color={gray.light2} />
       </View>
     </TouchableWithoutFeedback>
