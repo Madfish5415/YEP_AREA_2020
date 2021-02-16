@@ -11,6 +11,7 @@ import { gray } from "@area-common/styles";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useTheme } from "react-native-paper";
 import { DeleteAlert } from "./alert";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -36,9 +37,17 @@ type Props = {
 
 export const EditWorkflowItem: FC<Props> = (props) => {
   const { colors } = useTheme();
+  const { navigate } = useNavigation();
 
   return (
-    <TouchableWithoutFeedback onPress={() => alert("Todo !")}>
+    <TouchableWithoutFeedback
+      onPress={() =>
+        navigate("Workflow", {
+          screen: "Workflow",
+          params: { workflow: props.workflow },
+        })
+      }
+    >
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.delete}
