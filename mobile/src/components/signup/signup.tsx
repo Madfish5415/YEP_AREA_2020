@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -13,11 +13,12 @@ import {
 import { Title } from "../../common/title";
 import { ItemForm } from "../../common/item-form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { gray, primary, white } from "@area-common/styles";
+import { gray, primary, utils, white } from "@area-common/styles";
 import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useSignUp } from "../../hooks/authentication/signup";
+import { emailRegex } from "../../constants/regexs";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,9 +27,9 @@ const styles = StyleSheet.create({
   },
   inner: {
     width: "100%",
-    paddingBottom: 20,
     flex: 1,
-    justifyContent: "flex-end",
+    paddingBottom: 70,
+    justifyContent: "center",
   },
   createAccountContainer: {
     marginTop: 15,
@@ -42,6 +43,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 1,
     backgroundColor: gray.light2,
+  },
+  onErrorText: {
+    textAlign: "center",
+    color: utils.error,
+    fontWeight: "bold",
+    paddingBottom: 10,
   },
 });
 
@@ -57,18 +64,33 @@ type FormValues = {
 const Signup: FC = () => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
-  const { loading, signedUp, error, signUp } = useSignUp();
+  const { signUp } = useSignUp();
+  const [onError, setError] = useState(false);
+  const [onErrorEmail, setErrorEmail] = useState(false);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    await signUp(
-      data.username,
-      data.password,
-      data.confirmPassword,
-      data.email,
-      data.firstName,
-      data.lastName
-    );
-    navigate("SignIn");
+    if (
+      !data?.username ||
+      !data?.password ||
+      !data?.confirmPassword ||
+      !data?.email
+    ) {
+      setError(true);
+    } else if (!emailRegex.test(data.email)) {
+      setErrorEmail(true);
+    } else {
+      setError(false);
+      setErrorEmail(false);
+      await signUp(
+        data.username,
+        data.password,
+        data.confirmPassword,
+        data.email,
+        data.firstName,
+        data.lastName
+      );
+      navigate("SignIn");
+    }
   };
 
   const { register, handleSubmit, setValue } = useForm();
@@ -91,11 +113,20 @@ const Signup: FC = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
+            {onError ? (
+              <Text style={styles.onErrorText}>
+                One or more fields are empty
+              </Text>
+            ) : onErrorEmail ? (
+              <Text style={styles.onErrorText}>Invalid email</Text>
+            ) : null}
             <ItemForm
               label={"Username"}
               formId={"username"}
               placeholder={"JohnDoe"}
               setter={setValue}
+              error={onError}
+              required={true}
             />
             <ItemForm
               style={{ marginTop: 10 }}
@@ -103,6 +134,8 @@ const Signup: FC = () => {
               formId={"firstname"}
               placeholder={"John"}
               setter={setValue}
+              error={onError}
+              required={false}
             />
             <ItemForm
               style={{ marginTop: 10 }}
@@ -110,6 +143,8 @@ const Signup: FC = () => {
               formId={"lastname"}
               placeholder={"Doe"}
               setter={setValue}
+              error={onError}
+              required={false}
             />
             <ItemForm
               style={{ marginTop: 10 }}
@@ -117,6 +152,9 @@ const Signup: FC = () => {
               formId={"email"}
               placeholder={"example@gmail.com"}
               setter={setValue}
+              error={onError}
+              errorEmail={onErrorEmail}
+              required={true}
             />
             <ItemForm
               style={{ marginTop: 10 }}
@@ -124,6 +162,8 @@ const Signup: FC = () => {
               formId={"password"}
               placeholder={"..."}
               setter={setValue}
+              error={onError}
+              required={true}
             />
             <ItemForm
               style={{ marginTop: 10 }}
@@ -131,6 +171,8 @@ const Signup: FC = () => {
               formId={"confirmPassword"}
               placeholder={"..."}
               setter={setValue}
+              error={onError}
+              required={true}
             />
             <PrimaryButton
               style={{ marginTop: 20 }}
