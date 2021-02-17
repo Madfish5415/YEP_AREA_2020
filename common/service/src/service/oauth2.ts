@@ -3,13 +3,13 @@ import {
   OAuth2Options,
   OAuth2Verify,
   OAuth2VerifyCallback,
-} from "@dashboard/oauth";
+} from "../../../types/src/";
 import {
   ServiceRequest,
   ServiceResponse,
   ServiceSetting,
   User,
-} from "@dashboard/types";
+} from "@area-common/types";
 import { BaseAction } from "../action";
 import { BaseService } from "./service";
 
