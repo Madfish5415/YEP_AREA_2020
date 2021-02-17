@@ -13,7 +13,7 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import {emailRegex} from "../../../constants/regexs";
 import {useSignUp} from "../../../hooks";
-import {gray, primary, secondary} from "@area-common/styles";
+import {gray, primary, secondary, white} from "@area-common/styles";
 import {SignUpSignIn} from "./buttons/signin";
 
 const useStyle = makeStyles({
