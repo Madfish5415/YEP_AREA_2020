@@ -17,7 +17,11 @@ import { Workflow as WorkflowType } from "@area-common/types";
 import { View } from "react-native";
 import { SectionTitle } from "../common/section-title";
 import { Action } from "./action";
-import { Conditions } from "./conditions";
+import { Operator } from "./operator";
+import { Reaction } from "./reaction";
+import { NewOperator } from "./new-operator";
+import { NewReaction } from "./new-reaction";
+import { NewAction } from "./new-action";
 
 const styles = StyleSheet.create({
   container: {
@@ -74,7 +78,11 @@ const Workflow: FC<Props> = (props) => {
     <View style={styles.container}>
       <SectionTitle label={"Action"} style={{ marginTop: 10 }} />
       <View style={styles.actionContainer}>
-        <Action />
+        {props.workflow.action ? (
+          <Action item={props.workflow.action} />
+        ) : (
+          <NewAction />
+        )}
       </View>
       <SectionTitle label={"Conditions"} />
       <ScrollView
@@ -83,17 +91,34 @@ const Workflow: FC<Props> = (props) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           alignItems: "center",
+          flexGrow: 1,
+          justifyContent: "center",
         }}
         pagingEnabled
       >
-        <Conditions />
-        <Conditions />
-        <Conditions />
-        <Conditions />
-        <Conditions />
-        <Conditions />
+        {props.workflow.operators?.map((operator) => (
+          <Operator key={operator.id} item={operator} />
+        ))}
+        <NewOperator />
+        <Operator />
       </ScrollView>
       <SectionTitle label={"Reactions"} />
+      <ScrollView
+        horizontal={true}
+        style={styles.conditionsContainer}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          alignItems: "center",
+          flexGrow: 1,
+          justifyContent: "center",
+        }}
+        pagingEnabled
+      >
+        {props.workflow.reactions?.map((reaction) => (
+          <Reaction key={reaction.reaction.id} item={reaction} />
+        ))}
+        <NewReaction />
+      </ScrollView>
     </View>
   );
 };
