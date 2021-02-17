@@ -23,11 +23,6 @@ const RootStack: FC = () => {
             component={SignUpScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name={"Home"}
-            component={HomeStack}
-            options={{ headerShown: false }}
-          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

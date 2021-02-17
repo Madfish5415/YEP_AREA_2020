@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { gray, white } from "@area-common/styles";
+import { gray, utils, white } from "@area-common/styles";
 
 const styles = StyleSheet.create({
   container: {
@@ -32,6 +32,10 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 5,
   },
+  textInputError: {
+    borderWidth: 1,
+    borderColor: utils.error,
+  },
 });
 
 type Props = {
@@ -40,19 +44,47 @@ type Props = {
   formId: string;
   placeholder: string;
   setter: (value: string, text: string) => void;
+  error: boolean;
+  errorEmail?: boolean;
+  required: boolean;
 };
 
 export const ItemForm: FC<Props> = (props: Props) => {
+  const [text, setText] = useState("");
+
   return (
     <View style={[styles.container, props.style]}>
       <View style={styles.labelContainer}>
-        <Text style={styles.label}>{props.label}</Text>
+        <Text
+          style={[
+            styles.label,
+            {
+              color:
+                props.error && props.required && text.length == 0
+                  ? utils.error
+                  : props.errorEmail
+                  ? utils.error
+                  : gray.light2,
+            },
+          ]}
+        >
+          {props.label}
+        </Text>
       </View>
       <TextInput
-        style={styles.textInput}
+        style={
+          props.error && props.required && text.length == 0
+            ? [styles.textInput, styles.textInputError]
+            : props.errorEmail
+            ? [styles.textInput, styles.textInputError]
+            : styles.textInput
+        }
         placeholder={props.placeholder}
         placeholderTextColor={gray.light3}
-        onChangeText={(text) => props.setter(props.formId, text)}
+        onChangeText={(text) => {
+          setText(text);
+          props.setter(props.formId, text);
+        }}
         secureTextEntry={
           props.formId === "password" || props.formId === "confirmPassword"
         }
