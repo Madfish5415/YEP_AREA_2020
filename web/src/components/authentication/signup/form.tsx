@@ -38,6 +38,7 @@ const theme = createMuiTheme({
         type: "dark",
         primary: {
             main: primary.main,
+            contrastText: white
         },
         secondary: {
             main: secondary.main,
