@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { WorkflowReaction } from "@area-common/types";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Workflow, WorkflowReaction } from "@area-common/types";
 import { Text } from "react-native-paper";
-import { gray, primary } from "@area-common/styles";
+import { gray, primary, secondary } from "@area-common/styles";
+import { ReactionAlert } from "./reaction-alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -14,6 +15,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: 20,
   },
+  bulletLink: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    position: "absolute",
+    alignSelf: "center",
+    top: -10,
+    borderWidth: 2,
+    borderColor: gray.main,
+    backgroundColor: secondary.main,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   text: {
     color: gray.main,
   },
@@ -21,13 +35,21 @@ const styles = StyleSheet.create({
 
 type Props = {
   item: WorkflowReaction;
+  workflow: Workflow;
+  callback: (workflow: Workflow, id: string) => void;
 };
 
 export const Reaction: FC<Props> = (props) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onLongPress={() =>
+        ReactionAlert(props.item, props.workflow, props.callback)
+      }
+    >
+      <View style={styles.bulletLink}></View>
       <Text numberOfLines={1} style={[styles.text, { fontSize: 18 }]}>
-        Reaction
+        {props.item.reaction.name}
       </Text>
     </TouchableOpacity>
   );

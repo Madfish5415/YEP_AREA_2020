@@ -38,7 +38,9 @@ type Props = {
 export const Action: FC<Props> = (props) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <Text style={[styles.text, { fontSize: 18 }]}>Action</Text>
+      <Text style={[styles.text, { fontSize: 18 }]}>
+        {props.item.action.name}
+      </Text>
       <View style={styles.bulletLink}>
         <Text style={styles.text}>1</Text>
       </View>
