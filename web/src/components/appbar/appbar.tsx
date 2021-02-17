@@ -99,20 +99,18 @@ const AppBarComponent: FC = () => {
 
   return (
     <div className={classes.root}>
-      <Box boxShadow={1} m={1}>
-        <AppBar position={"static"} className={classes.appbar}>
-          <Toolbar className={classes.toolbar}>
-            <div className={classes.titleDivider}>
-              <Typography className={classes.title}>AREA 51</Typography>
-            </div>
-            <StyledTabs value={value} onChange={handleChange}>
-              <StyledTab label="Workflows" />
-              <StyledTab label="Credentials" />
-              <StyledTab label="Settings" />
-            </StyledTabs>
-          </Toolbar>
-        </AppBar>
-      </Box>
+      <AppBar position={"static"} className={classes.appbar}>
+        <Toolbar className={classes.toolbar}>
+          <div className={classes.titleDivider}>
+            <Typography className={classes.title}>AREA 51</Typography>
+          </div>
+          <StyledTabs value={value} onChange={handleChange}>
+            <StyledTab label="Workflows" />
+            <StyledTab label="Credentials" />
+            <StyledTab label="Settings" />
+          </StyledTabs>
+        </Toolbar>
+      </AppBar>
     </div>
   );
 };
