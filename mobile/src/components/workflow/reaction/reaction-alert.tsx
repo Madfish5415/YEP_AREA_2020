@@ -12,7 +12,7 @@ export const ReactionAlert: (
     [
       {
         text: "Yes",
-        onPress: () => callback(workflow, operator.operator.id),
+        onPress: () => callback(workflow, reaction.reaction.id),
       },
       {
         text: "Cancel",
