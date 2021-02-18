@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
 type Props = {
   workflow: Workflow;
   delete: (workflow: Workflow) => void;
+  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
 export const EditWorkflowItem: FC<Props> = (props) => {
@@ -44,6 +45,7 @@ export const EditWorkflowItem: FC<Props> = (props) => {
       onPress={() =>
         navigate("Workflow", {
           workflow: props.workflow,
+          callback: props.update,
           screen: "Workflow",
           params: { workflow: props.workflow },
         })
