@@ -14,6 +14,13 @@ export class WorkflowRepository extends Repository {
   }
 
   async read(id: string): Promise<Workflow> {
+    const workflow = workflows.find((workflow) => workflow.id === id);
+
+    if (workflow === undefined) {
+      throw Error("Workflow not found");
+    }
+    return workflow;
+
     const response = await fetch(`${this.remoteURL}/workflows/${id}`);
     const json = await response.json();
 

@@ -10,6 +10,8 @@ import {
   WorkflowListState,
   WorkflowRepository,
   WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { ErrorState } from "../blocbuilder/error-state";
@@ -27,6 +29,20 @@ const WorkflowsEditScreen: FC = () => {
   const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
   workflowsBloc.add(new WorkflowListEvent());
 
+  const updateWorkflowName = (
+    workflow: Workflow,
+    updatedWorkflow: Partial<Workflow>
+  ) => {
+    workflowsBloc.add(
+      new WorkflowUpdateEvent(
+        workflow.id,
+        updatedWorkflow.name
+          ? updatedWorkflow
+          : { name: workflow.action.action.name }
+      )
+    );
+  };
+
   const deleteWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(new WorkflowDeleteEvent(workflow.id));
   };
@@ -37,6 +53,9 @@ const WorkflowsEditScreen: FC = () => {
       key={uuidv4()}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowDeleteState) {
+          workflowsBloc.add(new WorkflowListEvent());
+        }
+        if (current instanceof WorkflowUpdateState) {
           workflowsBloc.add(new WorkflowListEvent());
         }
         return true;
@@ -50,6 +69,7 @@ const WorkflowsEditScreen: FC = () => {
             <WorkflowsEdit
               workflows={(state as WorkflowListState).workflows}
               delete={deleteWorkflow}
+              update={updateWorkflowName}
             />
           );
         }
@@ -62,6 +82,7 @@ const WorkflowsEditScreen: FC = () => {
 type Props = {
   workflows: Workflow[];
   delete: (workflow: Workflow) => void;
+  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
 const WorkflowsEdit: FC<Props> = (props) => {
@@ -72,6 +93,7 @@ const WorkflowsEdit: FC<Props> = (props) => {
           key={workflow.id}
           workflow={workflow}
           delete={props.delete}
+          update={props.update}
         />
       ))}
     </View>
