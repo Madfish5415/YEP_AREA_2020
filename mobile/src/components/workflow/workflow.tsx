@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { RouteProp } from "@react-navigation/native";
 import { WorkflowStackParamsList } from "../../screens/workflow";
@@ -18,30 +18,14 @@ import { DefaultState } from "../blocbuilder/default-state";
 import { Workflow as WorkflowType } from "@area-common/types";
 import { View } from "react-native";
 import { SectionTitle } from "../common/section-title";
-import { Action } from "./action";
-import { Operator } from "./operator";
-import { Reaction } from "./reaction";
-import { NewOperator } from "./new-operator";
-import { NewReaction } from "./new-reaction";
-import { v4 as uuidv4 } from "uuid";
+import { Action } from "./action/action";
+import { ReactionSection } from "./reaction/reaction-section";
+import { OperatorSection } from "./operator/operator-section";
+import { ActionSection } from "./action/action-section";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  actionContainer: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  conditionsContainer: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
   },
 });
 
@@ -72,7 +56,6 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
   return (
     <BlocBuilder
       bloc={workflowBloc}
-      key={uuidv4()}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowUpdateState) {
           workflowBloc.add(
@@ -110,55 +93,17 @@ const Workflow: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <SectionTitle label={"Action"} style={{ marginTop: 10 }} />
-      <View style={styles.actionContainer}>
-        <Action item={props.workflow.action} />
-      </View>
+      <ActionSection workflow={props.workflow} />
       <SectionTitle label={"Operators"} />
-      <ScrollView
-        horizontal={true}
-        style={styles.conditionsContainer}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          flexGrow: 1,
-          justifyContent: "center",
-        }}
-        pagingEnabled
-      >
-        {props.workflow.operators.map((operator) => (
-          <Operator
-            key={operator.id}
-            item={operator}
-            workflow={props.workflow}
-            callback={props.operatorCallback}
-          />
-        ))}
-        <NewOperator />
-      </ScrollView>
+      <OperatorSection
+        workflow={props.workflow}
+        callback={props.operatorCallback}
+      />
       <SectionTitle label={"Reactions"} />
-      <ScrollView
-        horizontal={true}
-        style={styles.conditionsContainer}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          flexGrow: 1,
-          justifyContent: "center",
-        }}
-        pagingEnabled
-      >
-        {props.workflow.reactions.map((reaction) => {
-          return (
-            <Reaction
-              key={reaction.reaction.id}
-              item={reaction}
-              workflow={props.workflow}
-              callback={props.reactionCallback}
-            />
-          );
-        })}
-        <NewReaction />
-      </ScrollView>
+      <ReactionSection
+        workflow={props.workflow}
+        callback={props.reactionCallback}
+      />
     </View>
   );
 };
