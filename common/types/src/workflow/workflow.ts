@@ -7,8 +7,8 @@ export interface Workflow {
   readonly id: string;
   readonly name: string;
   readonly isActive: boolean;
-  readonly action?: WorkflowAction;
-  readonly reactions?: WorkflowReaction[];
-  readonly operators?: WorkflowOperator[];
+  readonly action: WorkflowAction;
+  readonly reactions: WorkflowReaction[];
+  readonly operators: WorkflowOperator[];
   readonly runner?: Runner<Callback>;
 }
