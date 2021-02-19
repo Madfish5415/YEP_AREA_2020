@@ -19,8 +19,14 @@ import { Workflow } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
+import { gray, primary } from "@area-common/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({}));
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: gray.main,
+    height: "100%",
+  },
+}));
 
 const WorkflowPage: FC = () => {
   const router = useRouter();
@@ -59,9 +65,26 @@ type Props = {
 const WorkflowEdit: FC<Props> = (props) => {
   const classes = useStyles();
 
+  const findBlobId: (id: string) => number = (id) => {
+    console.log(parseInt("0x" + id[id.length - 1]) % 10);
+    return parseInt("0x" + id[id.length - 1]) % 10;
+  };
+
   return (
     <>
-      <div>{props.workflow.name}</div>
+      <AppBarComponent />
+      <div
+        className={classes.root}
+        style={{
+          background:
+            "url(/assets/images/blob" +
+            findBlobId(props.workflow.id) +
+            "_bg.svg) no-repeat center",
+          backgroundSize: "75%",
+        }}
+      >
+        {props.workflow.name}
+      </div>
     </>
   );
 };
