@@ -1,10 +1,14 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   createStyles,
   makeStyles,
   Theme,
   Typography,
   Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogTitle,
 } from "@material-ui/core";
 import { gray, white } from "@area-common/styles";
 import IOSSwitch from "../switch/switch";
@@ -47,6 +51,12 @@ const useStyles = makeStyles((theme: Theme) =>
       textTransform: "none",
       fontSize: 10,
     },
+    dialogTitle: {
+      color: white,
+    },
+    dialogButton: {
+      color: white,
+    },
   })
 );
 
@@ -58,6 +68,16 @@ type Props = {
 
 const WorkflowComponent: FC<Props> = (props) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (event: React.ChangeEvent<{}>) => {
+    event.stopPropagation();
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleWorkflowEdit = () => {
     console.log("edit my workflow");
@@ -68,41 +88,85 @@ const WorkflowComponent: FC<Props> = (props) => {
     props.isActiveCallback(props.workflow);
   };
 
-  const handleWorkflowDelete = (event: React.ChangeEvent<{}>) => {
-    event.stopPropagation();
+  const handleWorkflowDelete = () => {
     props.deleteCallback(props.workflow);
   };
 
+  const findBlobId: (id: string) => number = (id) => {
+    return parseInt("0x" + id[id.length - 1]) % 10;
+  };
+
+  const findBlodPosition: (id: string) => string = (id) => {
+    const xOffset = (parseInt("0x" + id[id.length - 3]) % 10) * 1;
+    const yOffset = (parseInt("0x" + id[id.length - 2]) % 10) * 1;
+    const xVal =
+      parseInt("0x" + id[id.length - 5]) % 2 ? 30 + xOffset : 30 - xOffset;
+    const yVal =
+      parseInt("0x" + id[id.length - 4]) % 2 ? 30 + yOffset : 30 - yOffset;
+    return xVal + "% " + yVal + "%";
+  };
+
   return (
-    <div
-      className={classes.root}
-      style={{
-        backgroundImage: "url(/assets/images/blob1.svg)",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "30% 30%",
-      }}
-      onClick={handleWorkflowEdit}
-    >
-      <div className={classes.titleAndSwitch}>
-        <Typography className={classes.workflowName}>
-          {props.workflow.name}
-        </Typography>
-        <div className={classes.switch}>
-          <IOSSwitch
-            onClick={handleSwitchWorkflow}
-            checked={props.workflow.isActive}
-          />
+    <>
+      <Box
+        boxShadow={3}
+        className={classes.root}
+        style={{
+          backgroundImage:
+            "url(/assets/images/blob" + findBlobId(props.workflow.id) + ".svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: findBlodPosition(props.workflow.id),
+          backgroundSize: "140%",
+        }}
+        onClick={handleWorkflowEdit}
+      >
+        <div className={classes.titleAndSwitch}>
+          <Typography className={classes.workflowName}>
+            {props.workflow.name}
+          </Typography>
+          <div className={classes.switch}>
+            <IOSSwitch
+              onClick={handleSwitchWorkflow}
+              checked={props.workflow.isActive}
+            />
+          </div>
         </div>
-      </div>
-      <div className={classes.deleteButton}>
-        <Button
-          className={classes.deleteButtonText}
-          onClick={handleWorkflowDelete}
-        >
-          Delete
-        </Button>
-      </div>
-    </div>
+        <div className={classes.deleteButton}>
+          <Button className={classes.deleteButtonText} onClick={handleOpen}>
+            Delete
+          </Button>
+        </div>
+      </Box>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: { backgroundColor: gray.light1, boxShadow: "1" },
+        }}
+      >
+        <DialogTitle className={classes.dialogTitle}>
+          Do you want to delete this workflow ?
+        </DialogTitle>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            className={classes.dialogButton}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleWorkflowDelete}
+            color="primary"
+            className={classes.dialogButton}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

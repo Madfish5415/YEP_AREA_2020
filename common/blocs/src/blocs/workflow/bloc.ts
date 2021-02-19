@@ -82,9 +82,7 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
 
   async *update(event: WorkflowUpdateEvent) {
     try {
-      console.log(event.workflow)
       const originalWorkflow = await this.repository.read(event.id);
-      console.log("oui l'og", originalWorkflow)
       const workflow: Workflow = {
         ...originalWorkflow,
         ...event.workflow,
@@ -94,7 +92,6 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       await this.repository.update(event.id, workflow);
       yield new WorkflowUpdateState(workflow);
     } catch (e) {
-      console.log("genre la : ", e)
       yield new WorkflowErrorState();
     }
   }
