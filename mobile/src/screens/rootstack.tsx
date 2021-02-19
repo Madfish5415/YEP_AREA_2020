@@ -20,6 +20,7 @@ const RootStack: FC = () => {
             name={"Home"}
             component={HomeStack}
             options={{ headerShown: false }}
+            initialParams={{ userId: "3dcf9a69-e258-4449-a41d-cea7f6ca3fa9" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
