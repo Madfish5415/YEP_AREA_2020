@@ -3,6 +3,8 @@ import React, { FC, useState } from "react";
 import { View, StyleSheet, Switch } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { gray } from "@area-common/styles";
+import { Workflow } from "@area-common/types";
+import workflows from "@area-common/blocs/build/data/workflows";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,22 +23,23 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  label: string;
-  isActive: boolean;
+  workflow: Workflow;
+  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
 export const WorkflowItem: FC<Props> = (props) => {
-  const [toggle, setToggle] = useState(props.isActive);
   const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
-      <Text>{props.label}</Text>
+      <Text>{props.workflow.name}</Text>
       <Switch
         trackColor={{ true: colors.primary }}
         style={styles.switch}
-        onValueChange={setToggle}
-        value={toggle}
+        onValueChange={() =>
+          props.update(props.workflow, { isActive: !props.workflow.isActive })
+        }
+        value={props.workflow.isActive}
       />
     </View>
   );
