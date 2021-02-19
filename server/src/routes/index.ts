@@ -1,10 +1,8 @@
 import { Router } from "express";
-import {servicesRouter} from "./services/services";
-import {workflowsRouter} from "./workflows/workflows";
-import {usersRouter} from "./users/users";
 
-export const indexRouter = Router();
+import { API_ROUTE } from "../constants";
+import { authenticationRouter } from "./authentication";
 
-indexRouter.use(servicesRouter);
-indexRouter.use(workflowsRouter);
-indexRouter.use(usersRouter);
+export const apiRouter = Router();
+
+apiRouter.use(API_ROUTE, authenticationRouter);
