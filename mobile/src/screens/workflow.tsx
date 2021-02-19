@@ -24,7 +24,8 @@ export type WorkflowStackParamsList = {
 const Stack = createStackNavigator<WorkflowStackParamsList>();
 
 type AppBarProps = {
-  name: string;
+  workflow: Workflow;
+  callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
 const AppBar: FC<AppBarProps> = (props) => {
@@ -34,8 +35,9 @@ const AppBar: FC<AppBarProps> = (props) => {
     <Appbar.Header style={{ backgroundColor: colors.background }}>
       <Appbar.BackAction color={colors.primary} onPress={goBack} />
       <TextInput
-        defaultValue={props.name}
+        defaultValue={props.workflow.name}
         style={[styles.headerTextInput, fonts.headerBarTitle]}
+        onChangeText={(text) => props.callback(props.workflow, { name: text })}
       />
     </Appbar.Header>
   );
@@ -48,10 +50,12 @@ type Props = {
 };
 
 const WorkflowStack: FC<Props> = (props) => {
+  const { workflow, callback } = props.route.params;
+
   return (
     <Stack.Navigator
       screenOptions={{
-        header: () => <AppBar name={props.route.params.workflow.name} />,
+        header: () => <AppBar workflow={workflow} callback={callback} />,
       }}
     >
       <Stack.Screen name={"Workflow"} component={WorkflowScreen} />

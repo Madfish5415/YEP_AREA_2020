@@ -22,6 +22,11 @@ import { Action } from "./action/action";
 import { ReactionSection } from "./reaction/reaction-section";
 import { OperatorSection } from "./operator/operator-section";
 import { ActionSection } from "./action/action-section";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 const styles = StyleSheet.create({
   container: {

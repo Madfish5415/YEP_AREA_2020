@@ -9,7 +9,10 @@ import WorkflowStack from "./workflow";
 
 export type RootStackParamList = {
   Home: { userId: string };
-  Workflow: { workflow: Workflow };
+  Workflow: {
+    workflow: Workflow;
+    callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
