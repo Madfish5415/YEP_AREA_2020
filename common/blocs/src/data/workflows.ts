@@ -27,4 +27,9 @@ export default [
       },
     ],
   },
+  {
+    id: "30d59b78-acca-4d07-a9ea-c480d9501000",
+    name: "DropBox",
+    isActive: true,
+  },
 ];
