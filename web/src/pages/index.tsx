@@ -1,10 +1,8 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 
 const IndexPage: FC = () => {
-    return (
-        <AppBarComponent/>
-    );
+  return <AppBarComponent />;
 };
 
 export default IndexPage;
