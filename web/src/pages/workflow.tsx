@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import AppBarComponent from "../components/appbar/appbar";
-import { makeStyles, Theme, Typography } from "@material-ui/core";
+import { makeStyles, withStyles, TextField, Theme } from "@material-ui/core";
 import {
   WorkflowBloc,
   WorkflowDeleteEvent,
@@ -25,6 +25,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: gray.main,
     height: "100%",
+  },
+  nameForm: {
+    marginLeft: 125,
+    marginTop: 40,
+  },
+  title: {
+    color: primary.main,
+    fontSize: 30,
+    textDecoration: "underline",
+    textUnderlinePosition: "under",
   },
 }));
 
@@ -58,6 +68,17 @@ const WorkflowPage: FC = () => {
   );
 };
 
+const CssTextField = withStyles({
+  root: {
+    "& .MuiInput-underline:before": {
+      borderBottomColor: primary.main,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: primary.main,
+    },
+  },
+})(TextField);
+
 type Props = {
   workflow: Workflow;
 };
@@ -68,6 +89,10 @@ const WorkflowEdit: FC<Props> = (props) => {
   const findBlobId: (id: string) => number = (id) => {
     console.log(parseInt("0x" + id[id.length - 1]) % 10);
     return parseInt("0x" + id[id.length - 1]) % 10;
+  };
+
+  const handleWorkflowNameChange = () => {
+    console.log("plops");
   };
 
   return (
@@ -83,7 +108,18 @@ const WorkflowEdit: FC<Props> = (props) => {
           backgroundSize: "75%",
         }}
       >
-        {props.workflow.name}
+        <form autoComplete="off">
+          <CssTextField
+            id="workflowName"
+            name="name"
+            margin="normal"
+            label=""
+            className={classes.nameForm}
+            InputProps={{ className: classes.title }}
+            value={props.workflow.name}
+            onChange={handleWorkflowNameChange}
+          />
+        </form>
       </div>
     </>
   );
