@@ -82,8 +82,7 @@ const WorkflowComponent: FC<Props> = (props) => {
 
   const handleWorkflowEdit = () => {
     Router.push({
-      pathname: "/workflow",
-      query: { id: props.workflow.id },
+      pathname: "/workflow/" + props.workflow.id,
     });
   };
 

@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import AppBarComponent from "../components/appbar/appbar";
+import React, { FC, useState } from "react";
+import AppBarComponent from "../../components/appbar/appbar";
 import { makeStyles, withStyles, TextField, Theme } from "@material-ui/core";
 import {
   WorkflowBloc,
@@ -13,8 +13,8 @@ import {
   WorkflowRepository,
   WorkflowState,
 } from "@area-common/blocs";
-import { DefaultState } from "../components/blocbuilder/default-state";
-import { ErrorState } from "../components/blocbuilder/error-state";
+import { DefaultState } from "../../components/blocbuilder/default-state";
+import { ErrorState } from "../../components/blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
@@ -40,16 +40,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const WorkflowPage: FC = () => {
   const router = useRouter();
+  const { workflowId } = router.query;
   const workflowBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowBloc.add(new WorkflowReadEvent(router.query.id as string));
+  workflowBloc.add(new WorkflowReadEvent(workflowId as string));
+
+  const handleWorkflowChange = (
+    workflowId: string,
+    updateWorkflow: Partial<Workflow>
+  ) => {
+    workflowBloc.add(new WorkflowUpdateEvent(workflowId, updateWorkflow));
+  };
 
   return (
     <BlocBuilder
       bloc={workflowBloc}
       key={uuidv4()}
       condition={(_, current: WorkflowState) => {
-        if (current instanceof WorkflowUpdateEvent) {
-          workflowBloc.add(new WorkflowReadEvent(router.query.id as string));
+        if (current instanceof WorkflowUpdateState) {
+          workflowBloc.add(new WorkflowReadEvent(workflowId as string));
         }
         return true;
       }}
@@ -59,7 +67,10 @@ const WorkflowPage: FC = () => {
         }
         if (state instanceof WorkflowReadState) {
           return (
-            <WorkflowEdit workflow={(state as WorkflowReadState).workflow} />
+            <WorkflowEdit
+              workflow={(state as WorkflowReadState).workflow}
+              changeCallback={handleWorkflowChange}
+            />
           );
         }
         return <DefaultState />;
@@ -81,18 +92,30 @@ const CssTextField = withStyles({
 
 type Props = {
   workflow: Workflow;
+  changeCallback: (
+    workflowId: string,
+    updateWorkflow: Partial<Workflow>
+  ) => void;
 };
 
 const WorkflowEdit: FC<Props> = (props) => {
   const classes = useStyles();
+  const [workflowName, setWorkflowName] = useState(props.workflow.name);
 
   const findBlobId: (id: string) => number = (id) => {
-    console.log(parseInt("0x" + id[id.length - 1]) % 10);
     return parseInt("0x" + id[id.length - 1]) % 10;
   };
 
-  const handleWorkflowNameChange = () => {
-    console.log("plops");
+  const handleWorkflowNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setWorkflowName(event.target.value);
+  };
+
+  const handleWorkflowNameSubmit = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    props.changeCallback(props.workflow.id, { name: workflowName });
   };
 
   return (
@@ -108,7 +131,7 @@ const WorkflowEdit: FC<Props> = (props) => {
           backgroundSize: "75%",
         }}
       >
-        <form autoComplete="off">
+        <form onSubmit={handleWorkflowNameSubmit}>
           <CssTextField
             id="workflowName"
             name="name"
@@ -116,7 +139,7 @@ const WorkflowEdit: FC<Props> = (props) => {
             label=""
             className={classes.nameForm}
             InputProps={{ className: classes.title }}
-            value={props.workflow.name}
+            defaultValue={props.workflow.name}
             onChange={handleWorkflowNameChange}
           />
         </form>
