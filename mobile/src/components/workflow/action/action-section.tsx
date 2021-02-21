@@ -1,5 +1,9 @@
 import React, { FC } from "react";
-import { Workflow } from "@area-common/types";
+import {
+  Workflow as WorkflowType,
+  Workflow,
+  WorkflowAction,
+} from "@area-common/types";
 import { Action } from "./action";
 import { View, StyleSheet } from "react-native";
 
@@ -16,12 +20,19 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
+  updateActionCallback: (
+    workflow: WorkflowType,
+    action: WorkflowAction
+  ) => void;
 };
 
 export const ActionSection: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
-      <Action item={props.workflow.action} />
+      <Action
+        workflow={props.workflow}
+        updateActionCallback={props.updateActionCallback}
+      />
     </View>
   );
 };

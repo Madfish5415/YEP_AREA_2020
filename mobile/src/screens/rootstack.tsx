@@ -6,10 +6,15 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
+import ActionNodeStack from "./action-node";
 
 export type RootStackParamList = {
   Home: { userId: string };
   Workflow: {
+    workflow: Workflow;
+    callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  };
+  ActionNode: {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
   };
@@ -31,6 +36,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"Workflow"}
             component={WorkflowStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"ActionNode"}
+            component={ActionNodeStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

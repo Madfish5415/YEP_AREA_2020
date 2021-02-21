@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { StyleSheet } from "react-native";
 import { BlocBuilder } from "@felangel/react-bloc";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { WorkflowStackParamsList } from "../../screens/workflow";
 import {
   WorkflowBloc,
@@ -15,7 +15,7 @@ import {
 } from "@area-common/blocs";
 import { ErrorState } from "../blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
-import { Workflow as WorkflowType } from "@area-common/types";
+import { Workflow as WorkflowType, WorkflowAction } from "@area-common/types";
 import { View } from "react-native";
 import { SectionTitle } from "../common/section-title";
 import { Action } from "./action/action";
@@ -43,6 +43,13 @@ type WorkflowScreenProps = {
 const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
   const workflowBloc = new WorkflowBloc(new WorkflowRepository(""));
   workflowBloc.add(new WorkflowReadEvent(props.route.params.workflow.id));
+  useIsFocused();
+
+  const updateAction = (workflow: WorkflowType, action: WorkflowAction) => {
+    workflowBloc.add(
+      new WorkflowUpdateEvent(workflow.id, { ...workflow, action: action })
+    );
+  };
 
   const deleteOperator = (workflow: WorkflowType, id: string) => {
     const index = workflow.operators.findIndex((operator) => operator.id == id);
@@ -52,7 +59,9 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
   };
 
   const deleteReaction = (workflow: WorkflowType, id: string) => {
-    const index = workflow.reactions.findIndex((reaction) => reaction.id == id);
+    const index = workflow.reactions.findIndex(
+      (reaction) => reaction.reaction.id == id
+    );
 
     workflow.reactions.splice(index, 1);
     workflowBloc.add(new WorkflowUpdateEvent(workflow.id, workflow));
@@ -79,6 +88,7 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
               workflow={state.workflow}
               operatorCallback={deleteOperator}
               reactionCallback={deleteReaction}
+              updateActionCallback={updateAction}
             />
           );
         }
@@ -92,13 +102,20 @@ type Props = {
   workflow: WorkflowType;
   operatorCallback: (workflow: WorkflowType, id: string) => void;
   reactionCallback: (workflow: WorkflowType, id: string) => void;
+  updateActionCallback: (
+    workflow: WorkflowType,
+    action: WorkflowAction
+  ) => void;
 };
 
 const Workflow: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <SectionTitle label={"Action"} style={{ marginTop: 10 }} />
-      <ActionSection workflow={props.workflow} />
+      <ActionSection
+        workflow={props.workflow}
+        updateActionCallback={props.updateActionCallback}
+      />
       <SectionTitle label={"Operators"} />
       <OperatorSection
         workflow={props.workflow}

@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { WorkflowAction } from "@area-common/types";
+import { Workflow as WorkflowType, WorkflowAction } from "@area-common/types";
 import { Text } from "react-native-paper";
 import { gray, primary, secondary } from "@area-common/styles";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -32,14 +33,33 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  item: WorkflowAction;
+  workflow: WorkflowType;
+  updateActionCallback: (
+    workflow: WorkflowType,
+    action: WorkflowAction
+  ) => void;
 };
 
 export const Action: FC<Props> = (props) => {
+  const { navigate } = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() =>
+        navigate("ActionNode", {
+          screen: "ActionNode",
+          workflow: props.workflow,
+          callback: props.updateActionCallback,
+          params: {
+            workflow: props.workflow,
+            updateActionCallback: props.updateActionCallback,
+          },
+        })
+      }
+    >
       <Text style={[styles.text, { fontSize: 18 }]}>
-        {props.item.action.name}
+        {props.workflow.action.action.name}
       </Text>
       <View style={styles.bulletLink}>
         <Text style={styles.text}>1</Text>
