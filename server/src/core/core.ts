@@ -13,6 +13,8 @@ import {
   UserRepository,
   WorkflowRepository,
 } from "../repositories";
+import { apiRouter } from "../routes";
+import { useStrategies } from "../strategies";
 
 export class Core {
   hostname: string;
@@ -57,10 +59,13 @@ export class Core {
 
     this.express = express();
 
+    useStrategies(this.accountRepository, this.userRepository);
+
     this.express.use(cors());
     this.express.use(json());
     this.express.use(workflowMiddleware(this.workflowRepository));
     this.express.use(runnerMiddleware(this.runnerManager));
+    this.express.use(apiRouter);
   }
 
   start(): Promise<void> {
