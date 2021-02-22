@@ -6,7 +6,11 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import EpitechCredentials from "../components/credentials/epitech-credentials";
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  Home: { userId: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const RootStack: FC = () => {
   return (
@@ -17,6 +21,7 @@ const RootStack: FC = () => {
             name={"Home"}
             component={HomeStack}
             options={{ headerShown: false }}
+            initialParams={{ userId: "3dcf9a69-e258-4449-a41d-cea7f6ca3fa9" }}
           />
           <Stack.Screen
             name={"EpitechCredentials"}
