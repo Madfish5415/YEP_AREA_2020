@@ -40,6 +40,7 @@ export class GoogleStrategy extends OAuth2Strategy {
           username: json.name,
           firstName: json.given_name,
           lastName: json.family_name,
+          administrator: false
         };
 
         return done(null, user);

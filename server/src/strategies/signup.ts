@@ -36,6 +36,7 @@ export class SignUpStrategy extends Strategy {
         username,
         firstName,
         lastName,
+        administrator: false
       };
 
       await userRepository.create(user);

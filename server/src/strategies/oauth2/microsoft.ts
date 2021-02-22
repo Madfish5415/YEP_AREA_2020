@@ -40,6 +40,7 @@ export class MicrosoftStrategy extends OAuth2Strategy {
           username: json.displayName,
           firstName: json.givenName,
           lastName: json.surname,
+          administrator: false
         };
 
         return done(null, user);
