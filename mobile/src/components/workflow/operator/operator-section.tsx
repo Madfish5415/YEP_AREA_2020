@@ -1,7 +1,5 @@
 import { Workflow as WorkflowType, Workflow } from "@area-common/types";
 import React, { FC } from "react";
-import { Reaction } from "./reaction";
-import { NewReaction } from "./new-reaction";
 import { ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
 import { NewOperator } from "./new-operator";
@@ -18,7 +16,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
-  callback: (workflow: WorkflowType, id: string) => void;
+  callback: (workflow: WorkflowType) => void;
 };
 
 export const OperatorSection: FC<Props> = (props) => {
@@ -34,14 +32,16 @@ export const OperatorSection: FC<Props> = (props) => {
       }}
       pagingEnabled
     >
-      {props.workflow.operators.map((operator) => (
-        <Operator
-          key={operator.id}
-          item={operator}
-          workflow={props.workflow}
-          callback={props.callback}
-        />
-      ))}
+      {props.workflow && props.workflow.operators
+        ? props.workflow.operators.map((operator) => (
+            <Operator
+              key={operator.id}
+              item={operator}
+              workflow={props.workflow}
+              callback={props.callback}
+            />
+          ))
+        : null}
       <NewOperator />
     </ScrollView>
   );

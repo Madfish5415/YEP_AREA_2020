@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 type Props = {
   item: WorkflowOperator;
   workflow: Workflow;
-  callback: (workflow: Workflow, id: string) => void;
+  callback: (workflow: Workflow) => void;
 };
 
 export const Operator: FC<Props> = (props) => {

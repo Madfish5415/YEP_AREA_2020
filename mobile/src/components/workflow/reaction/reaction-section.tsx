@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
-  callback: (workflow: WorkflowType, id: string) => void;
+  callback: (workflow: WorkflowType) => void;
 };
 
 export const ReactionSection: FC<Props> = (props) => {

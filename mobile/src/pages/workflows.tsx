@@ -28,7 +28,7 @@ const WorkflowsActiveAppBar = () => {
       <Appbar.Content title="Workflows" titleStyle={fonts.headerBarTitle} />
       <Appbar.Action
         icon={add}
-        onPress={() => alert("Todo!")}
+        onPress={() => navigate("NewWorkflow", { screen: "NewWorkflow" })}
         color={colors.primary}
       />
     </Appbar.Header>
