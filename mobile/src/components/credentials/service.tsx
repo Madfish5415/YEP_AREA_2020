@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   Linking,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { primary, gray, white } from "@area-common/styles";
 import { authorize } from "react-native-app-auth";
 
@@ -31,8 +32,14 @@ const styles = StyleSheet.create({
     color: white,
     paddingLeft: 15,
   },
+  serviceIconContainer: {
+    width: 60,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    color: primary.main,
+  },
   serviceIcon: {
-    fontSize: 50,
     color: primary.main,
   },
   right: {
@@ -46,9 +53,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type ServiceProps = {
+type Props = {
   name: string;
-  imageName: string;
+  icon: React.ReactElement<any>;
+  isEpitech: boolean;
+  epitechAutoLoginLink?: string;
+  setEpitechAutoLoginLink?: (link: string) => void;
 };
 
 type ConfigProps = {
@@ -58,7 +68,7 @@ type ConfigProps = {
   scopes: string[];
 };
 
-const Service: FC<ServiceProps> = ({ name, imageName }: ServiceProps) => {
+const Service: FC<Props> = (props) => {
   const handleClick = async () => {
     Linking.openURL(
       "https://accounts.google.com/o/oauth2/v2/auth?" +
@@ -90,19 +100,38 @@ const Service: FC<ServiceProps> = ({ name, imageName }: ServiceProps) => {
       console.log(error);
     }
   };
-
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => handleClick2()}>
-        <View style={styles.service}>
-          <View style={styles.description}>
-            <Icon style={styles.serviceIcon} name={imageName} />
-            <Text style={styles.serviceName}>{name}</Text>
-          </View>
-          <Icon style={styles.right} name={"chevron-right"} />
+      {props.isEpitech ? (
+        <View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("EpitechCredentials")}
+          >
+            <View style={styles.service}>
+              <View style={styles.description}>
+                <View style={styles.serviceIconContainer}>{props.icon}</View>
+                <Text style={styles.serviceName}>{props.name}</Text>
+              </View>
+              <FontAwesome style={styles.right} name={"chevron-right"} />
+            </View>
+          </TouchableOpacity>
+          <View style={styles.border} />
         </View>
-      </TouchableOpacity>
-      <View style={styles.border} />
+      ) : (
+        <View>
+          <TouchableOpacity onPress={() => handleClick2()}>
+            <View style={styles.service}>
+              <View style={styles.description}>
+                <View style={styles.serviceIconContainer}>{props.icon}</View>
+                <Text style={styles.serviceName}>{props.name}</Text>
+              </View>
+              <FontAwesome style={styles.right} name={"chevron-right"} />
+            </View>
+          </TouchableOpacity>
+          <View style={styles.border} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
