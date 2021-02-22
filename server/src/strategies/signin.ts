@@ -8,7 +8,7 @@ export class SignInStrategy extends Strategy {
     userRepository: UserRepository
   ) {
     super(async (req, done: VerifiedCallback) => {
-      const email = req.body.username;
+      const email = req.body.email;
       const password = req.body.password;
 
       if (!email || !password) {
