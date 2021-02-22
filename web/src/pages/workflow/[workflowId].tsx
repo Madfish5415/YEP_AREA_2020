@@ -101,7 +101,7 @@ type Props = {
 
 const WorkflowEdit: FC<Props> = (props) => {
   const classes = useStyles();
-  const [workflowName, setWorkflowName] = useState(props.workflow.name);
+  const [workflow, setWorkflow] = useState(props.workflow);
 
   const findBlobId: (id: string) => number = (id) => {
     return parseInt("0x" + id[id.length - 1]) % 10;
@@ -110,13 +110,13 @@ const WorkflowEdit: FC<Props> = (props) => {
   const handleWorkflowNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setWorkflowName(event.target.value);
+    setWorkflow({ ...workflow, name: event.target.value });
   };
 
   const handleWorkflowNameSubmit = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    props.changeCallback(props.workflow.id, { name: workflowName });
+    props.changeCallback(props.workflow.id, { name: workflow.name });
   };
 
   return (
@@ -144,7 +144,7 @@ const WorkflowEdit: FC<Props> = (props) => {
             onChange={handleWorkflowNameChange}
           />
         </form>
-        <WorkflowConfig workflow={props.workflow} />
+        <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
       </div>
     </>
   );
