@@ -9,8 +9,8 @@ import { workflowRouter } from "./[id]";
 
 export const workflowsRouter = Router();
 
-workflowsRouter.use(passport.authorize("authorize"));
-workflowsRouter.use(workflowRouter);
+workflowsRouter.use(WORKFLOWS_ROUTE, passport.authenticate("authorize"));
+workflowsRouter.use(WORKFLOWS_ROUTE, workflowRouter);
 
 workflowsRouter.get(WORKFLOWS_ROUTE, async (req, res) => {
   const user = req.user as User;
