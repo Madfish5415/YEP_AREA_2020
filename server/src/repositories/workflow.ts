@@ -1,100 +1,34 @@
-import {
-  Workflow,
-  WorkflowAction,
-  WorkflowOperator,
-  WorkflowReaction,
-} from "@area-common/types";
-import workflowsJson from "../data/workflows.json";
-import { ServiceRepository } from "./service";
-import { BaseWorkflow } from "../workflows/workflow";
-import { OperatorRepository } from "./operator";
+import { Workflow } from "@area-common/types";
 
-function fromJSON(
-  json: any,
-  operatorRepository: OperatorRepository,
-  serviceRepository: ServiceRepository
-): BaseWorkflow {
-  const action: WorkflowAction = {
-    action: serviceRepository.readAction(json.action.service, json.action.id)!,
-    parameters: json.action.parameters,
-  };
-
-  const reactions: WorkflowReaction[] = json.reactions.map(
-    (reactionJson: any): WorkflowReaction => {
-      return {
-        reaction: serviceRepository.readReaction(
-          reactionJson.service,
-          reactionJson.id
-        )!,
-        parameters: reactionJson.parameters,
-        operatorId: reactionJson.operator,
-      };
-    }
-  );
-
-  const operators: WorkflowOperator[] = json.operators.map(
-    (operatorJson: any): WorkflowOperator => {
-      return {
-        id: operatorJson.id,
-        operator: operatorRepository.read(operatorJson.type)!,
-        parameters: operatorJson.parameters,
-      };
-    }
-  );
-
-  if (!action || !reactions.length) {
-    throw new Error();
-  }
-
-  return new BaseWorkflow(
-    json.id,
-    json.name,
-    json.description,
-    action,
-    reactions,
-    operators
-  );
-}
+import { WorkflowModel } from "../database";
 
 export class WorkflowRepository {
-  operatorRepository: OperatorRepository;
-  serviceRepository: ServiceRepository;
+  model = WorkflowModel;
 
-  private readonly workflows: Workflow[];
-
-  constructor(
-    operatorRepository: OperatorRepository,
-    serviceRepository: ServiceRepository
-  ) {
-    this.operatorRepository = operatorRepository;
-    this.serviceRepository = serviceRepository;
-
-    this.workflows = workflowsJson.map((workflowJson) =>
-      fromJSON(workflowJson, this.operatorRepository, this.serviceRepository)
-    );
+  async create(workflow: Workflow): Promise<void> {
+    await this.model.create(workflow);
   }
 
-  list(): Workflow[] {
-    return this.workflows;
+  async read(id: string): Promise<Workflow | null> {
+    return this.model.findOne({ id });
   }
 
-  create(workflow: Workflow) {
-    return this.workflows.push(workflow);
+  async update(
+    id: string,
+    partial: Partial<Workflow>
+  ): Promise<Workflow | null> {
+    return this.model.findOneAndUpdate({ id }, partial);
   }
 
-  read(id: string): Workflow | undefined {
-    return this.workflows.find((workflow) => workflow.id === id);
+  async delete(id: string): Promise<void> {
+    await this.model.deleteMany({ id });
   }
 
-  update(id: string, values: Partial<Workflow>) {
-    const index = this.workflows.findIndex((workflow) => workflow.id === id);
-
-    this.workflows[index] = { ...this.workflows[index], ...values };
+  async exists(id: string): Promise<boolean> {
+    return this.model.exists({ id });
   }
 
-  delete(id: string) {
-    const index = this.workflows.findIndex((workflow) => workflow.id === id);
-
-    this.workflows.splice(index, 1);
+  async list(userId: string): Promise<Workflow[]> {
+    return this.model.find({ userId });
   }
 }
