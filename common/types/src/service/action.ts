@@ -1,14 +1,13 @@
-import { Variable } from "./variable";
-import { RunnerConstructor } from "./runner";
-import { Callback } from "./callback";
+import { Converter } from "../converter";
+import { TriggerConstructor } from "../trigger";
+import { Variable } from "../variable";
 
-export interface Action {
+export interface Action<P = any, O = any> {
   readonly id: string;
   readonly name: string;
   readonly description: string;
-  readonly parameters: Variable[];
-  readonly outputs: Variable[];
-  readonly runner: RunnerConstructor<Callback>;
-
-  receive(response: any): Promise<Record<string, unknown>>;
+  readonly parametersDef: Record<keyof P, Variable>;
+  readonly outputsDef: Record<keyof O, Variable>;
+  readonly trigger: TriggerConstructor<P>;
+  readonly converter: Converter<any, O>;
 }

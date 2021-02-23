@@ -1,10 +1,10 @@
-import { Variable } from "./variable";
+import { Variable } from "../variable";
 
-export interface Reaction {
+export interface Reaction<P = any> {
   readonly id: string;
   readonly name: string;
   readonly description: string;
-  readonly parameters: Variable[];
+  readonly parametersDef: Record<keyof P, Variable>;
 
-  send(parameters: Record<string, unknown>): Promise<void>;
+  execute(parameters: P): Promise<void>;
 }
