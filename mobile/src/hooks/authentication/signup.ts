@@ -29,8 +29,8 @@ async function apiSignUp(
         firstName: firstName,
         lastName: lastName,
         custom: {
-          baseURL: `https://localhost/authentication/verify`,
-          URL: `https://localhost/authentication/verify?username=:username&id=:id`,
+          baseURL: `https://localhost:8080/authentication/verify`,
+          URL: `https://localhost:8080/authentication/verify?username=:username&id=:id`,
         },
       }),
     });
