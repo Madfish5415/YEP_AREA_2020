@@ -1,7 +1,7 @@
 {
   "name": "@area-common/service",
   "version": "1.0.0",
-  "description": "Base service for AREA",
+  "description": "Service development kit for AREA",
   "license": "MIT",
   "main": "build/index.js",
   "module": "build/index.js",
@@ -12,6 +12,7 @@
     "fclean": "rm -rf build node_modules/"
   },
   "devDependencies": {
-    "@area-common/types": "*"
+    "@area-common/types": "*",
+    "@types/node": "^14.14.28"
   }
 }

@@ -1,5 +1,5 @@
-import {Action} from "./action";
-import {Reaction} from "./reaction";
+import { Action } from "./action";
+import { Reaction } from "./reaction";
 
 export interface Service {
   readonly id: string;
