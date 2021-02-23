@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {
   createStyles,
   makeStyles,
@@ -7,6 +7,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
+import { Add } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,13 +18,21 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 120,
       borderRadius: 22,
       backgroundColor: primary.main,
-      display: "flex",
       justifyContent: "center",
       alignItems: "center",
     },
+    icon: {
+      marginTop: 30,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      fontSize: 50,
+    },
     boxTitle: {
       textAlign: "center",
-      fontSize: 20,
+      fontSize: 15,
+      fontWeight: "bold",
     },
   })
 );
@@ -32,16 +41,17 @@ type Props = {
   label: string;
 };
 
-const ComponentBox: FC<Props> = (props) => {
+const AddBox: FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
     <>
       <Box boxShadow={3} className={classes.content}>
-        <Typography className={classes.boxTitle}>{props.label}</Typography>
+        <Add className={classes.icon} />
+        <Typography className={classes.boxTitle}>New {props.label}</Typography>
       </Box>
     </>
   );
 };
 
-export default ComponentBox;
+export default AddBox;

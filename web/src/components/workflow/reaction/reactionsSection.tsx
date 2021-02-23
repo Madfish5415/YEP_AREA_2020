@@ -4,6 +4,7 @@ import { gray, primary, white } from "@area-common/styles";
 import { Workflow, WorkflowReaction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
+import AddReaction from "../../containers/addBox";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,13 +26,9 @@ const ReactionsSection: FC<Props> = (props) => {
     <>
       <div className={classes.content}>
         {props.workflow.reactions.map((reaction: WorkflowReaction) => {
-          return (
-            <ComponentBox
-              key={reaction.reaction.id}
-              label={reaction.reaction.name}
-            />
-          );
+          return <ComponentBox key={reaction.id} label={reaction.name} />;
         })}
+        <AddReaction label={"reaction"} />
       </div>
     </>
   );

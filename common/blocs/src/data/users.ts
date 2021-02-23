@@ -4,5 +4,6 @@ export default [
     username: "Matt",
     firstName: "Mattéo",
     lastName: "Fauchon",
+    administrator: true,
   },
 ];

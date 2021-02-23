@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
-import { Workflow } from "@area-common/types";
+import { Workflow, WorkflowAction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,7 +23,9 @@ const ActionSection: FC<Props> = (props) => {
   return (
     <>
       <div className={classes.content}>
-        <ComponentBox label={props.workflow.action?.action.name as string} />
+        {props.workflow.actions.map((action: WorkflowAction) => {
+          return <ComponentBox key={action.id} label={action.name} />;
+        })}
       </div>
     </>
   );
