@@ -1,6 +1,12 @@
 import React, { FC, useState } from "react";
 import AppBarComponent from "../../components/appbar/appbar";
-import { makeStyles, withStyles, TextField, Theme } from "@material-ui/core";
+import {
+  makeStyles,
+  withStyles,
+  TextField,
+  Theme,
+  Fab,
+} from "@material-ui/core";
 import {
   WorkflowBloc,
   WorkflowDeleteEvent,
@@ -36,6 +42,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
+  },
+  saveButton: {
+    backgroundColor: primary.main,
+    fontWeight: "bold",
+    margin: "0px",
+    top: "auto",
+    right: "20px",
+    bottom: "20px",
+    left: "auto",
+    position: "fixed",
   },
 }));
 
@@ -113,10 +129,8 @@ const WorkflowEdit: FC<Props> = (props) => {
     setWorkflow({ ...workflow, name: event.target.value });
   };
 
-  const handleWorkflowNameSubmit = (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    props.changeCallback(props.workflow.id, { name: workflow.name });
+  const handleWorkflowChangeSubmit = () => {
+    props.changeCallback(props.workflow.id, workflow);
   };
 
   return (
@@ -132,19 +146,24 @@ const WorkflowEdit: FC<Props> = (props) => {
           backgroundSize: "75%",
         }}
       >
-        <form onSubmit={handleWorkflowNameSubmit}>
-          <CssTextField
-            id="workflowName"
-            name="name"
-            margin="normal"
-            label=""
-            className={classes.nameForm}
-            InputProps={{ className: classes.title }}
-            defaultValue={props.workflow.name}
-            onChange={handleWorkflowNameChange}
-          />
-        </form>
+        <CssTextField
+          id="workflowName"
+          name="name"
+          margin="normal"
+          label=""
+          className={classes.nameForm}
+          InputProps={{ className: classes.title }}
+          defaultValue={props.workflow.name}
+          onChange={handleWorkflowNameChange}
+        />
         <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
+        <Fab
+          variant={"extended"}
+          className={classes.saveButton}
+          onClick={handleWorkflowChangeSubmit}
+        >
+          Save changes
+        </Fab>
       </div>
     </>
   );
