@@ -3,6 +3,7 @@ import { Strategy, VerifiedCallback } from "passport-custom";
 import { v4 } from "uuid";
 
 import { AccountRepository, UserRepository } from "../repositories";
+import { ACCOUNT_EXISTS_ERROR, BAD_REQUEST_ERROR } from "../constants";
 
 export class SignUpStrategy extends Strategy {
   constructor(
@@ -18,35 +19,39 @@ export class SignUpStrategy extends Strategy {
       const lastName = req.body.lastName;
 
       if (!email || !password || !confirmPassword || !username) {
-        return done({});
+        return done(BAD_REQUEST_ERROR);
       }
 
       if (password !== confirmPassword) {
-        return done({});
+        return done(BAD_REQUEST_ERROR);
       }
 
       const exists = await accountRepository.exists({ email });
 
       if (exists) {
-        return done({});
+        return done(ACCOUNT_EXISTS_ERROR);
       }
 
+      const userId = v4();
       const user: User = {
-        id: v4(),
+        id: userId,
         username,
         firstName,
         lastName,
-        administrator: false
+        administrator: false,
       };
 
       await userRepository.create(user);
 
+      const accountId = v4();
+      const accountVerification = v4();
       const account: Account = {
         userId: user.id,
-        id: v4(),
+        id: accountId,
         email,
         password,
         verified: true,
+        verification: accountVerification,
       };
 
       await accountRepository.create(account);

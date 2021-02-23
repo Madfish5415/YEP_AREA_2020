@@ -7,6 +7,7 @@ import {
 } from "@area-common/types";
 
 import { ExecutionRepository, ServiceRepository } from "../repositories";
+import { WORKFLOW_ACTION_NOT_EXISTS } from "../constants";
 
 export class BaseRunner implements Runner {
   actions: RunnerAction[];
@@ -38,7 +39,7 @@ export class BaseRunner implements Runner {
         wAction.actionId
       );
 
-      if (!action) throw Error(); // ! TODO: Better error handling
+      if (!action) throw WORKFLOW_ACTION_NOT_EXISTS;
 
       rActions.push({
         id: wAction.id,

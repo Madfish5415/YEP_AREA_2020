@@ -5,7 +5,11 @@ import { Server } from "http";
 
 import { Database } from "../database";
 import { RunnerManager } from "../managers";
-import { runnerMiddleware, workflowMiddleware } from "../middlewares";
+import {
+  errorMiddleware,
+  runnerMiddleware,
+  workflowMiddleware,
+} from "../middlewares";
 import {
   AccountRepository,
   ExecutionRepository,
@@ -15,6 +19,7 @@ import {
 } from "../repositories";
 import { apiRouter } from "../routes";
 import { useStrategies } from "../strategies";
+import passport from "passport";
 
 export class Core {
   hostname: string;
@@ -63,12 +68,16 @@ export class Core {
 
     this.express.use(cors());
     this.express.use(json());
+    this.express.use(passport.initialize());
     this.express.use(workflowMiddleware(this.workflowRepository));
     this.express.use(runnerMiddleware(this.runnerManager));
     this.express.use(apiRouter);
+    this.express.use(errorMiddleware());
   }
 
-  start(): Promise<void> {
+  async start(): Promise<void> {
+    await this.database.connect();
+
     return new Promise<void>((resolve) => {
       this.server = this.express.listen(this.port, this.hostname, () => {
         return resolve();
@@ -76,7 +85,9 @@ export class Core {
     });
   }
 
-  stop(): Promise<void> {
+  async stop(): Promise<void> {
+    await this.database.disconnect();
+
     return new Promise<void>((resolve, reject) => {
       this.server?.close((err) => {
         return err ? reject(err) : resolve();
