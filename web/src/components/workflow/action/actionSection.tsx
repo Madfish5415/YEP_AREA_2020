@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
-import { gray, primary, white } from "@area-common/styles";
+import { gray, primary, white, secondary } from "@area-common/styles";
 import { Workflow, WorkflowAction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 
