@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, primary, white, secondary } from "@area-common/styles";
 import { Workflow, WorkflowAction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
+import AddBox from "../../containers/addBox";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +27,7 @@ const ActionSection: FC<Props> = (props) => {
         {props.workflow.actions.map((action: WorkflowAction) => {
           return <ComponentBox key={action.id} label={action.name} />;
         })}
+        {props.workflow.actions.length === 0 && <AddBox label={"action"} />}
       </div>
     </>
   );

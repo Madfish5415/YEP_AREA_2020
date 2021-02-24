@@ -130,7 +130,7 @@ const WorkflowComponent: FC<Props> = (props) => {
           <div className={classes.switch}>
             <IOSSwitch
               onClick={handleSwitchWorkflow}
-              checked={props.workflow.isActive}
+              checked={props.workflow.active}
             />
           </div>
         </div>

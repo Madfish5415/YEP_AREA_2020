@@ -21,6 +21,7 @@ import { ErrorState } from "../components/blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
+import Router from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -61,7 +62,7 @@ const WorkflowsPage: FC = () => {
   const isActiveWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(
       new WorkflowUpdateEvent(workflow.id, {
-        isActive: workflow.isActive ? false : true,
+        active: workflow.active ? false : true,
       })
     );
   };
@@ -108,7 +109,9 @@ const Workflows: FC<Props> = (props) => {
   const classes = useStyles();
 
   const handleNewWorkflow = () => {
-    console.log("create new workflow");
+    Router.push({
+      pathname: "new/workflow",
+    });
   };
 
   return (
