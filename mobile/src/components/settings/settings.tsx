@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { SettingsStackParamsList } from "../../pages/settings";
 import { BlocBuilder } from "@felangel/react-bloc";
 import {
@@ -63,6 +63,7 @@ type Props = {
 const Settings: FC<Props> = (props) => {
   const [username, setUsername] = useState(props.user.username);
   const [firstName, setFirstName] = useState(props.user.username);
+  const { navigate } = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -74,7 +75,12 @@ const Settings: FC<Props> = (props) => {
       <CustomTextInput text={props.user.lastName} setText={setFirstName} />
       <StandardButton
         label={"Account security"}
-        callback={null}
+        callback={() =>
+          navigate("AccountSecurity", {
+            screen: "AccountSecurity",
+            params: { user: props.user, updateCallback: null },
+          })
+        }
         important={false}
         style={{ marginTop: 20 }}
       />

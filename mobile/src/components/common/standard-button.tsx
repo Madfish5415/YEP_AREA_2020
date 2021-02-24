@@ -34,7 +34,10 @@ type Props = {
 export const StandardButton: FC<Props> = (props) => {
   const { fonts } = useTheme();
   return (
-    <TouchableOpacity style={[styles.container, props.style]}>
+    <TouchableOpacity
+      style={[styles.container, props.style]}
+      onPress={props.callback}
+    >
       <Text style={{ color: props.important ? primary.main : white }}>
         {props.label}
       </Text>
