@@ -30,30 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       fontSize: 20,
     },
-    bulletLink: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      position: "relative",
-      marginLeft: "-10px",
-      alignSelf: "center",
-      borderWidth: "2px",
-      borderStyle: "solid",
-      borderColor: gray.main,
-      backgroundColor: secondary.main,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    textDiv: {
-      display: "flex",
-      height: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    bulletText: {
-      fontSize: 11,
-      textAlign: "center",
-    },
   })
 );
 
@@ -70,11 +46,6 @@ const ComponentBox: FC<Props> = (props) => {
         <Box boxShadow={3} className={classes.elemBox}>
           <Typography className={classes.boxTitle}>{props.label}</Typography>
         </Box>
-        <div className={classes.bulletLink}>
-          <div className={classes.textDiv}>
-            <Typography className={classes.bulletText}>1</Typography>
-          </div>
-        </div>
       </div>
     </>
   );
