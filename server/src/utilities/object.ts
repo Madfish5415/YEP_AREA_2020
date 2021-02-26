@@ -11,7 +11,9 @@ export function flatObject(
         flatten[`${key}.${subKey}`] = subFlatten[subKey];
       }
     } else {
-      flatten[key] = object[key];
+      if (flatten[key] === "__proto__") {
+        flatten[key] = object[key];
+      }
     }
   }
 

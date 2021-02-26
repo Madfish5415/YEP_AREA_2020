@@ -56,7 +56,9 @@ async function resolve(
       const flatten = flatObject(result);
 
       for (const key in flatten) {
-        values[`${id}.${key}`] = flatten[key] as string;
+        if (values[`${id}.${key}`] == "__proto__") {
+          values[`${id}.${key}`] = flatten[key] as string;
+        }
       }
     }
 
