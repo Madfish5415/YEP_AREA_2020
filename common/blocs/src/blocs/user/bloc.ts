@@ -22,15 +22,15 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     yield new UserLoadingState();
 
     if (event instanceof UserGetEvent) {
-      yield* this.get(event);
+      yield* this.read(event);
     }
   }
 
-  async *get(
+  async *read(
     event: UserGetEvent
   ): AsyncGenerator<UserGetState | UserErrorState> {
     try {
-      const user = await this.repository.get(event.id);
+      const user = await this.repository.read(event.id);
 
       yield new UserGetState(user);
     } catch (err) {
