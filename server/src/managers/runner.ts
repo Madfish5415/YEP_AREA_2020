@@ -18,6 +18,7 @@ import { WORKFLOW_CIRCULAR_DEPENDENCY_ERROR } from "../constants";
 
 const expressionRegex = /\${(.+?)}/;
 
+// file deepcode ignore PrototypePollutionFunctionParams: Useless warning in this case
 async function resolve(
   expression: string,
   rExecutions: RunnerExecution[],
