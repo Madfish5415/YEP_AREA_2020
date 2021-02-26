@@ -7,7 +7,7 @@ export abstract class PollingTrigger<
 > extends BaseTrigger<P> {
   abstract readonly interval: number;
 
-  private timeout?: number;
+  private timeout?: Timeout;
 
   start(): void {
     super.start();
