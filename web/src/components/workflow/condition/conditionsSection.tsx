@@ -5,6 +5,7 @@ import { Workflow, WorkflowExecution } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
 import AddBox from "../../containers/addBox";
+import UpdateCondition from "./updateCondition";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,6 +20,12 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
+type ContainerProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  execution: WorkflowExecution;
+};
+
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
 
@@ -26,10 +33,36 @@ const ConditionsSection: FC<Props> = (props) => {
     <>
       <div className={classes.content}>
         {props.workflow.executions.map((execution: WorkflowExecution) => {
-          return <ComponentBox key={execution.id} label={execution.name} />;
+          return (
+            <ConditionContainer
+              key={execution.id}
+              workflow={props.workflow}
+              setWorkflow={props.setWorkflow}
+              execution={execution}
+            />
+          );
         })}
         <AddBox label={"condition"} />
       </div>
+    </>
+  );
+};
+
+const ConditionContainer: FC<ContainerProps> = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <div onClick={() => setIsOpen(true)}>
+        <ComponentBox label={props.execution.name} />
+      </div>
+      <UpdateCondition
+        execution={props.execution}
+        workflow={props.workflow}
+        setWorkflow={props.setWorkflow}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </>
   );
 };

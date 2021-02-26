@@ -6,6 +6,7 @@ import {
   TextField,
   Theme,
   Fab,
+  Typography,
 } from "@material-ui/core";
 import {
   WorkflowBloc,
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: "20px",
     left: "auto",
     position: "fixed",
+    textTransform: "none",
   },
 }));
 
@@ -162,7 +164,7 @@ const WorkflowEdit: FC<Props> = (props) => {
           className={classes.saveButton}
           onClick={handleWorkflowChangeSubmit}
         >
-          Save changes
+          Save
         </Fab>
       </div>
     </>
