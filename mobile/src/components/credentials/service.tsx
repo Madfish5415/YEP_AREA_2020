@@ -8,7 +8,7 @@ import {
   Linking,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { primary, gray, white } from "@area-common/styles";
 import { authorize } from "react-native-app-auth";
 
@@ -42,10 +42,6 @@ const styles = StyleSheet.create({
   serviceIcon: {
     color: primary.main,
   },
-  right: {
-    fontSize: 15,
-    color: gray.light1,
-  },
   border: {
     borderBottomColor: gray.light1,
     borderBottomWidth: 1,
@@ -59,6 +55,7 @@ type Props = {
   isEpitech: boolean;
   epitechAutoLoginLink?: string;
   setEpitechAutoLoginLink?: (link: string) => void;
+  userId: string;
 };
 
 type ConfigProps = {
@@ -100,20 +97,29 @@ const Service: FC<Props> = (props) => {
       console.log(error);
     }
   };
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       {props.isEpitech ? (
         <View>
           <TouchableOpacity
-            onPress={() => navigation.navigate("EpitechCredentials")}
+            onPress={() =>
+              navigate("EpitechCredentials", {
+                screen: "EpitechCredentials",
+                params: { userId: props.userId },
+              })
+            }
           >
             <View style={styles.service}>
               <View style={styles.description}>
                 <View style={styles.serviceIconContainer}>{props.icon}</View>
                 <Text style={styles.serviceName}>{props.name}</Text>
               </View>
-              <FontAwesome style={styles.right} name={"chevron-right"} />
+              <Ionicons
+                name={"chevron-forward"}
+                size={24}
+                color={gray.light1}
+              />
             </View>
           </TouchableOpacity>
           <View style={styles.border} />
@@ -126,7 +132,11 @@ const Service: FC<Props> = (props) => {
                 <View style={styles.serviceIconContainer}>{props.icon}</View>
                 <Text style={styles.serviceName}>{props.name}</Text>
               </View>
-              <FontAwesome style={styles.right} name={"chevron-right"} />
+              <Ionicons
+                name={"chevron-forward"}
+                size={24}
+                color={gray.light1}
+              />
             </View>
           </TouchableOpacity>
           <View style={styles.border} />

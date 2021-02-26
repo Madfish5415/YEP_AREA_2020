@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
-import EpitechCredentials from "../components/credentials/epitech-credentials";
+import EpitechCredentialsStack from "./epitech-credentials";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -25,7 +25,7 @@ const RootStack: FC = () => {
           />
           <Stack.Screen
             name={"EpitechCredentials"}
-            component={EpitechCredentials}
+            component={EpitechCredentialsStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

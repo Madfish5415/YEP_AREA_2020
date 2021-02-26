@@ -18,7 +18,7 @@ type Props = {
 
 export type TabParamsList = {
   Workflows: { userId: string };
-  credentials: { userId: string };
+  Credentials: { userId: string };
   Settings: { userId: string };
 };
 
