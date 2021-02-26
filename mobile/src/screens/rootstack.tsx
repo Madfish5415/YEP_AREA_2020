@@ -6,7 +6,7 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
-import NewWorkflowStack from "./new-workflow";
+import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -14,7 +14,7 @@ export type RootStackParamList = {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
   };
-  NewWorkflow: undefined;
+  WorkflowCreate: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -33,6 +33,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"Workflow"}
             component={WorkflowStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"WorkflowCreate"}
+            component={WorkflowCreateStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

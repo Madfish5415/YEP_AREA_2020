@@ -8,7 +8,7 @@ export type Workflow = {
   readonly name: string;
   readonly description: string;
   readonly active: boolean;
-  readonly actions: WorkflowAction[];
-  readonly reactions: WorkflowReaction[];
+  readonly actions?: WorkflowAction[];
+  readonly reactions?: WorkflowReaction[];
   readonly executions?: WorkflowExecution[];
 };

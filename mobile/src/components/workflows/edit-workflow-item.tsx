@@ -50,7 +50,6 @@ export const EditWorkflowItem: FC<Props> = (props) => {
           params: {
             workflow: props.workflow,
             callback: props.update,
-            isEditing: true,
           },
         })
       }

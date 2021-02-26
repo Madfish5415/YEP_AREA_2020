@@ -1,8 +1,9 @@
 import React, { FC, useState } from "react";
 
-import { View, StyleSheet, Switch } from "react-native";
+import { View, StyleSheet, Switch, Alert } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { gray } from "@area-common/styles";
+import { Workflow } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,21 +22,28 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  label: string;
-  isActive: boolean;
+  workflow: Workflow;
 };
 
 export const WorkflowItem: FC<Props> = (props) => {
-  const [toggle, setToggle] = useState(props.isActive);
+  const [toggle, setToggle] = useState(props.workflow.active);
   const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
-      <Text>{props.label}</Text>
+      <Text>{props.workflow.name}</Text>
       <Switch
         trackColor={{ true: colors.primary }}
         style={styles.switch}
-        onValueChange={setToggle}
+        onValueChange={() =>
+          props.workflow.actions?.length > 0 &&
+          props.workflow.reactions?.length > 0
+            ? setToggle(!props.workflow.active)
+            : Alert.alert(
+                "Warning",
+                "This workflow must have at least one action and reaction to be activated"
+              )
+        }
         value={toggle}
       />
     </View>

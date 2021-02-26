@@ -11,7 +11,6 @@ import { Text, useTheme } from "react-native-paper";
 import { primary } from "@area-common/styles";
 import { SaveAlert } from "./save-alert";
 import { ErrorAlert } from "./error-alert";
-import { CreateAlert } from "./create-alert";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -43,20 +42,9 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
   const [workflow, setWorkflow] = useState(props.route.params.workflow);
 
   const submitWorkflow = () => {
-    if (
-      workflow.action &&
-      workflow.reactions.length > 0 &&
-      props.route.params.isEditing
-    ) {
+    if (workflow.actions?.length > 0 && workflow.reactions?.length > 0) {
       props.route.params.callback(props.route.params.workflow, workflow);
       SaveAlert();
-    } else if (
-      workflow.action &&
-      workflow.reactions.length > 0 &&
-      !props.route.params.isEditing
-    ) {
-      props.route.params.callback(workflow);
-      CreateAlert();
     } else {
       ErrorAlert();
     }

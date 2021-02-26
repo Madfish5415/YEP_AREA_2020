@@ -33,11 +33,9 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       const user = await this.repository.get(event.id);
 
-      console.log("reussi");
       yield new UserGetState(user);
     } catch (err) {
       console.log(err);
-      console.log("fail");
 
       yield new UserErrorState();
     }

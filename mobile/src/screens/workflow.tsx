@@ -24,7 +24,6 @@ export type WorkflowStackParamsList = {
   Workflow: {
     workflow: Workflow;
     callback: update | create;
-    isEditing: boolean;
   };
 };
 

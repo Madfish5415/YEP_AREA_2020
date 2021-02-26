@@ -2,8 +2,8 @@ import { Workflow as WorkflowType, Workflow } from "@area-common/types";
 import React, { FC } from "react";
 import { ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
-import { NewOperator } from "./new-operator";
 import { Operator } from "./operator";
+import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +42,7 @@ export const OperatorSection: FC<Props> = (props) => {
             />
           ))
         : null}
-      <NewOperator />
+      <NewWidget widget={"operator"} />
     </ScrollView>
   );
 };
