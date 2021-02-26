@@ -47,7 +47,7 @@ export class AccountRepository {
   }
 
   async comparePassword(filter: Filter, password: string): Promise<boolean> {
-    const account = await this.model.findOne(filter);
+    const account = await this.model.findOne(filter).select("+password");
 
     return account?.comparePassword(password) ?? false;
   }
@@ -56,7 +56,7 @@ export class AccountRepository {
     filter: Filter,
     verification: string
   ): Promise<boolean> {
-    const account = await this.model.findOne(filter);
+    const account = await this.model.findOne(filter).select("+verification");
 
     return account?.compareVerification(verification) ?? false;
   }

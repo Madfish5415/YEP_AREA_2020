@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 
 import { WorkflowRepository } from "../repositories";
 
@@ -10,8 +10,10 @@ declare global {
   }
 }
 
-export function workflowMiddleware(repository: WorkflowRepository) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+export function workflowMiddleware(
+  repository: WorkflowRepository
+): RequestHandler {
+  return (req, res, next): void => {
     req.workflowRepository = repository;
 
     return next();

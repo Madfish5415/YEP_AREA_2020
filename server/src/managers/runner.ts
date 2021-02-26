@@ -14,6 +14,7 @@ import {
 } from "../repositories";
 import { BaseRunner } from "../runner/runner";
 import { flatObject } from "../utilities";
+import { WORKFLOW_CIRCULAR_DEPENDENCY_ERROR } from "../constants";
 
 const expressionRegex = /\${(.+?)}/;
 
@@ -28,7 +29,7 @@ async function resolve(
   for (const matches of matchesArr) {
     if (!values[matches[1]]) {
       if (visited.find((item) => item === matches[1])) {
-        throw Error(); // ! TODO: Better error handling
+        throw WORKFLOW_CIRCULAR_DEPENDENCY_ERROR;
       }
 
       visited.push(matches[1]);

@@ -10,7 +10,7 @@ import { UserRepository } from "../repositories";
 
 export class AuthorizeStrategy extends Strategy {
   constructor(userRepository: UserRepository) {
-    super((req, done) => {
+    super(async (req, done) => {
       const authorization = req.header("Authorization");
 
       if (!authorization) {
@@ -18,7 +18,7 @@ export class AuthorizeStrategy extends Strategy {
       }
 
       const id = jwt.verify(authorization, AUTHORIZE_SECRET) as string;
-      const user = userRepository.read(id);
+      const user = await userRepository.read(id);
 
       if (!user) {
         return done(USER_NOT_EXISTS_ERROR);
