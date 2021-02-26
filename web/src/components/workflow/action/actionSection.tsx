@@ -4,6 +4,7 @@ import { gray, primary, white, secondary } from "@area-common/styles";
 import { Workflow, WorkflowAction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import AddBox from "../../containers/addBox";
+import UpdateAction from "./updateAction";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,6 +19,12 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
+type ContainerProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  action: WorkflowAction;
+};
+
 const ActionSection: FC<Props> = (props) => {
   const classes = useStyles();
 
@@ -25,10 +32,36 @@ const ActionSection: FC<Props> = (props) => {
     <>
       <div className={classes.content}>
         {props.workflow.actions.map((action: WorkflowAction) => {
-          return <ComponentBox key={action.id} label={action.name} />;
+          return (
+            <ActionContainer
+              key={action.id}
+              workflow={props.workflow}
+              setWorkflow={props.setWorkflow}
+              action={action}
+            />
+          );
         })}
         {props.workflow.actions.length === 0 && <AddBox label={"action"} />}
       </div>
+    </>
+  );
+};
+
+const ActionContainer: FC<ContainerProps> = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <div onClick={() => setIsOpen(true)}>
+        <ComponentBox label={props.action.name} />
+      </div>
+      <UpdateAction
+        action={props.action}
+        workflow={props.workflow}
+        setWorkflow={props.setWorkflow}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </>
   );
 };
