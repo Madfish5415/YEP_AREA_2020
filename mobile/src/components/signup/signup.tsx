@@ -89,7 +89,7 @@ const Signup: FC = () => {
         data.firstName,
         data.lastName
       );
-      navigate("SignIn");
+      alert("Todo !");
     }
   };
 

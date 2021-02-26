@@ -16,25 +16,25 @@ async function apiSignUp(
   setError(undefined);
 
   try {
-    const response = await fetch(`/api/server/authentication/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-        confirmPassword: confirmPassword,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        custom: {
-          baseURL: `https://localhost:8080/authentication/verify`,
-          URL: `https://localhost:8080/authentication/verify?username=:username&id=:id`,
+    const response = await fetch(
+      `http://localhost:8080/api/authentication/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          confirmPassword: confirmPassword,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+        }),
+      }
+    );
 
+    console.log(response);
     const result = await (async () => {
       try {
         return await response.json();
