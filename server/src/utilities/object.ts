@@ -1,3 +1,4 @@
+// file deepcode ignore PrototypePollutionFunctionParams: Useless warning in this case
 export function flatObject(
   object: Record<string, unknown>
 ): Record<string, unknown> {
