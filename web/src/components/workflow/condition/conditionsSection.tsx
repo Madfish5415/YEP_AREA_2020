@@ -6,6 +6,7 @@ import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
 import AddBox from "../../containers/addBox";
 import UpdateCondition from "./updateCondition";
+import AddConditionDialog from "./addConditionDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +29,7 @@ type ContainerProps = {
 
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -42,7 +44,15 @@ const ConditionsSection: FC<Props> = (props) => {
             />
           );
         })}
-        <AddBox label={"condition"} />
+        <div onClick={() => setIsOpen(true)}>
+          <AddBox label={"condition"} />
+        </div>
+        <AddConditionDialog
+          workflow={props.workflow}
+          setWorkflow={props.setWorkflow}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       </div>
     </>
   );
