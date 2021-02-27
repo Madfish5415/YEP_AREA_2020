@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     configSection: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
-      height: "75%",
+      height: "100%",
     },
   })
 );

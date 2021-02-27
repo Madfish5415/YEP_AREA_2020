@@ -6,6 +6,7 @@ import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
 import AddBox from "../../containers/addBox";
 import UpdateReaction from "./updateReaction";
+import AddReactionDialog from "./addReactionDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +29,7 @@ type ContainerProps = {
 
 const ReactionsSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -42,7 +44,15 @@ const ReactionsSection: FC<Props> = (props) => {
             />
           );
         })}
-        <AddBox label={"reaction"} />
+        <div onClick={() => setIsOpen(true)}>
+          <AddBox label={"reaction"} />
+        </div>
+        <AddReactionDialog
+          workflow={props.workflow}
+          setWorkflow={props.setWorkflow}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       </div>
     </>
   );

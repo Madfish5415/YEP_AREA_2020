@@ -7,6 +7,7 @@ import {
   Theme,
   Fab,
   Typography,
+  Box,
 } from "@material-ui/core";
 import {
   WorkflowBloc,
@@ -138,35 +139,37 @@ const WorkflowEdit: FC<Props> = (props) => {
   return (
     <>
       <AppBarComponent />
-      <div
-        className={classes.root}
-        style={{
-          background:
-            "url(/assets/images/blob" +
-            findBlobId(props.workflow.id) +
-            "_bg.svg) no-repeat center",
-          backgroundSize: "75%",
-        }}
-      >
-        <CssTextField
-          id="workflowName"
-          name="name"
-          margin="normal"
-          label=""
-          className={classes.nameForm}
-          InputProps={{ className: classes.title }}
-          defaultValue={props.workflow.name}
-          onChange={handleWorkflowNameChange}
-        />
-        <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
-        <Fab
-          variant={"extended"}
-          className={classes.saveButton}
-          onClick={handleWorkflowChangeSubmit}
+      <Box mb={5}>
+        <div
+          className={classes.root}
+          style={{
+            background:
+              "url(/assets/images/blob" +
+              findBlobId(props.workflow.id) +
+              "_bg.svg) no-repeat center",
+            backgroundSize: "75%",
+          }}
         >
-          Save
-        </Fab>
-      </div>
+          <CssTextField
+            id="workflowName"
+            name="name"
+            margin="normal"
+            label=""
+            className={classes.nameForm}
+            InputProps={{ className: classes.title }}
+            defaultValue={props.workflow.name}
+            onChange={handleWorkflowNameChange}
+          />
+          <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
+          <Fab
+            variant={"extended"}
+            className={classes.saveButton}
+            onClick={handleWorkflowChangeSubmit}
+          >
+            Save
+          </Fab>
+        </div>
+      </Box>
     </>
   );
 };

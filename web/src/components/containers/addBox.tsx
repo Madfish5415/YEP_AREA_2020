@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
       marginTop: 40,
-      marginBottom: 40,
       width: 200,
       height: 120,
       borderRadius: 22,
