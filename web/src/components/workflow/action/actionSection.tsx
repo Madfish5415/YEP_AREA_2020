@@ -5,6 +5,7 @@ import { Workflow, WorkflowAction } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import AddBox from "../../containers/addBox";
 import UpdateAction from "./updateAction";
+import AddActionDialog from "./addActionDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +28,7 @@ type ContainerProps = {
 
 const ActionSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -41,7 +43,19 @@ const ActionSection: FC<Props> = (props) => {
             />
           );
         })}
-        {props.workflow.actions.length === 0 && <AddBox label={"action"} />}
+        {props.workflow.actions.length === 0 && (
+          <>
+            <div onClick={() => setIsOpen(true)}>
+              <AddBox label={"action"} />
+            </div>
+            <AddActionDialog
+              workflow={props.workflow}
+              setWorkflow={props.setWorkflow}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
+          </>
+        )}
       </div>
     </>
   );

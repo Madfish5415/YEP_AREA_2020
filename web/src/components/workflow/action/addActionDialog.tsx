@@ -60,9 +60,7 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
   id: string;
   children: React.ReactNode;
   label: string;
-  handleReactionNameChange: (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void;
+  handleActionNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
 }
 
@@ -72,19 +70,19 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
     classes,
     onClose,
     label,
-    handleReactionNameChange,
+    handleActionNameChange,
     ...other
   } = props;
   return (
     <MuiDialogTitle className={classes.root} {...other}>
       <CssTextField
-        id="reactionName"
+        id="actionName"
         name="name"
         margin="normal"
         label=""
         InputProps={{ className: classes.dialogTitle }}
         defaultValue={label}
-        onChange={handleReactionNameChange}
+        onChange={handleActionNameChange}
       />
       {onClose ? (
         <IconButton
@@ -99,34 +97,34 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   );
 });
 
-const AddReactionDialog: FC<Props> = (props) => {
-  const [reaction, setReaction] = useState({
+const AddActionDialog: FC<Props> = (props) => {
+  const [action, setAction] = useState({
     id: uuidv4(),
     name: "",
     serviceId: uuidv4(),
-    reactionId: uuidv4(),
+    actionId: uuidv4(),
   });
 
   const handleClose = () => {
     props.setIsOpen(false);
   };
 
-  const handleReactionNameChange = (
+  const handleActionNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setReaction({ ...reaction, name: event.target.value });
+    setAction({ ...action, name: event.target.value });
   };
 
   const handleAdd = () => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.reactions.push(reaction);
+    newWorkflow.actions.push(action);
     props.setWorkflow(newWorkflow);
-    setReaction({
+    setAction({
       id: uuidv4(),
       name: "",
       serviceId: uuidv4(),
-      reactionId: uuidv4(),
+      actionId: uuidv4(),
     });
     props.setIsOpen(false);
   };
@@ -145,12 +143,12 @@ const AddReactionDialog: FC<Props> = (props) => {
         }}
       >
         <DialogTitle
-          id={reaction.id}
+          id={action.id}
           onClose={handleClose}
-          label={reaction.name}
-          handleReactionNameChange={handleReactionNameChange}
+          label={action.name}
+          handleActionNameChange={handleActionNameChange}
         >
-          {reaction.name}
+          {action.name}
         </DialogTitle>
         <DialogContent>Plop</DialogContent>
         <DialogActions>
@@ -161,4 +159,4 @@ const AddReactionDialog: FC<Props> = (props) => {
   );
 };
 
-export default AddReactionDialog;
+export default AddActionDialog;
