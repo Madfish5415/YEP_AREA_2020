@@ -7,6 +7,7 @@ import {
   Theme,
   Fab,
   Typography,
+  Button,
   Box,
 } from "@material-ui/core";
 import {
@@ -38,6 +39,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   nameForm: {
     marginLeft: 125,
     marginTop: 40,
+  },
+  titleAndSave: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  save: {
+    marginTop: 40,
+    marginRight: 30,
+    backgroundColor: primary.main,
+    fontWeight: "bold",
+    fontSize: 15,
+    textTransform: "none",
+    height: 50,
+    maxWidth: 75,
+    minWidth: 75,
+    borderRadius: 50 / 2,
+    "&:hover": {
+      backgroundColor: primary.dark2,
+    },
   },
   title: {
     color: primary.main,
@@ -150,16 +171,26 @@ const WorkflowEdit: FC<Props> = (props) => {
             backgroundSize: "75%",
           }}
         >
-          <CssTextField
-            id="workflowName"
-            name="name"
-            margin="normal"
-            label=""
-            className={classes.nameForm}
-            InputProps={{ className: classes.title }}
-            defaultValue={props.workflow.name}
-            onChange={handleWorkflowNameChange}
-          />
+          <div className={classes.titleAndSave}>
+            <CssTextField
+              id="workflowName"
+              name="name"
+              margin="normal"
+              label=""
+              className={classes.nameForm}
+              InputProps={{ className: classes.title }}
+              defaultValue={props.workflow.name}
+              onChange={handleWorkflowNameChange}
+            />
+            <div className={classes.saveContainer}>
+              <Button
+                className={classes.save}
+                onClick={handleWorkflowChangeSubmit}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
           <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
           <Fab
             variant={"extended"}
