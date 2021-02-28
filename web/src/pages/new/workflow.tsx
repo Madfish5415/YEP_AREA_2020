@@ -8,6 +8,7 @@ import {
   Typography,
   Grid,
   Fab,
+  Button,
 } from "@material-ui/core";
 import {
   WorkflowBloc,
@@ -41,21 +42,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 125,
     marginTop: 40,
   },
+  titleAndCreate: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  createButton: {
+    marginTop: 40,
+    marginRight: 30,
+    backgroundColor: primary.main,
+    color: "white",
+    fontSize: 19,
+    textTransform: "none",
+    height: 50,
+    maxWidth: 175,
+    minWidth: 175,
+    borderRadius: 50 / 2,
+    "&:hover": {
+      backgroundColor: primary.dark2,
+    },
+  },
   title: {
     color: primary.main,
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
-  },
-  saveButton: {
-    backgroundColor: primary.main,
-    fontWeight: "bold",
-    margin: "0px",
-    top: "auto",
-    right: "20px",
-    bottom: "20px",
-    left: "auto",
-    position: "fixed",
   },
 }));
 
@@ -139,25 +150,26 @@ const NewWorkflow: FC<Props> = (props) => {
           backgroundSize: "75%",
         }}
       >
-        <CssTextField
-          id="workflowName"
-          name="name"
-          margin="normal"
-          label=""
-          placeholder="Workflow name"
-          className={classes.nameForm}
-          InputProps={{ className: classes.title }}
-          defaultValue={newWorkflow.name}
-          onChange={handleWorkflowNameChange}
-        />
+        <div className={classes.titleAndCreate}>
+          <CssTextField
+            id="workflowName"
+            name="name"
+            margin="normal"
+            label=""
+            placeholder="Workflow name"
+            className={classes.nameForm}
+            InputProps={{ className: classes.title }}
+            defaultValue={newWorkflow.name}
+            onChange={handleWorkflowNameChange}
+          />
+          <Button
+            className={classes.createButton}
+            onClick={() => props.createCallback(newWorkflow)}
+          >
+            Create workflow
+          </Button>
+        </div>
         <WorkflowConfig workflow={newWorkflow} setWorkflow={setNewWorkflow} />
-        <Fab
-          variant={"extended"}
-          className={classes.saveButton}
-          onClick={() => props.createCallback(newWorkflow)}
-        >
-          Create workflow
-        </Fab>
       </div>
     </>
   );

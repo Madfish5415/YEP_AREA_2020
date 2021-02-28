@@ -45,11 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  save: {
+  saveButton: {
     marginTop: 40,
     marginRight: 30,
     backgroundColor: primary.main,
-    fontWeight: "bold",
+    color: "white",
     fontSize: 15,
     textTransform: "none",
     height: 50,
@@ -65,17 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
-  },
-  saveButton: {
-    backgroundColor: primary.main,
-    fontWeight: "bold",
-    margin: "0px",
-    top: "auto",
-    right: "20px",
-    bottom: "20px",
-    left: "auto",
-    position: "fixed",
-    textTransform: "none",
   },
 }));
 
@@ -182,23 +171,14 @@ const WorkflowEdit: FC<Props> = (props) => {
               defaultValue={props.workflow.name}
               onChange={handleWorkflowNameChange}
             />
-            <div className={classes.saveContainer}>
-              <Button
-                className={classes.save}
-                onClick={handleWorkflowChangeSubmit}
-              >
-                Save
-              </Button>
-            </div>
+            <Button
+              className={classes.saveButton}
+              onClick={handleWorkflowChangeSubmit}
+            >
+              Save
+            </Button>
           </div>
           <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
-          <Fab
-            variant={"extended"}
-            className={classes.saveButton}
-            onClick={handleWorkflowChangeSubmit}
-          >
-            Save
-          </Fab>
         </div>
       </Box>
     </>

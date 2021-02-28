@@ -3,7 +3,7 @@ import AppBarComponent from "../components/appbar/appbar";
 import WorkflowComponent from "../components/workflows/workflow";
 import { makeStyles, Theme, Typography, Grid, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { gray, primary } from "@area-common/styles";
+import { gray, primary, white } from "@area-common/styles";
 import {
   WorkflowBloc,
   WorkflowDeleteEvent,
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   floatingButton: {
     backgroundColor: primary.main,
-    color: gray.main,
+    color: white,
     margin: "0px",
     top: "auto",
     right: "20px",
