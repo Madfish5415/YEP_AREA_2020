@@ -19,6 +19,24 @@ import { gray, primary, white } from "@area-common/styles";
 import { Workflow } from "@area-common/types";
 import { v4 as uuidv4 } from "uuid";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    addButton: {
+      backgroundColor: primary.main,
+      color: "white",
+      fontSize: 15,
+      textTransform: "none",
+      height: 40,
+      maxWidth: 60,
+      minWidth: 60,
+      borderRadius: 40 / 2,
+      "&:hover": {
+        backgroundColor: primary.dark2,
+      },
+    },
+  })
+);
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -80,6 +98,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
         name="name"
         margin="normal"
         label=""
+        placeholder="Action name"
         InputProps={{ className: classes.dialogTitle }}
         defaultValue={label}
         onChange={handleActionNameChange}
@@ -98,6 +117,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
 });
 
 const AddActionDialog: FC<Props> = (props) => {
+  const classes = useStyles();
   const [action, setAction] = useState({
     id: uuidv4(),
     name: "",
@@ -152,7 +172,9 @@ const AddActionDialog: FC<Props> = (props) => {
         </DialogTitle>
         <DialogContent>Plop</DialogContent>
         <DialogActions>
-          <Button onClick={handleAdd}>Add</Button>
+          <Button className={classes.addButton} onClick={handleAdd}>
+            Add
+          </Button>
         </DialogActions>
       </Dialog>
     </>
