@@ -2,9 +2,10 @@ import React, { FC } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { OauthCredentialsStackParamList } from "../../screens/oauth-credentials";
 import { RouteProp } from "@react-navigation/native";
-import { gray } from "@area-common/styles";
+import { gray, primary, white } from "@area-common/styles";
 import { SectionTitle } from "../common/section-title";
 import { CustomTextInput } from "../common/text-input";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,8 +13,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: gray.main,
   },
-  sectionTitle: {
-    marginTop: 10,
+  connectedText: {
+    marginTop: 25,
+    color: white,
+    fontSize: 18,
+  },
+  button: {
+    marginTop: 25,
+    backgroundColor: primary.main,
+    width: 160,
+    height: 30,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textButton: {
+    fontSize: 14,
+    color: white,
   },
 });
 type OauthCredentialsRootProps = RouteProp<
@@ -26,11 +42,12 @@ type Props = {
 };
 
 const OauthCredentialsScreen: FC<Props> = (props) => {
-  const [autoLoginLink, setAutoLoginLink] = React.useState("");
   return (
     <View style={styles.container}>
-      <SectionTitle label={"Oauth"} style={styles.sectionTitle} />
-      <CustomTextInput text={autoLoginLink} setText={setAutoLoginLink} />
+      <Text style={styles.connectedText}>Connected as </Text>
+      <TouchableOpacity style={styles.button} onPress={() => alert("Todo!")}>
+        <Text style={styles.textButton}>Log out</Text>
+      </TouchableOpacity>
     </View>
   );
 };
