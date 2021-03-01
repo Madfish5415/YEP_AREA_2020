@@ -42,7 +42,6 @@ const AppBar: FC<Props> = (props) => {
 
 const OauthCredentialsStack: FC<CredentialsProps> = (props) => {
   const { userId, serviceName } = props.route.params;
-  console.log(serviceName);
   return (
     <Stack.Navigator
       screenOptions={{ header: () => <AppBar serviceName={serviceName} /> }}
