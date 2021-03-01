@@ -5,6 +5,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
 import AccountSecurityStack from "./account-security";
+import AdminBoardStack from "./admin-board";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -26,6 +27,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"AccountSecurity"}
             component={AccountSecurityStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminBoard"}
+            component={AdminBoardStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

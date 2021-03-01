@@ -85,6 +85,12 @@ const Settings: FC<Props> = (props) => {
         style={{ marginTop: 20 }}
       />
       <View style={styles.logoutContainer}>
+        <StandardButton
+          label={"Admin board"}
+          callback={() => navigate("AdminBoard", { screen: "AdminBoard" })}
+          important={true}
+          style={{ marginBottom: 20 }}
+        />
         <StandardButton label={"Log out"} callback={null} important={true} />
       </View>
     </View>
