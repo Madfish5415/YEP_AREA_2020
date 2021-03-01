@@ -19,4 +19,14 @@ export class UserRepository extends Repository {
     }
     return json["data"];
   }
+
+  async getCredentials(id: string): Promise<Credential> {
+    const response = await fetch(`${this.remoteURL}/api/credentials/${id}`);
+    const json = await response.json();
+
+    if (json.status != 200) {
+      throw Error(json.error.code);
+    }
+    return json["data"];
+  }
 }
