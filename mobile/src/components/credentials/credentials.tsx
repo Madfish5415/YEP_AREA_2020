@@ -73,6 +73,7 @@ const Credentials: FC<Props> = (props) => {
         icon={<FontAwesome size={50} name={"instagram"} color={primary.main} />}
         isEpitech={false}
         user={props.user}
+        isLoggedIn={false}
       />
       <Service
         name={"Office 365"}
@@ -85,18 +86,21 @@ const Credentials: FC<Props> = (props) => {
         }
         isEpitech={false}
         user={props.user}
+        isLoggedIn={true}
       />
       <Service
         name={"Github"}
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
         user={props.user}
+        isLoggedIn={true}
       />
       <Service
         name={"Discord"}
         icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
         isEpitech={false}
         user={props.user}
+        isLoggedIn={false}
       />
       <Service
         name={"Youtube"}
@@ -105,6 +109,7 @@ const Credentials: FC<Props> = (props) => {
         }
         isEpitech={false}
         user={props.user}
+        isLoggedIn={true}
       />
       <Service
         name={"Epitech"}

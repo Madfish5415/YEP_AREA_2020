@@ -57,6 +57,7 @@ type Props = {
   epitechAutoLoginLink?: string;
   setEpitechAutoLoginLink?: (link: string) => void;
   user: User;
+  isLoggedIn?: boolean;
 };
 
 type ConfigProps = {
@@ -132,7 +133,7 @@ const Service: FC<Props> = (props) => {
           </TouchableOpacity>
           <View style={styles.border} />
         </View>
-      ) : (
+      ) : props.isLoggedIn ? (
         <View>
           <TouchableOpacity
             onPress={() =>
@@ -143,6 +144,13 @@ const Service: FC<Props> = (props) => {
               })
             }
           >
+            <ServiceDescription icon={props.icon} name={props.name} />
+          </TouchableOpacity>
+          <View style={styles.border} />
+        </View>
+      ) : (
+        <View>
+          <TouchableOpacity onPress={() => alert("Connect")}>
             <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />
