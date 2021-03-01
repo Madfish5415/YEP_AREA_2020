@@ -1,13 +1,25 @@
 import { Bloc } from "@felangel/bloc";
-import { UserEvent, UserGetEvent } from "./event";
+import {
+  UserEvent,
+  UserReadEvent,
+  UserListEvent,
+  UserUpdateEvent,
+  UserDeleteEvent,
+  UserCreateEvent,
+} from "./event";
 import {
   UserErrorState,
-  UserGetState,
+  UserReadState,
   UserInitialState,
+  UserListState,
   UserLoadingState,
   UserState,
+  UserCreateState,
+  UserUpdateState,
+  UserDeleteState,
 } from "./state";
 import { UserRepository } from "../../repositories";
+import { User } from "@area-common/types";
 
 export class UserBloc extends Bloc<UserEvent, UserState> {
   repository: UserRepository;
@@ -19,26 +31,87 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   async *mapEventToState(event: UserEvent): AsyncIterableIterator<UserState> {
-    console.log("UserLoadgnState");
     yield new UserLoadingState();
 
-    if (event instanceof UserGetEvent) {
-      yield* this.get(event);
+    if (event instanceof UserCreateEvent) {
+      yield* this.create(event);
+    }
+
+    if (event instanceof UserReadEvent) {
+      yield* this.read(event);
+    }
+
+    if (event instanceof UserUpdateEvent) {
+      yield* this.update(event);
+    }
+
+    if (event instanceof UserDeleteEvent) {
+      yield* this.delete(event);
+    }
+
+    if (event instanceof UserListEvent) {
+      yield* this.list(event);
     }
   }
 
-  async *get(
-    event: UserGetEvent
-  ): AsyncGenerator<UserGetState | UserErrorState> {
+  async *create(
+    event: UserCreateEvent
+  ): AsyncGenerator<UserCreateState | UserErrorState> {
     try {
-      const user = await this.repository.get(event.id);
+      await this.repository.create(event.user);
 
-      console.log("reussi");
-      yield new UserGetState(user);
+      yield new UserCreateState();
+    } catch (e) {
+      yield new UserErrorState();
+    }
+  }
+
+  async *read(
+    event: UserReadEvent
+  ): AsyncGenerator<UserReadState | UserErrorState> {
+    try {
+      const user = await this.repository.read(event.id);
+
+      yield new UserReadState(user);
     } catch (err) {
       console.log(err);
-      console.log("fail");
 
+      yield new UserErrorState();
+    }
+  }
+
+  async *update(event: UserUpdateEvent) {
+    try {
+      const originalUser = await this.repository.read(event.id);
+      const user: User = {
+        ...originalUser,
+        ...event.user,
+        id: originalUser.id,
+      };
+
+      await this.repository.update(event.id, user);
+      yield new UserUpdateState(user);
+    } catch (e) {
+      yield new UserErrorState();
+    }
+  }
+
+  async *delete(event: UserDeleteEvent) {
+    try {
+      await this.repository.delete(event.id);
+
+      yield new UserDeleteState();
+    } catch (e) {
+      yield new UserErrorState();
+    }
+  }
+
+  async *list(event: UserListEvent) {
+    try {
+      const users = await this.repository.list();
+
+      yield new UserListState(users);
+    } catch (e) {
       yield new UserErrorState();
     }
   }
