@@ -1,6 +1,7 @@
 export type User = {
-  readonly id: string;
+  id: string;
   username: string;
   firstName?: string;
   lastName?: string;
+  administrator: boolean;
 };

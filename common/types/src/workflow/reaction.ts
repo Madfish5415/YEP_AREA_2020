@@ -1,7 +1,10 @@
-import { Reaction } from "../service";
+import { AnyMap } from "../lib";
 
 export type WorkflowReaction = {
-  readonly reaction: Reaction;
-  readonly parameters?: Record<string, unknown>;
-  readonly operatorId?: string;
-}
+  id: string;
+  name: string;
+  serviceId: string;
+  reactionId: string;
+  parameters: AnyMap<string>;
+  nextId?: string;
+};

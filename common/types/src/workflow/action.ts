@@ -1,6 +1,10 @@
-import { Action } from "../service";
+import { AnyMap } from "../lib";
 
 export type WorkflowAction = {
-  readonly action: Action;
-  readonly parameters?: Record<string, unknown>;
-}
+  id: string;
+  name: string;
+  serviceId: string;
+  actionId: string;
+  parameters: AnyMap<string>;
+  nextId?: string;
+};
