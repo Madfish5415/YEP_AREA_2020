@@ -5,9 +5,12 @@ import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
 import EpitechCredentialsStack from "./epitech-credentials";
+import OAuthCredentialsStack from "./oauth-credentials";
 
 export type RootStackParamList = {
   Home: { userId: string };
+  EpitechCredentials: undefined;
+  OAuthCredentials: { userId: string; serviceName: string };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -26,6 +29,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"EpitechCredentials"}
             component={EpitechCredentialsStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"OAuthCredentials"}
+            component={OAuthCredentialsStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

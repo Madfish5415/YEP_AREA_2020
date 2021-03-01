@@ -4,27 +4,26 @@ import Service from "./service";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { primary } from "@area-common/styles";
+import { primary, gray } from "@area-common/styles";
 import {
   UserBloc,
   UserErrorState,
   UserGetEvent,
   UserGetState,
   UserRepository,
-  UserState,
-  UserEvent,
 } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
 import { RouteProp } from "@react-navigation/native";
 import { CredentialsStackParamsList } from "../../pages/credentials";
+import { User } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#262C40",
+    backgroundColor: gray.main,
     marginTop: 10,
   },
   text: {
@@ -45,15 +44,25 @@ type CredentialsProps = {
 
 const CredentialsScreen: FC<CredentialsProps> = (props) => {
   const userBloc = new UserBloc(new UserRepository(""));
-  //userBloc.add(new UserGetEvent());
-
-  //return (
-  // <Credentials/>)
-  return <Credentials userId={props.route.params.userId} />;
+  userBloc.add(new UserGetEvent(props.route.params.userId));
+  return (
+    <BlocBuilder
+      bloc={userBloc}
+      builder={(state) => {
+        if (state instanceof UserErrorState) {
+          return <ErrorState errorLabel={"An error has occured"} />;
+        }
+        if (state instanceof UserGetState) {
+          return <Credentials user={state.user} />;
+        }
+        return <DefaultState />;
+      }}
+    />
+  );
 };
 
 type Props = {
-  userId: string;
+  user: User;
 };
 
 const Credentials: FC<Props> = (props) => {
@@ -63,7 +72,7 @@ const Credentials: FC<Props> = (props) => {
         name={"Instagram"}
         icon={<FontAwesome size={50} name={"instagram"} color={primary.main} />}
         isEpitech={false}
-        userId={props.userId}
+        user={props.user}
       />
       <Service
         name={"Office 365"}
@@ -75,19 +84,19 @@ const Credentials: FC<Props> = (props) => {
           />
         }
         isEpitech={false}
-        userId={props.userId}
+        user={props.user}
       />
       <Service
         name={"Github"}
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
-        userId={props.userId}
+        user={props.user}
       />
       <Service
         name={"Discord"}
         icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
         isEpitech={false}
-        userId={props.userId}
+        user={props.user}
       />
       <Service
         name={"Youtube"}
@@ -95,13 +104,13 @@ const Credentials: FC<Props> = (props) => {
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }
         isEpitech={false}
-        userId={props.userId}
+        user={props.user}
       />
       <Service
         name={"Epitech"}
         icon={<Text style={styles.text}>E</Text>}
         isEpitech={true}
-        userId={props.userId}
+        user={props.user}
       />
     </View>
   );

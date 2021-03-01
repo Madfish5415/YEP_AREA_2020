@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { primary, gray, white } from "@area-common/styles";
 import { authorize } from "react-native-app-auth";
+import { User } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
@@ -55,7 +56,7 @@ type Props = {
   isEpitech: boolean;
   epitechAutoLoginLink?: string;
   setEpitechAutoLoginLink?: (link: string) => void;
-  userId: string;
+  user: User;
 };
 
 type ConfigProps = {
@@ -63,6 +64,23 @@ type ConfigProps = {
   clientID: string;
   redirectURL: string;
   scopes: string[];
+};
+
+type ServiceDescriptionProps = {
+  icon: React.ReactElement<any>;
+  name: string;
+};
+
+const ServiceDescription: FC<ServiceDescriptionProps> = (props) => {
+  return (
+    <View style={styles.service}>
+      <View style={styles.description}>
+        <View style={styles.serviceIconContainer}>{props.icon}</View>
+        <Text style={styles.serviceName}>{props.name}</Text>
+      </View>
+      <Ionicons name={"chevron-forward"} size={24} color={gray.light1} />
+    </View>
+  );
 };
 
 const Service: FC<Props> = (props) => {
@@ -106,38 +124,26 @@ const Service: FC<Props> = (props) => {
             onPress={() =>
               navigate("EpitechCredentials", {
                 screen: "EpitechCredentials",
-                params: { userId: props.userId },
+                params: { userId: props.user.id },
               })
             }
           >
-            <View style={styles.service}>
-              <View style={styles.description}>
-                <View style={styles.serviceIconContainer}>{props.icon}</View>
-                <Text style={styles.serviceName}>{props.name}</Text>
-              </View>
-              <Ionicons
-                name={"chevron-forward"}
-                size={24}
-                color={gray.light1}
-              />
-            </View>
+            <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => handleClick2()}>
-            <View style={styles.service}>
-              <View style={styles.description}>
-                <View style={styles.serviceIconContainer}>{props.icon}</View>
-                <Text style={styles.serviceName}>{props.name}</Text>
-              </View>
-              <Ionicons
-                name={"chevron-forward"}
-                size={24}
-                color={gray.light1}
-              />
-            </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigate("OAuthCredentials", {
+                screen: "OAuthCredentials",
+                params: { userId: props.user.id },
+                serviceName: props.name,
+              })
+            }
+          >
+            <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />
         </View>
