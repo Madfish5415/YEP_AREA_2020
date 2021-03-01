@@ -6,5 +6,5 @@ export type WorkflowReaction = {
   serviceId: string;
   reactionId: string;
   parameters: AnyMap<string>;
-  condition: string;
+  nextId?: string;
 };

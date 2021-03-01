@@ -2,6 +2,7 @@ import { Service } from "@area-common/types";
 
 import { BaseAction } from "../action";
 import { BaseReaction } from "../reaction";
+import { BaseSource } from "../source";
 
 export abstract class BaseService implements Service {
   abstract readonly id: string;
@@ -10,4 +11,5 @@ export abstract class BaseService implements Service {
   abstract readonly version: string;
   abstract readonly actions: BaseAction[];
   abstract readonly reactions: BaseReaction[];
+  abstract readonly sources: BaseSource[];
 }

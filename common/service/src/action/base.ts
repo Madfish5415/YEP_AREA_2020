@@ -1,6 +1,4 @@
-import { Action, AnyObject, Converter, Variable } from "@area-common/types";
-
-import { BaseTriggerConstructor } from "../trigger";
+import { Action, Any, AnyObject, Variable } from "@area-common/types";
 
 export abstract class BaseAction<
   P extends AnyObject = AnyObject,
@@ -9,8 +7,9 @@ export abstract class BaseAction<
   abstract readonly id: string;
   abstract readonly name: string;
   abstract readonly description: string;
+  abstract readonly eventId: string;
   abstract readonly parametersDef: Record<keyof P, Variable>;
   abstract readonly outputsDef: Record<keyof O, Variable>;
-  abstract readonly trigger: BaseTriggerConstructor<P>;
-  abstract readonly converter: Converter<any, O>;
+
+  abstract converter(inputs: Any): Promise<O>;
 }

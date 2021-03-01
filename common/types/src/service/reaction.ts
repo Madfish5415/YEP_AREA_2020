@@ -1,6 +1,7 @@
 import { Variable } from "../variable";
+import { Any } from "../lib";
 
-export interface Reaction<P = any> {
+export interface Reaction<P = Any> {
   readonly id: string;
   readonly name: string;
   readonly description: string;

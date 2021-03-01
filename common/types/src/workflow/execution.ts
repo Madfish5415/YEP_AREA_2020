@@ -5,4 +5,5 @@ export type WorkflowExecution = {
   name: string;
   executionId: string;
   parameters: AnyMap<string>;
+  nextId?: string;
 };

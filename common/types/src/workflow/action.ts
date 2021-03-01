@@ -6,4 +6,5 @@ export type WorkflowAction = {
   serviceId: string;
   actionId: string;
   parameters: AnyMap<string>;
+  nextId?: string;
 };

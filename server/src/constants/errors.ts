@@ -50,6 +50,16 @@ export const WORKFLOW_ACTION_NOT_EXISTS = new StatusError(404, {
   message: "Workflow action doesn't exist",
 });
 
+export const WORKFLOW_REACTION_NOT_EXISTS = new StatusError(404, {
+  name: "WORKFLOW_REACTION_NOT_EXISTS",
+  message: "Workflow reaction doesn't exist",
+});
+
+export const WORKFLOW_EXECUTION_NOT_EXISTS = new StatusError(404, {
+  name: "WORKFLOW_EXECUTION_NOT_EXISTS",
+  message: "Workflow execution doesn't exist",
+});
+
 export const WORKFLOW_CIRCULAR_DEPENDENCY_ERROR = new StatusError(400, {
   name: "WORKFLOW_CIRCULAR_DEPENDENCY",
   message: "Workflow has a circular dependency",

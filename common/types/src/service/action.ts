@@ -1,13 +1,13 @@
-import { Converter } from "../converter";
-import { TriggerConstructor } from "../trigger";
 import { Variable } from "../variable";
+import { Any } from "../lib";
 
-export interface Action<P = any, O = any> {
+export interface Action<P = Any, I = Any, O = Any> {
   readonly id: string;
   readonly name: string;
   readonly description: string;
+  readonly eventId: string;
   readonly parametersDef: Record<keyof P, Variable>;
   readonly outputsDef: Record<keyof O, Variable>;
-  readonly trigger: TriggerConstructor<P>;
-  readonly converter: Converter<any, O>;
+
+  converter(inputs: I): Promise<O>;
 }
