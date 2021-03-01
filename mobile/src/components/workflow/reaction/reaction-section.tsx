@@ -7,10 +7,7 @@ import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
+    height: 150,
   },
 });
 
@@ -36,7 +33,7 @@ export const ReactionSection: FC<Props> = (props) => {
         ? props.workflow.reactions.map((reaction) => {
             return (
               <Reaction
-                key={reaction.reaction.id}
+                key={reaction.id}
                 item={reaction}
                 workflow={props.workflow}
                 callback={props.callback}

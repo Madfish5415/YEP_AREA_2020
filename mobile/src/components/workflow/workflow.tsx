@@ -1,5 +1,10 @@
 import React, { FC, useState } from "react";
-import { LogBox, View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  LogBox,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { WorkflowStackParamsList } from "../../screens/workflow";
 import { SectionTitle } from "../common/section-title";
@@ -18,10 +23,10 @@ LogBox.ignoreLogs([
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
   },
   saveButton: {
+    marginTop: 40,
     width: 250,
     height: 30,
     justifyContent: "center",
@@ -51,7 +56,7 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <SectionTitle label={"Action"} style={{ marginTop: 10 }} />
       <ActionSection workflow={workflow} />
       <SectionTitle label={"Operators"} />
@@ -61,7 +66,7 @@ const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
       <TouchableOpacity style={styles.saveButton} onPress={submitWorkflow}>
         <Text style={fonts.main}>Save</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
