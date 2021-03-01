@@ -1,4 +1,4 @@
-import { BaseReaction } from "@area-common/service";
+import { BaseNode } from "@area-common/service";
 import { Type, Variable } from "@area-common/types";
 import { CLIENT } from "../constants";
 
@@ -11,9 +11,9 @@ type OAuth = {
   tokenSecret: string;
 };
 
-export class TweetReaction extends BaseReaction<Parameters> {
-  readonly id: string = "tweet";
-  readonly name: string = "Tweet";
+export class TweetReactionNode extends BaseNode<Parameters, void> {
+  readonly id: string = "tweet-reaction";
+  readonly name: string = "Tweet Reaction";
   readonly description: string = "No description";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     content: {
@@ -22,6 +22,7 @@ export class TweetReaction extends BaseReaction<Parameters> {
       type: Type.STRING,
     },
   };
+  outputsDef = undefined;
 
   async execute(parameters: Parameters & OAuth): Promise<void> {
     const { content, token, tokenSecret } = parameters;

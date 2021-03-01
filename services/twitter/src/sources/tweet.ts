@@ -1,21 +1,49 @@
-import { PoolingSource, toQuery } from "@area-common/service";
+import { BaseNode, toQuery } from "@area-common/service";
 import { CLIENT } from "../constants";
-import { Any, Event, EventType } from "@area-common/types";
+import { Any, Type, Variable } from "@area-common/types";
 
 type Parameters = {
   username: string;
+};
+
+type OAuth = {
   token: string;
   tokenSecret: string;
 };
 
-export class TweetSource extends PoolingSource<Parameters> {
-  eventIds = ["tweet"];
-  interval = 5 * 60 * 60 * 1000;
+type Outputs = {
+  id: string;
+  text: string;
+};
 
-  private lastDate = Date.now();
+export class TweetRequestNode extends BaseNode<Parameters, Outputs> {
+  readonly id: string = "tweet-request";
+  readonly name: string = "Tweet Request";
+  readonly description: string = "No description";
+  readonly parametersDef: Record<keyof Parameters, Variable> = {
+    username: {
+      name: "Username",
+      description: "No description",
+      type: Type.STRING,
+    },
+  };
+  readonly outputsDef: Record<keyof Outputs, Variable> = {
+    id: {
+      name: "Tweet ID",
+      description: "No description",
+      type: Type.STRING,
+    },
+    text: {
+      name: "Tweet text",
+      description: "No description",
+      type: Type.STRING,
+    },
+  };
 
-  async pool(eventType: EventType<Parameters>): Promise<Event<Parameters>[]> {
-    const { username, token, tokenSecret } = eventType.parameters;
+  private lastDates = new Map<Parameters, number>();
+
+  async execute(parameters: Parameters & OAuth): Promise<Outputs> {
+    const { username, token, tokenSecret } = parameters;
     const query = toQuery({
       screen_name: username,
       count: 10,
@@ -30,9 +58,9 @@ export class TweetSource extends PoolingSource<Parameters> {
       },
     });
     const json = await response.json();
-    const lastDate = this.lastDate;
+    const lastDate = this.lastDates.get(parameters) || Date.now();
 
-    this.lastDate = Date.now();
+    this.lastDates.set(parameters, Date.now());
 
     const tweets = json.filter((tweet: Any) => {
       const date = Date.parse(tweet.date);
@@ -42,8 +70,8 @@ export class TweetSource extends PoolingSource<Parameters> {
 
     return tweets.map((tweet: Any) => {
       return {
-        type: eventType,
-        data: tweet,
+        id: tweet.id,
+        text: tweet.text,
       };
     });
   }

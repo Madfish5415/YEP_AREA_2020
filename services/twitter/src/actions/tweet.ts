@@ -1,8 +1,9 @@
-import { BaseAction } from "@area-common/service";
-import { Any, Type, Variable } from "@area-common/types";
+import { Node, Type, Variable } from "@area-common/types";
+import { IntervalNode } from "@area-common/service";
+import { TWEET_SOURCE_NODE } from "../constants";
 
 type Parameters = {
-  id: string;
+  username: string;
 };
 
 type Outputs = {
@@ -10,14 +11,14 @@ type Outputs = {
   text: string;
 };
 
-export class TweetAction extends BaseAction<Parameters, Outputs> {
-  readonly id: string = "tweet";
+export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
+  readonly id: string = "tweet-action";
   readonly name: string = "Tweet";
   readonly description: string = "No description";
   readonly eventId: string = "tweet";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
-    id: {
-      name: "User ID",
+    username: {
+      name: "Username",
       description: "No description",
       type: Type.STRING,
     },
@@ -34,11 +35,6 @@ export class TweetAction extends BaseAction<Parameters, Outputs> {
       type: Type.STRING,
     },
   };
-
-  async converter(inputs: Any): Promise<Outputs> {
-    return {
-      id: inputs.id,
-      text: inputs.text,
-    };
-  }
+  readonly interval: number = 5 * 60 * 60;
+  readonly list: Node[] = [TWEET_SOURCE_NODE];
 }
