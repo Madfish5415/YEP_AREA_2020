@@ -19,6 +19,7 @@ import { useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useSignUp } from "../../hooks/authentication/signup";
 import { emailRegex } from "../../constants/regexs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -89,7 +90,12 @@ const Signup: FC = () => {
         data.firstName,
         data.lastName
       );
-      navigate("SignIn");
+      try {
+        const token = await AsyncStorage.getItem("@userToken");
+        alert(token);
+      } catch (e) {
+        alert("Error trying to get token");
+      }
     }
   };
 

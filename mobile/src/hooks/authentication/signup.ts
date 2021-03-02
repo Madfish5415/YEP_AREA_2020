@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 async function apiSignUp(
   username: string,
@@ -16,24 +17,23 @@ async function apiSignUp(
   setError(undefined);
 
   try {
-    const response = await fetch(`/api/server/authentication/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-        confirmPassword: confirmPassword,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        custom: {
-          baseURL: `https://localhost/authentication/verify`,
-          URL: `https://localhost/authentication/verify?username=:username&id=:id`,
+    const response = await fetch(
+      `http://localhost:8080/api/authentication/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          confirmPassword: confirmPassword,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+        }),
+      }
+    );
 
     const result = await (async () => {
       try {
@@ -49,6 +49,11 @@ async function apiSignUp(
       return setError(result);
     }
 
+    try {
+      await AsyncStorage.setItem("@userToken", result.data.token);
+    } catch (_) {
+      return "Unable to store user token";
+    }
     return setSignedUp(true);
   } catch (err) {
     setLoading(false);

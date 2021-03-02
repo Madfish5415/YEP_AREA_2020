@@ -1,8 +1,8 @@
 import { Bloc } from "@felangel/bloc";
-import { UserEvent, UserGetEvent } from "./event";
+import { UserEvent, UserReadEvent } from "./event";
 import {
   UserErrorState,
-  UserGetState,
+  UserReadState,
   UserInitialState,
   UserLoadingState,
   UserState,
@@ -21,18 +21,18 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
   async *mapEventToState(event: UserEvent): AsyncIterableIterator<UserState> {
     yield new UserLoadingState();
 
-    if (event instanceof UserGetEvent) {
-      yield* this.get(event);
+    if (event instanceof UserReadEvent) {
+      yield* this.read(event);
     }
   }
 
-  async *get(
-    event: UserGetEvent
-  ): AsyncGenerator<UserGetState | UserErrorState> {
+  async *read(
+    event: UserReadEvent
+  ): AsyncGenerator<UserReadEvent | UserErrorState> {
     try {
-      const user = await this.repository.get(event.id);
+      const user = await this.repository.read(event.id);
 
-      yield new UserGetState(user);
+      yield new UserReadState(user);
     } catch (err) {
       console.log(err);
 
