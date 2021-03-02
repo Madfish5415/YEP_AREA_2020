@@ -45,19 +45,14 @@ export const USER_NOT_EXISTS_ERROR = new StatusError(404, {
   message: "User doesn't exist",
 });
 
-export const WORKFLOW_ACTION_NOT_EXISTS = new StatusError(404, {
+export const WORKFLOW_NOT_EXISTS = new StatusError(404, {
+  name: "WORKFLOW_NOT_EXISTS",
+  message: "Workflow doesn't exist",
+});
+
+export const WORKFLOW_NODE_NOT_EXISTS = new StatusError(404, {
   name: "WORKFLOW_ACTION_NOT_EXISTS",
   message: "Workflow action doesn't exist",
-});
-
-export const WORKFLOW_REACTION_NOT_EXISTS = new StatusError(404, {
-  name: "WORKFLOW_REACTION_NOT_EXISTS",
-  message: "Workflow reaction doesn't exist",
-});
-
-export const WORKFLOW_EXECUTION_NOT_EXISTS = new StatusError(404, {
-  name: "WORKFLOW_EXECUTION_NOT_EXISTS",
-  message: "Workflow execution doesn't exist",
 });
 
 export const WORKFLOW_CIRCULAR_DEPENDENCY_ERROR = new StatusError(400, {

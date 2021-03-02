@@ -1,41 +1,18 @@
-import {
-  Workflow,
-  WorkflowAction,
-  WorkflowExecution,
-  WorkflowReaction,
-} from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 import { Document, model, Schema } from "mongoose";
 
-export type WorkflowActionDocument = Document & WorkflowAction;
-
-export type WorkflowExecutionDocument = Document & WorkflowExecution;
-
-export type WorkflowReactionDocument = Document & WorkflowReaction;
+export type WorkflowNodeDocument = Document & WorkflowNode;
 
 export type WorkflowDocument = Document & Workflow;
 
-const WorkflowActionSchema = new Schema<WorkflowActionDocument>({
+const WorkflowNodeSchema = new Schema<WorkflowNodeDocument>({
   id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   serviceId: { type: String, required: true },
-  actionId: { type: String, required: true },
-  parameters: { type: Map, required: true },
-});
-
-const WorkflowExecutionSchema = new Schema<WorkflowExecutionDocument>({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  functionId: { type: String, required: true },
-  parameters: { type: Map, required: true },
-});
-
-const WorkflowReactionSchema = new Schema<WorkflowReactionDocument>({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  serviceId: { type: String, required: true },
-  reactionId: { type: String, required: true },
-  parameters: { type: Map, required: true },
+  nodeId: { type: String, required: true },
+  parameters: { type: Object, required: true },
   condition: { type: String, required: true },
+  nextNodes: { type: Array, required: true },
 });
 
 export const WorkflowSchema = new Schema<WorkflowDocument>({
@@ -43,9 +20,9 @@ export const WorkflowSchema = new Schema<WorkflowDocument>({
   id: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
-  actions: { type: [WorkflowActionSchema], required: true },
-  reactions: { type: [WorkflowReactionSchema], required: true },
-  executions: { type: [WorkflowExecutionSchema], required: true },
+  active: { type: Boolean, required: true },
+  nodes: { type: [WorkflowNodeSchema], required: true },
+  starters: { type: Array, required: true },
 });
 
 WorkflowSchema.index({ userId: 1, id: 1 }, { unique: true });

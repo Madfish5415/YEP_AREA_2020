@@ -1,11 +1,4 @@
-import {
-  APIResponse,
-  User,
-  Workflow,
-  WorkflowAction,
-  WorkflowExecution,
-  WorkflowReaction,
-} from "@area-common/types";
+import { APIResponse, User, Workflow, WorkflowNode } from "@area-common/types";
 import { Router } from "express";
 import passport from "passport";
 import { v4 } from "uuid";
@@ -43,8 +36,8 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
       "name",
       "description",
       "active",
-      "actions",
-      "reactions",
+      "nodes",
+      "starters",
     ]);
 
     if (missingKeys.length) {
@@ -58,35 +51,15 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
       return res.json(response);
     }
 
-    for (const wAction of workflow.actions) {
-      const missingKeys = hasMissingKeys<WorkflowAction>(wAction, [
+    for (const wNode of workflow.nodes) {
+      const missingKeys = hasMissingKeys<WorkflowNode>(wNode, [
         "id",
         "name",
         "serviceId",
-        "actionId",
-        "parameters",
-      ]);
-
-      if (missingKeys.length) {
-        const response: APIResponse = {
-          status: 400,
-          failure: {
-            ...BAD_REQUEST_ERROR,
-          },
-        };
-
-        return res.json(response);
-      }
-    }
-
-    for (const wReaction of workflow.reactions) {
-      const missingKeys = hasMissingKeys<WorkflowReaction>(wReaction, [
-        "id",
-        "name",
-        "serviceId",
-        "reactionId",
+        "nodeId",
         "parameters",
         "condition",
+        "nextNodes",
       ]);
 
       if (missingKeys.length) {
@@ -98,28 +71,6 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
         };
 
         return res.json(response);
-      }
-    }
-
-    if (workflow.executions) {
-      for (const wExecution of workflow.executions) {
-        const missingKeys = hasMissingKeys<WorkflowExecution>(wExecution, [
-          "id",
-          "name",
-          "executionId",
-          "parameters",
-        ]);
-
-        if (missingKeys.length) {
-          const response: APIResponse = {
-            status: 400,
-            failure: {
-              ...BAD_REQUEST_ERROR,
-            },
-          };
-
-          return res.json(response);
-        }
       }
     }
 

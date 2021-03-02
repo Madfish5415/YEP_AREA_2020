@@ -2,8 +2,8 @@ import { Account, User } from "@area-common/types";
 import { Strategy, VerifiedCallback } from "passport-custom";
 import { v4 } from "uuid";
 
-import { AccountRepository, UserRepository } from "../repositories";
 import { ACCOUNT_EXISTS_ERROR, BAD_REQUEST_ERROR } from "../constants";
+import { AccountRepository, UserRepository } from "../repositories";
 
 export class SignUpStrategy extends Strategy {
   constructor(

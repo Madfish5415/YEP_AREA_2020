@@ -1,39 +1,74 @@
-import { Node, Variable } from "@area-common/types";
-import { BasePubSubNode } from "./base-pubsub";
+import { BasePubSub } from "@area-common/patterns";
+import { AnyObject, Node } from "@area-common/types";
 
-export abstract class IntervalNode<P, O> extends BasePubSubNode<P, O> {
-  abstract readonly id: string;
-  abstract readonly name: string;
-  abstract readonly description: string;
-  abstract readonly parametersDef?: Record<keyof P, Variable>;
-  abstract readonly outputsDef?: Record<keyof O, Variable>;
+import { BaseTriggerNode } from "./trigger";
+import Timeout = NodeJS.Timeout;
+
+export abstract class IntervalNode<P, O> extends BaseTriggerNode<P, O> {
   abstract readonly interval: number;
 
-  private callbacks = new Map<P, number>();
+  private pubSub = new BasePubSub<string>();
+  private subscribers = new Map<string, [Node, string][]>();
+  private intervals = new Map<string, Timeout>();
 
   subscribe(parameters: P, node: Node): void {
-    super.subscribe(parameters, node);
+    const parametersId = JSON.stringify(parameters);
+    const subscribeId = this.pubSub.subscribe(
+      parametersId,
+      (response: AnyObject) => node.execute(response)
+    );
 
-    if (this.callbacks.has(parameters)) return;
+    const eventSubscribers = this.subscribers.get(parametersId) || [];
 
-    const id = setInterval(async () => {
+    eventSubscribers.push([node, subscribeId]);
+
+    this.subscribers.set(parametersId, eventSubscribers);
+
+    if (this.intervals.has(parametersId)) return;
+
+    const intervalId = global.setInterval(async () => {
       const response = await this.execute(parameters);
 
-      this.pubSub.publish(parameters, response);
+      if (response instanceof Array) {
+        for (const item of response) {
+          this.pubSub.publish(parametersId, item);
+        }
+      } else {
+        this.pubSub.publish(parametersId, response);
+      }
     }, this.interval);
 
-    this.callbacks.set(parameters, id);
+    this.intervals.set(parametersId, intervalId);
   }
 
   unsubscribe(parameters: P, node: Node): void {
-    super.unsubscribe(parameters, node);
+    const parametersId = JSON.stringify(parameters);
 
-    if (this.pubSub.subscribers.get(parameters)?.length) return;
+    const eventSubscribers = this.subscribers.get(parametersId);
 
-    const id = this.callbacks.get(parameters);
+    if (!eventSubscribers) return;
 
-    clearInterval(id);
+    const index = eventSubscribers.findIndex(
+      (subscriber) => subscriber[0] === node
+    );
 
-    this.callbacks.delete(parameters);
+    if (index === -1) return;
+
+    this.pubSub.unsubscribe(parametersId, eventSubscribers[index][1]);
+
+    eventSubscribers.splice(index, 1);
+
+    const subscribers = this.pubSub.subscribers.get(parametersId);
+
+    if (!subscribers) return;
+    if (subscribers.length) return;
+
+    const id = this.intervals.get(parametersId);
+
+    if (id) {
+      global.clearInterval(id);
+    }
+
+    this.intervals.delete(parametersId);
   }
 }

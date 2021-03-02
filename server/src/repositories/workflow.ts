@@ -28,7 +28,11 @@ export class WorkflowRepository {
     return this.model.exists({ id });
   }
 
-  async list(userId: string): Promise<Workflow[]> {
+  async list(userId?: string): Promise<Workflow[]> {
+    if (!userId) {
+      return this.model.find();
+    }
+
     return this.model.find({ userId });
   }
 }

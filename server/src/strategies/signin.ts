@@ -1,12 +1,12 @@
 import { Strategy, VerifiedCallback } from "passport-custom";
 
-import { AccountRepository, UserRepository } from "../repositories";
 import {
   ACCOUNT_NOT_EXISTS_ERROR,
   ACCOUNT_NOT_VERIFIED_ERROR,
   BAD_REQUEST_ERROR,
   USER_NOT_EXISTS_ERROR,
 } from "../constants";
+import { AccountRepository, UserRepository } from "../repositories";
 
 export class SignInStrategy extends Strategy {
   constructor(

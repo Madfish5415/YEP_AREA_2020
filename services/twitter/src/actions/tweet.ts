@@ -1,9 +1,16 @@
-import { Node, Type, Variable } from "@area-common/types";
-import { IntervalNode } from "@area-common/service";
-import { TWEET_SOURCE_NODE } from "../constants";
+import { IntervalNode, toQuery } from "@area-common/service";
+import { Any, Type, Variable } from "@area-common/types";
+import fetch from "node-fetch";
+
+import { CLIENT } from "../constants";
 
 type Parameters = {
   username: string;
+};
+
+type OAuth = {
+  token: string;
+  tokenSecret: string;
 };
 
 type Outputs = {
@@ -13,7 +20,7 @@ type Outputs = {
 
 export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
   readonly id: string = "tweet-action";
-  readonly name: string = "Tweet";
+  readonly name: string = "Tweet Action";
   readonly description: string = "No description";
   readonly eventId: string = "tweet";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
@@ -35,6 +42,43 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
       type: Type.STRING,
     },
   };
-  readonly interval: number = 5 * 60 * 60;
-  readonly list: Node[] = [TWEET_SOURCE_NODE];
+  readonly interval: number = 10 * 1000;
+
+  private lastDates = new Map<Parameters, number>();
+
+  async execute(parameters: Parameters & OAuth): Promise<Outputs> {
+    console.log("TweetActionNode execute()");
+
+    const { username, token, tokenSecret } = parameters;
+    const query = toQuery({
+      screen_name: username,
+      count: 10,
+    });
+    const url = `https://api.twitter.com/1.1/statuses/user_timeline.json?${query}`;
+    const authorization = CLIENT.authHeader(url, token, tokenSecret, "GET");
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: authorization,
+      },
+    });
+    const json = await response.json();
+    const lastDate = this.lastDates.get(parameters) || Date.now();
+
+    this.lastDates.set(parameters, Date.now());
+
+    const tweets = json.filter((tweet: Any) => {
+      const date = Date.parse(tweet.created_at);
+
+      return date > lastDate;
+    });
+
+    return tweets.map((tweet: Any) => {
+      return {
+        id: tweet.id,
+        text: tweet.text,
+      };
+    });
+  }
 }
