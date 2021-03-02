@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
     backgroundColor: gray.main,
+    height: "100%",
   },
   title: {
     marginLeft: 125,
@@ -86,7 +87,15 @@ const Settings: FC<Props> = (props) => {
   return (
     <>
       <AppBarComponent />
-      <div className={classes.content}>
+      <div
+        className={classes.content}
+        style={{
+          backgroundImage: "url(/assets/images/blob8.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "-500px 50px",
+          backgroundSize: "100%",
+        }}
+      >
         <SettingsInformation user={props.user} updateUser={props.updateUser} />
       </div>
     </>
