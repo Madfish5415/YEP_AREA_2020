@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 async function apiSignUp(
   username: string,
@@ -34,7 +35,6 @@ async function apiSignUp(
       }
     );
 
-    console.log(response);
     const result = await (async () => {
       try {
         return await response.json();
@@ -49,6 +49,11 @@ async function apiSignUp(
       return setError(result);
     }
 
+    try {
+      await AsyncStorage.setItem("@userToken", result.data.token);
+    } catch (_) {
+      return "Unable to store user token";
+    }
     return setSignedUp(true);
   } catch (err) {
     setLoading(false);
