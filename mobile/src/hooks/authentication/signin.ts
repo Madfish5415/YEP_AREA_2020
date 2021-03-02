@@ -1,37 +1,33 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusError } from "@area-common/types";
+import {
+  serviceUnavailableStatus,
+  unknownErrorStatus,
+} from "../../constants/status";
 
-async function apiSignUp(
-  username: string,
-  password: string,
-  confirmPassword: string,
+async function apiSignIn(
   email: string,
-  firstName: string,
-  lastName: string,
+  password: string,
   setLoading: (loading: boolean) => void,
-  setSignedUp: (signedUp: boolean) => void,
+  setSignedIn: (signedIn: boolean) => void,
   setError: (error: StatusError | undefined) => void
 ) {
   setLoading(true);
-  setSignedUp(false);
+  setSignedIn(false);
   setError(undefined);
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/authentication/signup`,
+      `http://localhost:8080/api/authentication/signin`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username,
-          password: password,
-          confirmPassword: confirmPassword,
           email: email,
-          firstName: firstName,
-          lastName: lastName,
+          password: password,
         }),
       }
     );
@@ -55,45 +51,29 @@ async function apiSignUp(
     }
 
     try {
+      console.log(result.data.token);
       await AsyncStorage.setItem("@userToken", result.data.token);
     } catch (_) {
-      return "Unable to store user token";
+      return setError(unknownErrorStatus);
     }
-    return setSignedUp(true);
+    return setSignedIn(true);
   } catch (err) {
     setLoading(false);
 
     console.error(err);
 
-    return setError("Service unavailable");
+    return setError(serviceUnavailableStatus);
   }
 }
 
-export function useSignUp() {
+export function useSignIn() {
   const [loading, setLoading] = useState(false);
-  const [signedUp, setSignedUp] = useState(false);
+  const [signedIn, setSignedUp] = useState(false);
   const [error, setError] = useState<StatusError>();
 
-  const signUp = async (
-    username: string,
-    password: string,
-    confirmPassword: string,
-    email: string,
-    firstName: string,
-    lastName: string
-  ) => {
-    await apiSignUp(
-      username,
-      password,
-      confirmPassword,
-      email,
-      firstName,
-      lastName,
-      setLoading,
-      setSignedUp,
-      setError
-    );
+  const signIn = async (email: string, password: string) => {
+    await apiSignIn(email, password, setLoading, setSignedUp, setError);
   };
 
-  return { loading, signedUp, error, signUp };
+  return { loading, signedIn, error, signIn };
 }
