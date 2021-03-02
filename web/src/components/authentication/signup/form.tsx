@@ -83,7 +83,7 @@ export const SignUpForm: React.FC = () => {
                 ) : null}
                 {signedUp ? (
                     <Alert severity="success" className={classes.alert}>
-                        Success, an email has been sent to verify your account.
+                        Success, you can now sign in in your account.
                     </Alert>
                 ) : null}
                 <form

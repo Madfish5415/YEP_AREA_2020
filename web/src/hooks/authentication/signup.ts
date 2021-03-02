@@ -16,7 +16,7 @@ async function apiSignUp(
     setError(undefined);
 
     try {
-        const response = await fetch(`/api/server/authentication/signup`, {
+        const response = await fetch(`http://localhost:8080/api/authentication/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -27,13 +27,11 @@ async function apiSignUp(
                 confirmPassword: confirmPassword,
                 email: email,
                 firstName: firstName,
-                lastName: lastName,
-                custom: {
-                    baseURL: `${window.location.origin}/authentication/verify`,
-                    URL: `${window.location.origin}/authentication/verify?username=:username&id=:id`,
-                },
+                lastName: lastName
             }),
         });
+
+        console.log(response)
 
         const result = await (async () => {
             try {
@@ -48,6 +46,8 @@ async function apiSignUp(
         if (response.status !== 200) {
             return setError(result);
         }
+
+        localStorage.setItem("jwt", result.data.token)
 
         return setSignedUp(true);
     } catch (err) {
