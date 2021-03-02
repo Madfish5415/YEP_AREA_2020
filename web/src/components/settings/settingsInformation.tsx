@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputTitle: {
     color: gray.light2,
-    fontSize: 30,
+    fontSize: 25,
   },
 }));
 

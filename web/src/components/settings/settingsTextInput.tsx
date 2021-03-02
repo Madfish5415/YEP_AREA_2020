@@ -12,16 +12,16 @@ import { gray, primary, white } from "@area-common/styles";
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
     color: gray.light3,
-    fontSize: 25,
+    fontSize: 20,
   },
 }));
 
 const CssTextField = withStyles({
   root: {
-    marginTop: 0,
+    marginTop: 5,
     backgroundColor: gray.light1,
     borderRadius: 10,
-    height: 45,
+    height: 35,
     width: 450,
     display: "flex",
     justifyContent: "center",

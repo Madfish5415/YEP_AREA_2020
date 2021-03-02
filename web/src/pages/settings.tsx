@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import AppBarComponent from "../components/appbar/appbar";
-import { makeStyles, Theme, Typography, Grid } from "@material-ui/core";
+import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
   UserBloc,
   UserRepository,
@@ -11,7 +11,7 @@ import {
   UserUpdateEvent,
   UserErrorState,
 } from "@area-common/blocs";
-import { gray } from "@area-common/styles";
+import { gray, white } from "@area-common/styles";
 import { DefaultState } from "../components/blocbuilder/default-state";
 import { ErrorState } from "../components/blocbuilder/error-state";
 import SettingsInformation from "../components/settings/settingsInformation";
@@ -35,6 +35,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   settings: {
     marginTop: 25,
     justifyContent: "center",
+  },
+  logOutButton: {
+    marginTop: 150,
+    marginLeft: 125,
+    backgroundColor: gray.main,
+    color: white,
+    textTransform: "none",
+    width: 200,
   },
 }));
 
@@ -84,6 +92,10 @@ type Props = {
 const Settings: FC<Props> = (props) => {
   const classes = useStyles();
 
+  const handleLogOut = () => {
+    console.log("User logged out");
+  };
+
   return (
     <>
       <AppBarComponent />
@@ -97,6 +109,9 @@ const Settings: FC<Props> = (props) => {
         }}
       >
         <SettingsInformation user={props.user} updateUser={props.updateUser} />
+        <Button className={classes.logOutButton} onClick={handleLogOut}>
+          Log out
+        </Button>
       </div>
     </>
   );
