@@ -15,6 +15,7 @@ import { gray, white } from "@area-common/styles";
 import { DefaultState } from "../components/blocbuilder/default-state";
 import { ErrorState } from "../components/blocbuilder/error-state";
 import SettingsInformation from "../components/settings/settingsInformation";
+import AccountSecurity from "../components/settings/accountSecurity";
 import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
@@ -23,23 +24,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     backgroundColor: gray.main,
     height: "100%",
+    display: "flex",
   },
-  title: {
-    marginLeft: 125,
-    marginTop: 40,
-    color: gray.light2,
-    fontSize: 30,
-    textDecoration: "underline",
-    textUnderlinePosition: "under",
+  column: {
+    display: "flex",
+    flexDirection: "column",
   },
   settings: {
     marginTop: 25,
     justifyContent: "center",
   },
   logOutButton: {
-    marginTop: 150,
+    marginTop: 140,
     marginLeft: 125,
     backgroundColor: gray.main,
+    "&:hover": {
+      backgroundColor: gray.light1,
+    },
     color: white,
     textTransform: "none",
     width: 200,
@@ -108,10 +109,18 @@ const Settings: FC<Props> = (props) => {
           backgroundSize: "100%",
         }}
       >
-        <SettingsInformation user={props.user} updateUser={props.updateUser} />
-        <Button className={classes.logOutButton} onClick={handleLogOut}>
-          Log out
-        </Button>
+        <div className={classes.column}>
+          <SettingsInformation
+            user={props.user}
+            updateUser={props.updateUser}
+          />
+          <Button className={classes.logOutButton} onClick={handleLogOut}>
+            Log out
+          </Button>
+        </div>
+        <div className={classes.column}>
+          <AccountSecurity user={props.user} updateUser={props.updateUser} />
+        </div>
       </div>
     </>
   );
