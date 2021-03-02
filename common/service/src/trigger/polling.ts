@@ -12,7 +12,7 @@ export abstract class PollingTrigger<
   start(): void {
     super.start();
 
-    this.timeout = setInterval(async () => {
+    this.timeout = global.setInterval(async () => {
       const poll = await this.poll();
 
       this.callback(poll);
@@ -20,7 +20,7 @@ export abstract class PollingTrigger<
   }
 
   stop(): void {
-    if (this.timeout) clearInterval(this.timeout);
+    if (this.timeout) global.clearInterval(this.timeout);
 
     super.stop();
   }
