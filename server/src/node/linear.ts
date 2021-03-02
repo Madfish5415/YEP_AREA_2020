@@ -9,10 +9,16 @@ export class LinearNode<P extends AnyObject = AnyObject>
   }
 
   async execute(parameters?: P): Promise<void> {
-    let result: Any = parameters;
+    let outputs: Any = parameters;
 
     for (const node of this.collection) {
-      result = await node.execute(result);
+      if (outputs instanceof Array) {
+        for (const output of outputs) {
+          outputs = await node.execute(output);
+        }
+      } else {
+        outputs = await node.execute(outputs);
+      }
     }
   }
 }

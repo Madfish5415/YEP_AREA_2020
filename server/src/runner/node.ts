@@ -1,7 +1,10 @@
 import { BaseNode } from "@area-common/service";
 import { AnyObject, RunnerNode } from "@area-common/types";
 
-import { runnerMergeParameters } from "../helpers";
+import {
+  runnerEvaluateExpression,
+  runnerEvaluateExpressions,
+} from "../helpers";
 
 export class BaseRunnerNode<
   I extends AnyObject = AnyObject,
@@ -28,18 +31,44 @@ export class BaseRunnerNode<
     this.nextNodes = nextNodes;
   }
 
-  execute(parameters?: I): Promise<O | O[]> {
-    console.log("this.parameters: ", this.parameters);
-    console.log("parameters: ", parameters);
+  async execute(parameters?: I): Promise<O | O[]> {
+    let evaluatedCondition = this.condition;
 
-    if (!parameters) {
-      return this.original.execute();
+    if (parameters) {
+      evaluatedCondition = runnerEvaluateExpression(parameters, this.condition);
     }
 
-    const mergedParameters = runnerMergeParameters(parameters, this.parameters);
+    if (!JSON.parse(evaluatedCondition)) return [];
 
-    console.log("mergedParameters: ", mergedParameters);
+    let outputs: O | O[];
 
-    return this.original.execute(mergedParameters as P);
+    if (parameters) {
+      const evaluatedParameters = runnerEvaluateExpressions(
+        parameters,
+        this.parameters
+      );
+
+      outputs = await this.original.execute(evaluatedParameters as P);
+    } else {
+      outputs = await this.original.execute();
+    }
+
+    if (this.original.forward) {
+      if (outputs instanceof Array) {
+        outputs = outputs.map((outputs) => {
+          return {
+            ...parameters,
+            ...outputs,
+          };
+        });
+      } else {
+        outputs = {
+          ...parameters,
+          ...outputs,
+        };
+      }
+    }
+
+    return outputs;
   }
 }

@@ -6,7 +6,7 @@ export type WorkflowNodeDocument = Document & WorkflowNode;
 export type WorkflowDocument = Document & Workflow;
 
 const WorkflowNodeSchema = new Schema<WorkflowNodeDocument>({
-  id: { type: String, required: true, unique: true },
+  id: { type: String, required: true },
   name: { type: String, required: true },
   serviceId: { type: String, required: true },
   nodeId: { type: String, required: true },

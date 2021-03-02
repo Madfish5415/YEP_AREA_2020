@@ -8,10 +8,8 @@ import {
 } from "../repositories";
 import { CredentialRepository } from "../repositories/credential";
 import { AuthorizeStrategy } from "./authorize";
-import { GoogleStrategy } from "./parties/google";
-import { MicrosoftStrategy } from "./parties/microsoft";
-import { OAuth1ServiceStrategy } from "./services/oauth1";
-import { OAuth2ServiceStrategy } from "./services/oauth2";
+import { GoogleStrategy, MicrosoftStrategy, TwitterStrategy } from "./parties";
+import { OAuth1ServiceStrategy, OAuth2ServiceStrategy } from "./services";
 import { SignInStrategy } from "./signin";
 import { SignUpStrategy } from "./signup";
 import { VerifyStrategy } from "./verify";
@@ -29,6 +27,7 @@ export const useStrategies = (
 export const usePartyStrategies = (userRepository: UserRepository): void => {
   passport.use("google-party", new GoogleStrategy(userRepository));
   passport.use("microsoft-party", new MicrosoftStrategy(userRepository));
+  passport.use("twitter-party", new TwitterStrategy(userRepository));
 };
 
 export const useServiceStrategies = (

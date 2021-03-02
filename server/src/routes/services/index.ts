@@ -8,13 +8,17 @@ export const servicesRouter = Router();
 
 servicesRouter.use(SERVICES_ROUTE, serviceRouter);
 
-servicesRouter.get(SERVICES_ROUTE, async (req, res) => {
-  const services = req.serviceRepository.list();
+servicesRouter.get(SERVICES_ROUTE, async (req, res, next) => {
+  try {
+    const services = req.serviceRepository.list();
 
-  const response: APIResponse = {
-    status: 200,
-    data: services,
-  };
+    const response: APIResponse = {
+      status: 200,
+      data: services,
+    };
 
-  return res.json(response);
+    return res.json(response);
+  } catch (e) {
+    return next(e);
+  }
 });

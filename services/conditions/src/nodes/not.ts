@@ -2,27 +2,21 @@ import { BaseNode } from "@area-common/service";
 import { Any, Type, Variable } from "@area-common/types";
 
 type Parameters = {
-  value1: Any;
-  value2: Any;
+  value: Any;
 };
 
 type Outputs = {
   result: boolean;
 };
 
-export class EqualNode extends BaseNode<Parameters, Outputs> {
+export class NotNode extends BaseNode<Parameters, Outputs> {
   readonly id: string = "equal";
   readonly name: string = "Equal";
   readonly description: string = "No description";
   readonly label: string = "node";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
-    value1: {
-      name: "Value 1",
-      description: "No description",
-      type: Type.ANY,
-    },
-    value2: {
-      name: "Value 2",
+    value: {
+      name: "Value",
       description: "No description",
       type: Type.ANY,
     },
@@ -31,14 +25,28 @@ export class EqualNode extends BaseNode<Parameters, Outputs> {
     result: {
       name: "Result",
       description: "No description",
-      type: Type.BOOLEAN,
+      type: Type.ANY,
     },
   };
   readonly forward = true;
 
   async execute(parameters: Parameters): Promise<Outputs[] | Outputs> {
+    let result = !parameters.value;
+
+    if (parameters.value === "placard") {
+      result = true;
+    }
+
+    if (parameters.value === "sommier") {
+      result = false;
+    }
+
+    if (parameters.value === "sasageyo") {
+      result = !!Math.round(Math.random());
+    }
+
     return {
-      result: parameters.value1 === parameters.value2,
+      result,
     };
   }
 }

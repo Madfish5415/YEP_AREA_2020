@@ -3,6 +3,7 @@ import { Type, Variable } from "@area-common/types";
 import fetch from "node-fetch";
 
 import { CLIENT } from "../constants";
+import { strictEncodeURIComponent } from "../utilities";
 
 type Parameters = {
   content: string;
@@ -17,6 +18,7 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
   readonly id: string = "tweet-reaction";
   readonly name: string = "Tweet Reaction";
   readonly description: string = "No description";
+  readonly label: string = "node";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     content: {
       name: "Tweet Content",
@@ -27,15 +29,12 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
   outputsDef = undefined;
 
   async execute(parameters: Parameters & OAuth): Promise<void> {
-    console.log("TweetReactionNode execute()");
-
     const { content, token, tokenSecret } = parameters;
     const query = toQuery({
-      status: content,
+      status: strictEncodeURIComponent(content),
     });
     const url = `https://api.twitter.com/1.1/statuses/update.json?${query}`;
-    const uri = encodeURIComponent(url);
-    const authorization = CLIENT.authHeader(uri, token, tokenSecret, "POST");
+    const authorization = CLIENT.authHeader(url, token, tokenSecret, "POST");
 
     const response = await fetch(url, {
       method: "POST",
@@ -44,7 +43,5 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
       },
     });
     const json = await response.json();
-
-    console.log("TweetReactionNode response: ", json);
   }
 }

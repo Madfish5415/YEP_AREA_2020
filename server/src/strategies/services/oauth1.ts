@@ -26,33 +26,37 @@ export class OAuth1ServiceStrategy extends Strategy {
         user: User,
         done: VerifyCallback
       ) => {
-        user = req.user as User;
+        try {
+          user = req.user as User;
 
-        const filter = {
-          userId: user.id,
-          serviceId: req.serviceId,
-        };
+          const filter = {
+            userId: user.id,
+            serviceId: req.serviceId,
+          };
 
-        const exists = await credentialRepository.exists(filter);
+          const exists = await credentialRepository.exists(filter);
 
-        if (exists) {
-          await credentialRepository.update(filter, {
-            value: JSON.stringify({
-              token,
-              tokenSecret,
-            }),
-          });
-        } else {
-          await credentialRepository.create({
-            ...filter,
-            value: JSON.stringify({
-              token,
-              tokenSecret,
-            }),
-          });
+          if (exists) {
+            await credentialRepository.update(filter, {
+              value: JSON.stringify({
+                token,
+                tokenSecret,
+              }),
+            });
+          } else {
+            await credentialRepository.create({
+              ...filter,
+              value: JSON.stringify({
+                token,
+                tokenSecret,
+              }),
+            });
+          }
+
+          return done(null, user);
+        } catch (e) {
+          return done(e);
         }
-
-        return done(null, user);
       }
     );
 

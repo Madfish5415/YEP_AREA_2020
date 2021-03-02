@@ -22,7 +22,7 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
   readonly id: string = "tweet-action";
   readonly name: string = "Tweet Action";
   readonly description: string = "No description";
-  readonly eventId: string = "tweet";
+  readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     username: {
       name: "Username",
@@ -47,8 +47,6 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
   private lastDates = new Map<Parameters, number>();
 
   async execute(parameters: Parameters & OAuth): Promise<Outputs> {
-    console.log("TweetActionNode execute()");
-
     const { username, token, tokenSecret } = parameters;
     const query = toQuery({
       screen_name: username,

@@ -2,6 +2,6 @@ import { AnyObject } from "@area-common/types";
 
 export function toQuery(object: AnyObject): string {
   return Object.entries(object)
-    .map(([value, key]) => `${key}=${value}`)
+    .map(([key, value]) => `${key}=${value}`)
     .join("&");
 }

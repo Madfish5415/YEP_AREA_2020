@@ -1,5 +1,5 @@
 import { Credential } from "@area-common/types";
-import AES from "crypto-js/aes";
+import crypto, { AES } from "crypto-js";
 import { Document, model, Schema } from "mongoose";
 
 import { AES_SECRET } from "../../constants";
@@ -17,13 +17,15 @@ CredentialSchema.index({ userId: 1, serviceId: 1 }, { unique: true });
 CredentialSchema.pre("save", function (next) {
   if (!this.isModified("value")) return next();
 
-  // TODO: this.value = AES.encrypt(this.value, AES_SECRET).toString();
+  this.value = AES.encrypt(this.value, AES_SECRET).toString();
 
   return next();
 });
 
 CredentialSchema.post("init", function () {
-  // TODO: this.value = AES.decrypt(this.value, AES_SECRET).toString();
+  this.value = AES.decrypt(this.value, AES_SECRET).toString(crypto.enc.Utf8);
+
+  console.log(this.value);
 });
 
 export const CredentialModel = model("Credential", CredentialSchema);

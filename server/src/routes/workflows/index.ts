@@ -16,16 +16,20 @@ workflowsRouter.use(
 
 workflowsRouter.use(WORKFLOWS_ROUTE, workflowRouter);
 
-workflowsRouter.get(WORKFLOWS_ROUTE, async (req, res) => {
-  const user = req.user as User;
-  const workflows = await req.workflowRepository.list(user.id);
+workflowsRouter.get(WORKFLOWS_ROUTE, async (req, res, next) => {
+  try {
+    const user = req.user as User;
+    const workflows = await req.workflowRepository.list(user.id);
 
-  const response: APIResponse = {
-    status: 200,
-    data: workflows,
-  };
+    const response: APIResponse = {
+      status: 200,
+      data: workflows,
+    };
 
-  return res.json(response);
+    return res.json(response);
+  } catch (e) {
+    return next(e);
+  }
 });
 
 workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {

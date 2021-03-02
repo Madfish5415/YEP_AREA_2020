@@ -18,13 +18,17 @@ export abstract class OAuth2PartyStrategy extends Strategy {
         user: User,
         done: VerifyCallback
       ) => {
-        const exists = await userRepository.exists(user.id);
+        try {
+          const exists = await userRepository.exists(user.id);
 
-        if (!exists) {
-          await userRepository.create(user);
+          if (!exists) {
+            await userRepository.create(user);
+          }
+
+          return done(null, user);
+        } catch (e) {
+          return done(e);
         }
-
-        done(null, user);
       }
     );
   }

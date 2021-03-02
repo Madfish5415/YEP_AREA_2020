@@ -24,30 +24,34 @@ export class OAuth2ServiceStrategy extends Strategy {
         user: User,
         done: VerifyCallback
       ) => {
-        const filter = {
-          userId: user.id,
-          serviceId: req.params.id,
-        };
-        const exists = await credentialRepository.exists(filter);
+        try {
+          const filter = {
+            userId: user.id,
+            serviceId: req.params.id,
+          };
+          const exists = await credentialRepository.exists(filter);
 
-        if (exists) {
-          await credentialRepository.update(filter, {
-            value: JSON.stringify({
-              accessToken,
-              refreshToken,
-            }),
-          });
-        } else {
-          await credentialRepository.create({
-            ...filter,
-            value: JSON.stringify({
-              accessToken,
-              refreshToken,
-            }),
-          });
+          if (exists) {
+            await credentialRepository.update(filter, {
+              value: JSON.stringify({
+                accessToken,
+                refreshToken,
+              }),
+            });
+          } else {
+            await credentialRepository.create({
+              ...filter,
+              value: JSON.stringify({
+                accessToken,
+                refreshToken,
+              }),
+            });
+          }
+
+          return done(null);
+        } catch (e) {
+          return done(e);
         }
-
-        return done(null);
       }
     );
 

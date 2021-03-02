@@ -1,10 +1,10 @@
-import { User } from "@area-common/types";
+import { Any, User } from "@area-common/types";
 import { Strategy, StrategyOptions, VerifyCallback } from "passport-oauth1";
 
 import { UserRepository } from "../../repositories";
 import { OAuth1StrategyStore } from "../store/oauth1";
 
-export abstract class OAuth2PartyStrategy extends Strategy {
+export abstract class OAuth1PartyStrategy extends Strategy {
   abstract readonly id: string;
 
   protected constructor(
@@ -17,18 +17,22 @@ export abstract class OAuth2PartyStrategy extends Strategy {
         requestTokenStore: new OAuth1StrategyStore(),
       },
       async (
-        accessToken: string,
-        refreshToken: string,
+        token: string,
+        tokenSecret: string,
         user: User,
         done: VerifyCallback
       ) => {
-        const exists = await userRepository.exists(user.id);
+        try {
+          const exists = await userRepository.exists(user.id);
 
-        if (!exists) {
-          await userRepository.create(user);
+          if (!exists) {
+            await userRepository.create(user);
+          }
+
+          return done(null, user);
+        } catch (e) {
+          return done(e);
         }
-
-        done(null, user);
       }
     );
   }
@@ -36,6 +40,7 @@ export abstract class OAuth2PartyStrategy extends Strategy {
   abstract userProfile(
     token: string,
     tokenSecret: string,
+    params: Any,
     done: VerifyCallback
   ): void;
 }

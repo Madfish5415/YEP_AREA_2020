@@ -1,16 +1,16 @@
 import { BaseNode } from "@area-common/service";
-import { Any, Type, Variable } from "@area-common/types";
+import { Type, Variable } from "@area-common/types";
 
 type Parameters = {
-  value1: Any;
-  value2: Any;
+  value1: string;
+  value2: string;
 };
 
 type Outputs = {
   result: boolean;
 };
 
-export class EqualNode extends BaseNode<Parameters, Outputs> {
+export class ContainsNode extends BaseNode<Parameters, Outputs> {
   readonly id: string = "equal";
   readonly name: string = "Equal";
   readonly description: string = "No description";
@@ -19,12 +19,12 @@ export class EqualNode extends BaseNode<Parameters, Outputs> {
     value1: {
       name: "Value 1",
       description: "No description",
-      type: Type.ANY,
+      type: Type.STRING,
     },
     value2: {
       name: "Value 2",
       description: "No description",
-      type: Type.ANY,
+      type: Type.STRING,
     },
   };
   outputsDef: Record<keyof Outputs, Variable> = {
@@ -38,7 +38,7 @@ export class EqualNode extends BaseNode<Parameters, Outputs> {
 
   async execute(parameters: Parameters): Promise<Outputs[] | Outputs> {
     return {
-      result: parameters.value1 === parameters.value2,
+      result: parameters.value1.includes(parameters.value2),
     };
   }
 }

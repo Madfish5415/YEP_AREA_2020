@@ -26,7 +26,7 @@ export abstract class IntervalNode<P, O> extends BaseTriggerNode<P, O> {
 
     if (this.intervals.has(parametersId)) return;
 
-    const intervalId = global.setInterval(async () => {
+    const callback = async () => {
       const response = await this.execute(parameters);
 
       if (response instanceof Array) {
@@ -36,7 +36,11 @@ export abstract class IntervalNode<P, O> extends BaseTriggerNode<P, O> {
       } else {
         this.pubSub.publish(parametersId, response);
       }
-    }, this.interval);
+    };
+
+    callback();
+
+    const intervalId = global.setInterval(callback, this.interval);
 
     this.intervals.set(parametersId, intervalId);
   }

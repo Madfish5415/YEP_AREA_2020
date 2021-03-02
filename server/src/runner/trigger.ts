@@ -1,13 +1,16 @@
 import { BaseTriggerNode } from "@area-common/service";
 import { AnyObject, Node, RunnerTriggerNode } from "@area-common/types";
 
-import { runnerMergeParameters } from "../helpers";
+import { runnerEvaluateExpressions } from "../helpers";
+import { BaseRunnerNode } from "./node";
 
 export class BaseRunnerTriggerNode<
-  I extends AnyObject = AnyObject,
-  P extends AnyObject = AnyObject,
-  O extends AnyObject = AnyObject
-> implements RunnerTriggerNode<I, P, O> {
+    I extends AnyObject = AnyObject,
+    P extends AnyObject = AnyObject,
+    O extends AnyObject = AnyObject
+  >
+  extends BaseRunnerNode<I, P, O>
+  implements RunnerTriggerNode<I, P, O> {
   id: string;
   original: BaseTriggerNode<P, O>;
   parameters: Record<keyof P, string>;
@@ -22,6 +25,8 @@ export class BaseRunnerTriggerNode<
     condition: string,
     nextNodes: string[]
   ) {
+    super(id, original, parameters, condition, nextNodes);
+
     this.id = id;
     this.original = original;
     this.parameters = parameters;
@@ -29,26 +34,22 @@ export class BaseRunnerTriggerNode<
     this.nextNodes = nextNodes;
   }
 
-  execute(parameters?: I): Promise<O[] | O> {
-    if (!parameters) {
-      return this.original.execute();
-    }
-
-    const mergedParameters = runnerMergeParameters(parameters, this.parameters);
-
-    return this.original.execute(mergedParameters as P);
-  }
-
   subscribe(parameters: I, node: Node): void {
-    const mergedParameters = runnerMergeParameters(parameters, this.parameters);
+    const evaluatedParameters = runnerEvaluateExpressions(
+      parameters,
+      this.parameters
+    );
 
-    this.original.subscribe(mergedParameters as P, node);
+    this.original.subscribe(evaluatedParameters as P, node);
   }
 
   unsubscribe(parameters: I, node: Node): void {
-    const mergedParameters = runnerMergeParameters(parameters, this.parameters);
+    const evaluatedParameters = runnerEvaluateExpressions(
+      parameters,
+      this.parameters
+    );
 
-    this.original.unsubscribe(mergedParameters as P, node);
+    this.original.unsubscribe(evaluatedParameters as P, node);
   }
 
   subscribeAll(parameters: I): void {
