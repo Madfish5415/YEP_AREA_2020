@@ -18,6 +18,7 @@ import { ErrorState } from "../blocbuilder/error-state";
 import { RouteProp } from "@react-navigation/native";
 import { CredentialsStackParamsList } from "../../pages/credentials";
 import { User } from "@area-common/types";
+import { AuthConfiguration } from "react-native-app-auth";
 
 const styles = StyleSheet.create({
   container: {
@@ -65,6 +66,43 @@ type Props = {
   user: User;
 };
 
+export type ConfigProps = {
+  issuer: string;
+  clientID: string;
+  redirectURL: string;
+  scopes: string[];
+};
+
+const oAuthConfigMap = new Map<string, AuthConfiguration>([
+  [
+    "google",
+    {
+      issuer: "https://accounts.google.com",
+      clientId:
+        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
+      scopes: ["https://www.googleapis.com/auth/youtube"],
+    },
+  ],
+  [
+    "github",
+    {
+      redirectUrl:
+        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com:/credentials",
+      clientId: "8581958e9dae37e30f77",
+      clientSecret: "9ed0766602121c709c8c3275034316fba97b42b1",
+      scopes: ["identity"],
+      serviceConfiguration: {
+        authorizationEndpoint: "https://github.com/login/oauth/authorize",
+        tokenEndpoint: "https://github.com/login/oauth/access_token",
+        revocationEndpoint:
+          "https://github.com/settings/connections/applications/8581958e9dae37e30f77",
+      },
+    },
+  ],
+]);
+
 const Credentials: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
@@ -93,7 +131,8 @@ const Credentials: FC<Props> = (props) => {
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
         user={props.user}
-        isLoggedIn={true}
+        isLoggedIn={false}
+        oAuthConfig={oAuthConfigMap.get("github")}
       />
       <Service
         name={"Discord"}
@@ -101,6 +140,7 @@ const Credentials: FC<Props> = (props) => {
         isEpitech={false}
         user={props.user}
         isLoggedIn={false}
+        oAuthConfig={oAuthConfigMap.get("google")}
       />
       <Service
         name={"Youtube"}
