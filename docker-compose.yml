@@ -1,6 +1,18 @@
 version: "3"
 services:
+  ultrahook:
+    build:
+      context: .
+      dockerfile: ultrahook.Dockerfile
+    environment:
+      - "API_KEY=LD2DqAdj7YbFwEwYpalnUPpnv043hli5"
+      - "DEST=http://localhost:8080"
+    ports:
+      - "5000:5000"
+    network_mode: "host"
   server:
+    depends_on:
+      - ultrahook
     build:
       context: .
       dockerfile: server.Dockerfile

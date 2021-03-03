@@ -14,7 +14,7 @@ export class UserRepository {
   }
 
   async update(id: string, partial: Partial<User>): Promise<User | null> {
-    return this.model.findOneAndUpdate({ id }, partial);
+    return this.model.findOneAndUpdate({ id }, partial, { new: true });
   }
 
   async delete(id: string): Promise<void> {
@@ -27,5 +27,9 @@ export class UserRepository {
 
   async list(): Promise<User[]> {
     return this.model.find();
+  }
+
+  async deleteAll(): Promise<User[]> {
+    return this.model.deleteMany();
   }
 }

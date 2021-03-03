@@ -3,6 +3,7 @@
   "packages": [
     "common/**",
     "services/**",
+    "parties/**",
     "api-server",
     "server",
     "mobile",
