@@ -83,7 +83,7 @@ export class BaseRunner implements Runner {
       return workflow.starters.includes(rNode.id);
     });
     const rStartersTrees = rStartersNodes.map((rNode) => {
-      return this.createNodeTree(rNode, rNodes);
+      return BaseRunner.createNodeTree(rNode, rNodes);
     });
 
     return new BaseRunner(rStartersTrees);
@@ -98,7 +98,7 @@ export class BaseRunner implements Runner {
       return node.nextNodes.includes(item.id);
     });
     const subTree = subNodes.map((item) => {
-      return this.createNodeTree(item, allNodes);
+      return BaseRunner.createNodeTree(item, allNodes);
     });
     const parallelNode = new ParallelNode(subTree);
 
