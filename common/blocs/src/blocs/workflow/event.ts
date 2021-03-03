@@ -9,3 +9,5 @@ export class WorkflowGetEvent extends WorkflowEvent {
     this.id = id;
   }
 }
+
+export class WorkflowListEvent extends WorkflowEvent {}

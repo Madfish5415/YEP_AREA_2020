@@ -1,5 +1,6 @@
 import { Workflow } from "@area-common/types";
 import { Repository } from "../types";
+import workflows from "../data/workflows";
 
 export class WorkflowRepository extends Repository {
   async get(id: string): Promise<Workflow> {
@@ -7,5 +8,13 @@ export class WorkflowRepository extends Repository {
     const json = await response.json();
 
     return json["data"];
+  }
+
+  async list(): Promise<Workflow[]> {
+    return Promise.all(
+      workflows.map((workflow) => {
+        return workflow;
+      })
+    );
   }
 }

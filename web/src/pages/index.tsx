@@ -1,9 +1,11 @@
 import React, {FC} from "react";
-import AppBarComponent from "../components/appbar/appbar";
+import Router from "next/router";
 
 const IndexPage: FC = () => {
+    Router.push("/workflows");
+
     return (
-        <AppBarComponent/>
+        <div/>
     );
 };
 
