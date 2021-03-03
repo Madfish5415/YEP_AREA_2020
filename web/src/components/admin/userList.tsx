@@ -11,14 +11,13 @@ import {
   UserBloc,
   UserRepository,
   UserState,
-  UserReadEvent,
-  UserReadState,
   UserUpdateState,
   UserUpdateEvent,
   UserErrorState,
   UserListEvent,
   UserListState,
   UserDeleteState,
+  UserDeleteEvent,
 } from "@area-common/blocs";
 import { gray, white } from "@area-common/styles";
 import { DefaultState } from "../blocbuilder/default-state";
@@ -45,6 +44,14 @@ const UserList: FC<Props> = (props) => {
   const usersBloc = new UserBloc(new UserRepository(""));
   usersBloc.add(new UserListEvent());
 
+  const updateUser = (id: string, updatedUser: Partial<User>) => {
+    usersBloc.add(new UserUpdateEvent(id, updatedUser));
+  };
+
+  const deleteUser = (id: string) => {
+    usersBloc.add(new UserDeleteEvent(id));
+  };
+
   return (
     <BlocBuilder
       bloc={usersBloc}
@@ -66,6 +73,8 @@ const UserList: FC<Props> = (props) => {
           return (
             <UserListComponent
               user={props.user}
+              updateUser={updateUser}
+              deleteUser={deleteUser}
               users={(state as UserListState).users}
             />
           );
@@ -78,6 +87,8 @@ const UserList: FC<Props> = (props) => {
 
 type CompProps = {
   user: User;
+  updateUser: (id: string, updatedUser: Partial<User>) => void;
+  deleteUser: (id: string) => void;
   users: User[];
 };
 
@@ -91,7 +102,12 @@ const UserListComponent: FC<CompProps> = (props) => {
           {props.users.map(
             (user) =>
               user.id !== props.user.id && (
-                <UserLine key={user.id} user={user} />
+                <UserLine
+                  key={user.id}
+                  user={user}
+                  updateUser={props.updateUser}
+                  deleteUser={props.deleteUser}
+                />
               )
           )}
         </List>

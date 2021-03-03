@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   makeStyles,
   Theme,
@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
 import { User } from "@area-common/types";
+import UpdateUserDialog from "./updateUserDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -39,10 +40,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   user: User;
+  updateUser: (id: string, updatedUser: Partial<User>) => void;
+  deleteUser: (id: string) => void;
 };
 
 const UserLine: FC<Props> = (props) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -52,10 +56,22 @@ const UserLine: FC<Props> = (props) => {
             {props.user.username}
           </ListItemText>
           <ListItemSecondaryAction>
-            <Button className={classes.userButton}>Manage</Button>
+            <Button
+              className={classes.userButton}
+              onClick={() => setOpen(true)}
+            >
+              Manage
+            </Button>
           </ListItemSecondaryAction>
         </ListItem>
         <Divider className={classes.divider} />
+        <UpdateUserDialog
+          user={props.user}
+          updateUser={props.updateUser}
+          deleteUser={props.deleteUser}
+          open={open}
+          setOpen={setOpen}
+        />
       </div>
     </>
   );
