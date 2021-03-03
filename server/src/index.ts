@@ -25,8 +25,6 @@ async function main() {
   const services: Service[] = [new ConditionsService(), new TwitterService()];
   const core = new Core(HOSTNAME, PORT, database, services);
 
-  console.log(process.env["TWITTER_CONSUMER_KEY"]);
-
   process.on("SIGINT", () => core.stop());
   process.on("SIGTERM", () => core.stop());
 

@@ -1,7 +1,7 @@
 import { APIResponse } from "@area-common/types";
 import { Router } from "express";
 
-import { SERVICE_ROUTE } from "../../../constants";
+import { SERVICE_NOT_EXISTS_ERROR, SERVICE_ROUTE } from "../../../constants";
 
 export const serviceRouter = Router();
 
@@ -11,15 +11,7 @@ serviceRouter.use(SERVICE_ROUTE, async (req, res, next) => {
     const service = await req.serviceRepository.exists(id);
 
     if (!service) {
-      const response: APIResponse = {
-        status: 404,
-        failure: {
-          name: "SERVICE_NOT_EXISTS",
-          message: "Service doesn't exist",
-        },
-      };
-
-      return res.json(response);
+      return next(SERVICE_NOT_EXISTS_ERROR);
     }
 
     return next();

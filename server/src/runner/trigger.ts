@@ -53,21 +53,13 @@ export class BaseRunnerTriggerNode<
   }
 
   subscribeAll(parameters: I): void {
-    console.log("SUBSCRIBE_ALL");
-
     for (const node of this.subscribers) {
-      console.log("SUBSCRIBE");
-
       this.subscribe(parameters, node);
     }
   }
 
   unsubscribeAll(parameters: I): void {
-    console.log("UNSUBSCRIBE_ALL");
-
     for (const node of this.subscribers) {
-      console.log("UNSUBSCRIBE");
-
       this.unsubscribe(parameters, node);
     }
   }

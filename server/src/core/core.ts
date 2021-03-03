@@ -8,18 +8,21 @@ import passport from "passport";
 import { Database } from "../database";
 import { RunnerManager } from "../managers";
 import {
+  accountMiddleware,
+  credentialMiddleware,
   errorMiddleware,
   runnerMiddleware,
+  serviceMiddleware,
+  userMiddleware,
   workflowMiddleware,
 } from "../middlewares";
-import { serviceMiddleware } from "../middlewares/service";
 import {
   AccountRepository,
+  CredentialRepository,
   ServiceRepository,
   UserRepository,
   WorkflowRepository,
 } from "../repositories";
-import { CredentialRepository } from "../repositories/credential";
 import { apiRouter } from "../routes";
 import {
   usePartyStrategies,
@@ -79,7 +82,12 @@ export class Core {
     this.express.use(passport.initialize());
 
     this.express.use(serviceMiddleware(this.serviceRepository));
+
+    this.express.use(accountMiddleware(this.accountRepository));
+    this.express.use(credentialMiddleware(this.credentialRepository));
+    this.express.use(userMiddleware(this.userRepository));
     this.express.use(workflowMiddleware(this.workflowRepository));
+
     this.express.use(runnerMiddleware(this.runnerManager));
 
     this.express.use(apiRouter);

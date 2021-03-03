@@ -1,6 +1,6 @@
 import { AnyObject } from "@area-common/types";
 
-export function hasMissingKeys<T>(
+export function missingKeysOf<T extends AnyObject>(
   object: AnyObject,
   keys: (keyof T)[]
 ): (keyof T)[] {
@@ -13,4 +13,22 @@ export function hasMissingKeys<T>(
   }
 
   return missingKeys;
+}
+
+export function hasAKeysOf<T extends AnyObject>(
+  object: AnyObject,
+  keys: (keyof T)[]
+): [boolean, (keyof T)[]] {
+  const missingKeys = missingKeysOf<T>(object, keys);
+
+  return [missingKeys.length !== keys.length, missingKeys];
+}
+
+export function hasAllKeysOf<T extends AnyObject>(
+  object: AnyObject,
+  keys: (keyof T)[]
+): [boolean, (keyof T)[]] {
+  const missingKeys = missingKeysOf<T>(object, keys);
+
+  return [!missingKeys.length, missingKeys];
 }

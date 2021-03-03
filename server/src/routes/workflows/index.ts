@@ -4,7 +4,7 @@ import passport from "passport";
 import { v4 } from "uuid";
 
 import { BAD_REQUEST_ERROR, WORKFLOWS_ROUTE } from "../../constants";
-import { hasMissingKeys } from "../../utilities/type";
+import { hasAllKeysOf } from "../../utilities/type";
 import { workflowRouter } from "./[id]";
 
 export const workflowsRouter = Router();
@@ -36,7 +36,7 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
   try {
     const user = req.user as User;
     const workflow: Workflow = req.body;
-    const missingKeys = hasMissingKeys<Workflow>(workflow, [
+    const [hasKeys] = hasAllKeysOf<Workflow>(workflow, [
       "name",
       "description",
       "active",
@@ -44,19 +44,12 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
       "starters",
     ]);
 
-    if (missingKeys.length) {
-      const response: APIResponse = {
-        status: 400,
-        failure: {
-          ...BAD_REQUEST_ERROR,
-        },
-      };
-
-      return res.json(response);
+    if (!hasKeys) {
+      return next(BAD_REQUEST_ERROR);
     }
 
     for (const wNode of workflow.nodes) {
-      const missingKeys = hasMissingKeys<WorkflowNode>(wNode, [
+      const [hasKeys] = hasAllKeysOf<WorkflowNode>(wNode, [
         "id",
         "name",
         "serviceId",
@@ -66,15 +59,8 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
         "nextNodes",
       ]);
 
-      if (missingKeys.length) {
-        const response: APIResponse = {
-          status: 400,
-          failure: {
-            ...BAD_REQUEST_ERROR,
-          },
-        };
-
-        return res.json(response);
+      if (!hasKeys) {
+        return next(BAD_REQUEST_ERROR);
       }
     }
 

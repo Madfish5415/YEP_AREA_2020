@@ -5,4 +5,7 @@
     "outDir": "./build",
     "rootDir": "./src"
   },
+  "exclude": [
+    "./src/routes/admin/**/*"
+  ]
 }

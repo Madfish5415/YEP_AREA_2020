@@ -3,11 +3,12 @@ import passport from "passport";
 
 import {
   AccountRepository,
+  CredentialRepository,
   ServiceRepository,
   UserRepository,
 } from "../repositories";
-import { CredentialRepository } from "../repositories/credential";
 import { AuthorizeStrategy } from "./authorize";
+import { AuthorizeAdminStrategy } from "./authorize-admin";
 import { GoogleStrategy, MicrosoftStrategy, TwitterStrategy } from "./parties";
 import { OAuth1ServiceStrategy, OAuth2ServiceStrategy } from "./services";
 import { SignInStrategy } from "./signin";

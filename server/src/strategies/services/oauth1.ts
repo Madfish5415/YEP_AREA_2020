@@ -37,12 +37,14 @@ export class OAuth1ServiceStrategy extends Strategy {
           const exists = await credentialRepository.exists(filter);
 
           if (exists) {
-            await credentialRepository.update(filter, {
+            const r = await credentialRepository.update(filter, {
               value: JSON.stringify({
                 token,
                 tokenSecret,
               }),
             });
+
+            console.log(r);
           } else {
             await credentialRepository.create({
               ...filter,

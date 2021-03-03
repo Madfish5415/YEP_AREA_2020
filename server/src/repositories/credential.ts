@@ -27,7 +27,7 @@ export class CredentialRepository {
     filter: Filter,
     partial: Partial<Credential>
   ): Promise<Credential | null> {
-    return this.model.findOneAndUpdate(filter, partial);
+    return this.model.findOneAndUpdate(filter, partial, { new: true });
   }
 
   async delete(filter: Filter): Promise<void> {
@@ -39,6 +39,18 @@ export class CredentialRepository {
   }
 
   async list(userId?: string): Promise<Credential[]> {
-    return this.model.find({ userId });
+    if (userId) {
+      return this.model.find({ userId });
+    }
+
+    return this.model.find();
+  }
+
+  async deleteAll(userId?: string): Promise<boolean> {
+    if (userId) {
+      return this.model.deleteMany({ userId });
+    }
+
+    return this.model.deleteMany();
   }
 }

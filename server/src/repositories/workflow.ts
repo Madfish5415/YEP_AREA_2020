@@ -17,11 +17,11 @@ export class WorkflowRepository {
     id: string,
     partial: Partial<Workflow>
   ): Promise<Workflow | null> {
-    return this.model.findOneAndUpdate({ id }, partial);
+    return this.model.findOneAndUpdate({ id }, partial, { new: true });
   }
 
   async delete(id: string): Promise<void> {
-    await this.model.deleteMany({ id });
+    await this.model.deleteOne({ id });
   }
 
   async exists(id: string): Promise<boolean> {
@@ -34,5 +34,13 @@ export class WorkflowRepository {
     }
 
     return this.model.find({ userId });
+  }
+
+  async deleteAll(userId?: string): Promise<boolean> {
+    if (userId) {
+      return this.model.deleteMany({ userId });
+    }
+
+    return this.model.deleteMany();
   }
 }

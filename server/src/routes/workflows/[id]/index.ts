@@ -1,7 +1,12 @@
-import { APIResponse, Workflow } from "@area-common/types";
+import { APIResponse, Workflow, WorkflowNode } from "@area-common/types";
 import { Router } from "express";
 
-import { BAD_REQUEST_ERROR, WORKFLOW_ROUTE } from "../../../constants";
+import {
+  BAD_REQUEST_ERROR,
+  WORKFLOW_NOT_EXISTS,
+  WORKFLOW_ROUTE,
+} from "../../../constants";
+import { hasAKeysOf } from "../../../utilities/type";
 
 export const workflowRouter = Router();
 
@@ -11,15 +16,7 @@ workflowRouter.use(WORKFLOW_ROUTE, async (req, res, next) => {
     const workflow = await req.workflowRepository.exists(id);
 
     if (!workflow) {
-      const response: APIResponse = {
-        status: 404,
-        failure: {
-          name: "WORKFLOW_NOT_EXISTS",
-          message: "Workflow doesn't exist",
-        },
-      };
-
-      return res.json(response);
+      return next(WORKFLOW_NOT_EXISTS);
     }
 
     return next();
@@ -48,20 +45,37 @@ workflowRouter.get(WORKFLOW_ROUTE, async (req, res, next) => {
 workflowRouter.post(WORKFLOW_ROUTE, async (req, res, next) => {
   try {
     const id = req.params.id as string;
-    const data = req.body.data;
+    const partial: Partial<Workflow> = req.body;
+    const [hasKeys] = hasAKeysOf<Workflow>(partial, [
+      "name",
+      "description",
+      "active",
+      "nodes",
+      "starters",
+    ]);
 
-    if (!data) {
-      const response: APIResponse = {
-        status: 400,
-        failure: {
-          ...BAD_REQUEST_ERROR,
-        },
-      };
-
-      return res.json(response);
+    if (!hasKeys) {
+      return next(BAD_REQUEST_ERROR);
     }
 
-    const partial: Partial<Workflow> = data.workflow;
+    if (partial.nodes) {
+      for (const wNode of partial.nodes) {
+        const [hasKeys] = hasAKeysOf<WorkflowNode>(wNode, [
+          "id",
+          "name",
+          "serviceId",
+          "nodeId",
+          "parameters",
+          "condition",
+          "nextNodes",
+        ]);
+
+        if (!hasKeys) {
+          return next(BAD_REQUEST_ERROR);
+        }
+      }
+    }
+
     const workflow = await req.runnerManager.update(id, partial);
 
     const response: APIResponse = {

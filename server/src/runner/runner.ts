@@ -3,8 +3,7 @@ import { Node, Runner, RunnerNode, Workflow } from "@area-common/types";
 
 import { WORKFLOW_NODE_NOT_EXISTS } from "../constants";
 import { LinearNode, ParallelNode } from "../node";
-import { ServiceRepository } from "../repositories";
-import { CredentialRepository } from "../repositories/credential";
+import { CredentialRepository, ServiceRepository } from "../repositories";
 import { BaseRunnerNode } from "./node";
 import { BaseRunnerTriggerNode } from "./trigger";
 

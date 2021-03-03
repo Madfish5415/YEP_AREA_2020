@@ -1,8 +1,11 @@
 import { Runner, Workflow } from "@area-common/types";
 
 import { WORKFLOW_NOT_EXISTS } from "../constants";
-import { ServiceRepository, WorkflowRepository } from "../repositories";
-import { CredentialRepository } from "../repositories/credential";
+import {
+  CredentialRepository,
+  ServiceRepository,
+  WorkflowRepository,
+} from "../repositories";
 import { BaseRunner } from "../runner";
 
 export class RunnerManager {
@@ -40,7 +43,9 @@ export class RunnerManager {
   async create(workflow: Workflow): Promise<void> {
     await this.workflowRepository.create(workflow);
 
-    await this.createRunner(workflow);
+    if (workflow.active) {
+      await this.createRunner(workflow);
+    }
   }
 
   async update(id: string, partial: Partial<Workflow>): Promise<Workflow> {
@@ -49,7 +54,10 @@ export class RunnerManager {
     if (!workflow) throw WORKFLOW_NOT_EXISTS;
 
     await this.deleteRunner(id);
-    await this.createRunner(workflow);
+
+    if (workflow.active) {
+      await this.createRunner(workflow);
+    }
 
     return workflow;
   }
@@ -60,7 +68,7 @@ export class RunnerManager {
     await this.deleteRunner(id);
   }
 
-  async createRunner(workflow: Workflow): Promise<void> {
+  private async createRunner(workflow: Workflow): Promise<void> {
     const runner = await BaseRunner.fromWorkflow(
       workflow,
       this.credentialRepository,
@@ -70,13 +78,17 @@ export class RunnerManager {
     runner.start();
 
     this.runners.set(workflow.id, runner);
+
+    console.info(`Runner created for workflow ${workflow.id}`);
   }
 
-  async deleteRunner(id: string): Promise<void> {
+  private async deleteRunner(id: string): Promise<void> {
     const runner = this.runners.get(id);
 
     runner?.stop();
 
     this.runners.delete(id);
+
+    console.info(`Runner deleted for workflow ${id}`);
   }
 }

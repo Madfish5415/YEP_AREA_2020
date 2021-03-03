@@ -1,4 +1,4 @@
-import { AnyObject, CollectionNode, Node } from "@area-common/types";
+import { Any, AnyObject, CollectionNode, Node } from "@area-common/types";
 
 export class ParallelNode<P extends AnyObject = AnyObject>
   implements CollectionNode<P, void> {
@@ -9,8 +9,16 @@ export class ParallelNode<P extends AnyObject = AnyObject>
   }
 
   async execute(parameters?: P): Promise<void> {
+    const outputs: Any = parameters;
+
     for (const node of this.collection) {
-      await node.execute(parameters);
+      if (outputs instanceof Array) {
+        for (const output of outputs) {
+          await node.execute(output);
+        }
+      } else {
+        await node.execute(outputs);
+      }
     }
   }
 }

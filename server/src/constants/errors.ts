@@ -35,9 +35,19 @@ export const AUTHORIZATION_INVALID_ERROR = new StatusError(401, {
   message: "Authorization invalid",
 });
 
+export const USER_NOT_ADMIN_ERROR = new StatusError(401, {
+  name: "USER_NOT_ADMIN_ERROR",
+  message: "User isn't an administrator",
+});
+
 export const VERIFICATION_INVALID_ERROR = new StatusError(401, {
   name: "VERIFICATION_INVALID",
   message: "Verification invalid",
+});
+
+export const SERVICE_NOT_EXISTS_ERROR = new StatusError(404, {
+  name: "SERVICE_NOT_EXISTS",
+  message: "Service doesn't exist",
 });
 
 export const USER_NOT_EXISTS_ERROR = new StatusError(404, {
