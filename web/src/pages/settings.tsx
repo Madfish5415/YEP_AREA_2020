@@ -19,6 +19,7 @@ import AccountSecurity from "../components/settings/accountSecurity";
 import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -34,8 +35,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 25,
     justifyContent: "center",
   },
+  bottomGap: {
+    marginTop: 90,
+    marginLeft: 125,
+  },
+  adminButton: {
+    backgroundColor: gray.main,
+    "&:hover": {
+      backgroundColor: gray.light1,
+    },
+    color: white,
+    textTransform: "none",
+    width: 200,
+  },
   logOutButton: {
-    marginTop: 140,
+    marginTop: 20,
     marginLeft: 125,
     backgroundColor: gray.main,
     "&:hover": {
@@ -92,9 +106,14 @@ type Props = {
 
 const Settings: FC<Props> = (props) => {
   const classes = useStyles();
+  const router = useRouter();
 
   const handleLogOut = () => {
     console.log("User logged out");
+  };
+
+  const handleAdminBoard = () => {
+    router.push("/admin");
   };
 
   return (
@@ -114,6 +133,16 @@ const Settings: FC<Props> = (props) => {
             user={props.user}
             updateUser={props.updateUser}
           />
+          <div className={classes.bottomGap}>
+            {props.user.administrator ? (
+              <Button
+                className={classes.adminButton}
+                onClick={handleAdminBoard}
+              >
+                Admin board
+              </Button>
+            ) : null}
+          </div>
           <Button className={classes.logOutButton} onClick={handleLogOut}>
             Log out
           </Button>
