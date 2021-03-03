@@ -89,7 +89,7 @@ const oAuthConfigMap = new Map<string, AuthConfiguration>([
     "github",
     {
       redirectUrl:
-        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com:/credentials",
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials",
       clientId: "8581958e9dae37e30f77",
       clientSecret: "9ed0766602121c709c8c3275034316fba97b42b1",
       scopes: ["identity"],
@@ -98,6 +98,46 @@ const oAuthConfigMap = new Map<string, AuthConfiguration>([
         tokenEndpoint: "https://github.com/login/oauth/access_token",
         revocationEndpoint:
           "https://github.com/settings/connections/applications/8581958e9dae37e30f77",
+      },
+    },
+  ],
+  [
+    "office365",
+    {
+      issuer:
+        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/v2.0",
+      clientId: "dff89b78-9082-4107-ba9f-8b32f432f4fc",
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
+      scopes: ["openid", "profile", "email", "offline_access"],
+    },
+  ],
+  [
+    "instagram",
+    {
+      serviceConfiguration: {
+        authorizationEndpoint: "https://api.instagram.com/oauth/authorize",
+        tokenEndpoint: "https://api.instagram.com/oauth/access_token",
+      },
+      clientId: "422126992215364",
+      clientSecret: "7ac8b8ceb5e7e08d2cc4095d86b5986e",
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
+      scopes: ["user_profile", "user_media"],
+    },
+  ],
+  [
+    "discord",
+    {
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
+      clientId: "816619410512936970",
+      clientSecret: "tkXI9mzjHAekWRYn5_T_VmTXV5YlL6_9",
+      scopes: ["identify"],
+      serviceConfiguration: {
+        authorizationEndpoint: "https://discord.com/api/oauth2/authorize",
+        tokenEndpoint: "https://discord.com/api/oauth2/token",
+        revocationEndpoint: "https://discord.com/api/oauth2/token/revoke",
       },
     },
   ],
@@ -112,6 +152,7 @@ const Credentials: FC<Props> = (props) => {
         isEpitech={false}
         user={props.user}
         isLoggedIn={false}
+        oAuthConfig={oAuthConfigMap.get("instagram")}
       />
       <Service
         name={"Office 365"}
@@ -124,7 +165,8 @@ const Credentials: FC<Props> = (props) => {
         }
         isEpitech={false}
         user={props.user}
-        isLoggedIn={true}
+        isLoggedIn={false}
+        oAuthConfig={oAuthConfigMap.get("office365")}
       />
       <Service
         name={"Github"}
@@ -140,7 +182,7 @@ const Credentials: FC<Props> = (props) => {
         isEpitech={false}
         user={props.user}
         isLoggedIn={false}
-        oAuthConfig={oAuthConfigMap.get("google")}
+        oAuthConfig={oAuthConfigMap.get("discord")}
       />
       <Service
         name={"Youtube"}
@@ -150,6 +192,7 @@ const Credentials: FC<Props> = (props) => {
         isEpitech={false}
         user={props.user}
         isLoggedIn={true}
+        oAuthConfig={oAuthConfigMap.get("google")}
       />
       <Service
         name={"Epitech"}

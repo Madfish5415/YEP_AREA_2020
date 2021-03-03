@@ -37,6 +37,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal</string>
+        <string>627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com://credentials</string>
 			</array>
 		</dict>
 	</array>

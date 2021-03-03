@@ -79,9 +79,9 @@ const ServiceDescription: FC<ServiceDescriptionProps> = (props) => {
 };
 
 const Service: FC<Props> = (props) => {
-  const connectWithOauth = async () => {
+  const connectWithOauth = async (oAuthConfig: AuthConfiguration) => {
     try {
-      const result = await authorize(props.oAuthConfig);
+      const result = await authorize(oAuthConfig);
       console.log(result);
     } catch (error) {
       console.log(error);
@@ -121,7 +121,7 @@ const Service: FC<Props> = (props) => {
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => connectWithOauth()}>
+          <TouchableOpacity onPress={() => connectWithOauth(props.oAuthConfig)}>
             <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />
