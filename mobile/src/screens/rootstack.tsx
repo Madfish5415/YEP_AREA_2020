@@ -1,12 +1,10 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Provider as PaperProvider, Text } from "react-native-paper";
+import { Provider as PaperProvider } from "react-native-paper";
 import Theme from "../theme";
 import SignUpScreen from "./signup";
 import SignInScreen from "./signin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View } from "react-native";
 
 export type RootStackParamList = {
   SignIn: undefined;

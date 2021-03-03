@@ -52,11 +52,13 @@ const SignInScreen: FC = () => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    AsyncStorage.getItem("@userToken").then((token) => {
-      if (token) {
-        navigate("SignUp");
-      }
-    });
+    AsyncStorage.getItem("@userToken")
+      .then((token) => {
+        if (token) {
+          navigate("SignUp");
+        }
+      })
+      .catch((e) => console.log(e));
     console.log("Token:", token);
     if (token !== null) {
       navigate("SignUp");
