@@ -8,7 +8,7 @@ export class UserLoadingState extends UserState {}
 
 export class UserErrorState extends UserState {}
 
-export class UserGetState extends UserState {
+export class UserReadState extends UserState {
   user: User;
 
   constructor(user: User) {
