@@ -1,14 +1,14 @@
-import { Callback, Runner } from "../service";
 import { WorkflowAction } from "./action";
+import { WorkflowExecution } from "./execution";
 import { WorkflowReaction } from "./reaction";
-import { WorkflowOperator } from "./operator";
 
-export interface Workflow {
+export type Workflow = {
+  readonly userId: string;
   readonly id: string;
   readonly name: string;
   readonly description: string;
-  readonly action: WorkflowAction;
+  readonly active: boolean;
+  readonly actions: WorkflowAction[];
   readonly reactions: WorkflowReaction[];
-  readonly operators: WorkflowOperator[];
-  readonly runner: Runner<Callback>;
-}
+  readonly executions?: WorkflowExecution[];
+};
