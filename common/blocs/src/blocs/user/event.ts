@@ -1,6 +1,6 @@
 export abstract class UserEvent {}
 
-export class UserGetEvent extends UserEvent {
+export class UserReadEvent extends UserEvent {
   id: string;
 
   constructor(id: string) {

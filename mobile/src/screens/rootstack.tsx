@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
-import AccountSecurityStack from "./account-security";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -17,6 +16,11 @@ const RootStack: FC = () => {
     <PaperProvider theme={Theme}>
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name={"Home"}
             component={HomeStack}

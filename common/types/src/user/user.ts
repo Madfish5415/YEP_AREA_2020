@@ -1,5 +1,5 @@
 export type User = {
-  id: string;
+  readonly id: string;
   username: string;
   firstName?: string;
   lastName?: string;

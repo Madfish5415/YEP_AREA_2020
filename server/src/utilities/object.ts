@@ -1,3 +1,4 @@
+// file deepcode ignore PrototypePollutionFunctionParams: Useless warning in this case
 export function flatObject(
   object: Record<string, unknown>
 ): Record<string, unknown> {
@@ -11,7 +12,9 @@ export function flatObject(
         flatten[`${key}.${subKey}`] = subFlatten[subKey];
       }
     } else {
-      flatten[key] = object[key];
+      if (flatten[key] !== "__proto__") {
+        flatten[key] = object[key];
+      }
     }
   }
 
