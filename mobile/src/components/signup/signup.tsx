@@ -65,9 +65,16 @@ type FormValues = {
 const Signup: FC = () => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
-  const { signUp } = useSignUp();
+  const { signUp, error } = useSignUp();
   const [onError, setError] = useState(false);
   const [onErrorEmail, setErrorEmail] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (token !== null) {
+      alert(token);
+    }
+  }, [token]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (
@@ -77,7 +84,9 @@ const Signup: FC = () => {
       !data?.email
     ) {
       setError(true);
+      setErrorEmail(false);
     } else if (!emailRegex.test(data.email)) {
+      setError(false);
       setErrorEmail(true);
     } else {
       setError(false);
@@ -91,8 +100,10 @@ const Signup: FC = () => {
         data.lastName
       );
       try {
-        const token = await AsyncStorage.getItem("@userToken");
-        alert(token);
+        const tokenTmp = await AsyncStorage.getItem("@userToken");
+        if (token !== undefined) {
+          setToken(tokenTmp);
+        }
       } catch (e) {
         alert("Error trying to get token");
       }
@@ -119,13 +130,15 @@ const Signup: FC = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
-            {onError ? (
-              <Text style={styles.onErrorText}>
-                One or more fields are empty
-              </Text>
-            ) : onErrorEmail ? (
-              <Text style={styles.onErrorText}>Invalid email</Text>
-            ) : null}
+            <Text style={styles.onErrorText}>
+              {onError
+                ? "One or more fields are empty"
+                : onErrorEmail
+                ? "Invalid email"
+                : error
+                ? error.message
+                : null}
+            </Text>
             <ItemForm
               label={"Username"}
               formId={"username"}
