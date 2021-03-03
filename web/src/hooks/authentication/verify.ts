@@ -1,4 +1,6 @@
 import { useState } from "react";
+import {StatusError} from "@area-common/types";
+import {serviceUnavailableStatus, unknownErrorStatus} from "../../constants/status";
 
 async function apiVerify(
     username: string,
@@ -20,7 +22,7 @@ async function apiVerify(
             try {
                 return await response.json();
             } catch (e) {
-                return "unknownErrorStatus";
+                return unknownErrorStatus;
             }
         })();
 
@@ -38,7 +40,7 @@ async function apiVerify(
 
         console.error(err);
 
-        err = "serviceUnavailableStatus";
+        err = serviceUnavailableStatus;
 
         return setError(err);
     }
@@ -47,7 +49,7 @@ async function apiVerify(
 export function useVerify() {
     const [loading, setLoading] = useState(false);
     const [verified, setVerified] = useState(false);
-    const [error, setError] = useState<String>(); /* TODO: Use an error classe */
+    const [error, setError] = useState<StatusError>();
 
     const verify = async (username: string, id: string) => {
         await apiVerify(username, id, setLoading, setVerified, setError);

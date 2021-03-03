@@ -1,4 +1,6 @@
 import { useState } from "react";
+import {StatusError} from "@area-common/types";
+import {serviceUnavailableStatus, unknownErrorStatus} from "../../constants/status";
 
 async function apiSignUp(
     username: string,
@@ -37,7 +39,7 @@ async function apiSignUp(
             try {
                 return await response.json();
             } catch (e) {
-                return "unknownErrorStatus";
+                return unknownErrorStatus;
             }
         })();
 
@@ -55,7 +57,7 @@ async function apiSignUp(
 
         console.error(err);
 
-        err = "serviceUnavailableStatus";
+        err = serviceUnavailableStatus;
 
         return setError(err);
     }
@@ -64,7 +66,7 @@ async function apiSignUp(
 export function useSignUp() {
     const [loading, setLoading] = useState(false);
     const [signedUp, setSignedUp] = useState(false);
-    const [error, setError] = useState<String>(); /* TODO: Use an error classe */
+    const [error, setError] = useState<StatusError>();
 
     const signUp = async (
         username: string,
