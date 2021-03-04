@@ -33,6 +33,7 @@ authenticationServiceRouter.use(
   (req, res, next) => {
     passport.authenticate(req.serviceId, {
       callbackURL: req.query.callbackURL,
+      state: req.query.callbackURL,
       session: false,
       failWithError: true,
     } as AuthenticateOptions)(req, res, next);

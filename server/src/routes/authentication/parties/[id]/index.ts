@@ -28,6 +28,7 @@ authenticationPartyRouter.use(
 authenticationPartyRouter.use(AUTHENTICATION_PARTY_ROUTE, (req, res, next) => {
   passport.authenticate(req.partyId, {
     callbackURL: req.query.callbackURL,
+    state: req.query.callbackURL,
     session: false,
     failWithError: true,
   } as AuthenticateOptions)(req, res, next);
