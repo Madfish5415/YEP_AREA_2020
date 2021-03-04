@@ -20,6 +20,7 @@ import { gray, primary, white } from "@area-common/styles";
 import { User } from "@area-common/types";
 import UpdateUserField from "./updateUserField";
 import DeleteIcon from "@material-ui/icons/Delete";
+import IOSSwitch from "../switch/switch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +44,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     secondColumn: {
       margin: 20,
+    },
+    emailVerification: {
+      display: "flex",
+      alignItems: "center",
+    },
+    switchTitle: {
+      fontSize: 20,
+      color: gray.light2,
+    },
+    switch: {
+      transform: "scaleX(0.7) scaleY(0.7)",
     },
   })
 );
@@ -135,6 +147,10 @@ const UpdateUserDialog: FC<Props> = (props) => {
     console.log("password updated");
   };
 
+  const switchEmailVerification = () => {
+    console.log("email verification switch");
+  };
+
   return (
     <>
       <Dialog
@@ -201,6 +217,14 @@ const UpdateUserDialog: FC<Props> = (props) => {
                 onSubmit={updatePassword}
                 password
               />
+              <div className={classes.emailVerification}>
+                <Typography className={classes.switchTitle}>
+                  Email verification
+                </Typography>
+                <div className={classes.switch}>
+                  <IOSSwitch onChange={switchEmailVerification} />
+                </div>
+              </div>
             </div>
           </div>
         </DialogContent>
