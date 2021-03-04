@@ -21,6 +21,7 @@ export class GoogleStrategy extends OAuth2PartyStrategy {
         tokenURL: GOOGLE_TOKEN_URL,
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
+        scope: ["profile"]
       },
       userRepository
     );
