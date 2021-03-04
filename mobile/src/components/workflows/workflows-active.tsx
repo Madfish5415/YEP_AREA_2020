@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { WorkflowItem } from "./workflow-item";
 import { View, StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -19,6 +19,7 @@ import { ErrorState } from "../blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
 import { getLocalStorage } from "../../common/localStorage";
 import { Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,17 +28,22 @@ const styles = StyleSheet.create({
 });
 
 const WorkflowsActiveScreen: FC = () => {
+  const { navigate } = useNavigation();
   const [token, setToken] = useState<string>("");
   const workflowsBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
   useIsFocused();
-  getLocalStorage("@userToken").then((data) => {
-    if (data) {
-      setToken(data);
-      workflowsBloc.add(new WorkflowListEvent(data));
-    }
-  });
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        setToken(data);
+        workflowsBloc.add(new WorkflowListEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
 
   const updateWorkflow = (
     workflow: Workflow,

@@ -16,7 +16,7 @@ import { ErrorState } from "../blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
 import { Workflow } from "@area-common/types";
 import { v4 as uuidv4 } from "uuid";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
@@ -26,17 +26,22 @@ const styles = StyleSheet.create({
 });
 
 const WorkflowsEditScreen: FC = () => {
+  const { navigate } = useNavigation();
   const [token, setToken] = useState<string>("");
   const workflowsBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
   useIsFocused();
-  getLocalStorage("@userToken").then((data) => {
-    if (data) {
-      setToken(data);
-      workflowsBloc.add(new WorkflowListEvent(data));
-    }
-  });
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        setToken(data);
+        workflowsBloc.add(new WorkflowListEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
 
   const deleteWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(new WorkflowDeleteEvent(token, workflow.id));
