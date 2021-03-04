@@ -1,25 +1,33 @@
-import {Action, Reaction, Service} from "@area-common/types";
+import { Node, Service } from "@area-common/types";
 
 export class ServiceRepository {
-  private readonly services: Service[];
+  services: Service[];
 
   constructor(services: Service[]) {
     this.services = services;
-  }
-
-  list(): Service[] {
-    return this.services;
   }
 
   read(id: string): Service | undefined {
     return this.services.find((service) => service.id === id);
   }
 
-  readAction(serviceId: string, actionId: string): Action | undefined {
-    return this.read(serviceId)?.actions.find((action) => action.id === actionId);
+  readNode(serviceId: string, nodeId: string): Node | undefined {
+    return this.read(serviceId)?.nodes.find((node) => node.id === nodeId);
   }
 
-  readReaction(serviceId: string, reactionId: string): Reaction | undefined {
-    return this.read(serviceId)?.reactions.find((reaction) => reaction.id === reactionId);
+  exists(id: string): boolean {
+    return !!this.read(id);
+  }
+
+  existsNode(serviceId: string, nodeId: string): boolean {
+    return !!this.readNode(serviceId, nodeId);
+  }
+
+  list(): Service[] {
+    return this.services;
+  }
+
+  listNode(serviceId: string): Node[] | undefined {
+    return this.read(serviceId)?.nodes;
   }
 }

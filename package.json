@@ -4,6 +4,7 @@
   "workspaces": [
     "common/**",
     "services/**",
+    "packages/**",
     "api-server",
     "server",
     "mobile",
@@ -13,10 +14,10 @@
     "build": "lerna run build",
     "build:common": "lerna run --scope @area-common/* build",
     "build:services": "lerna run --scope @area-service/* build",
+    "build:server": "yarn workspace area-server build",
+    "build:web": "yarn workspace area-web build",
     "build:android": "yarn workspace area-mobile build:android",
     "build:ios": "yarn workspace area-mobile build:ios",
-    "clean": "lerna run clean",
-    "fclean": "lerna run fclean && rm -rf node_modules/",
     "start:api-server": "yarn workspace area-api-server start",
     "start:server": "yarn workspace area-server start",
     "start:android": "yarn workspace area-mobile start:android",
@@ -24,7 +25,9 @@
     "start:web": "yarn workspace area-web start",
     "dev:api-server": "yarn workspace area-api-server dev",
     "dev:server": "yarn workspace area-server dev",
-    "dev:web": "yarn workspace area-web dev"
+    "dev:web": "yarn workspace area-web dev",
+    "clean": "lerna run clean",
+    "fclean": "lerna run fclean && rm -rf node_modules/"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.13.0",
@@ -33,6 +36,7 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "lerna": "^3.22.1",
     "prettier": "^2.2.1",
     "typescript": "^4.1.3"

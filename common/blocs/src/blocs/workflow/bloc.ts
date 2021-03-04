@@ -1,25 +1,25 @@
 import { Bloc } from "@felangel/bloc";
+
+import { WorkflowRepository } from "../../repositories";
 import {
-  WorkflowEvent,
-  WorkflowReadEvent,
-  WorkflowListEvent,
-  WorkflowUpdateEvent,
-  WorkflowDeleteEvent,
   WorkflowCreateEvent,
+  WorkflowDeleteEvent,
+  WorkflowEvent,
+  WorkflowListEvent,
+  WorkflowReadEvent,
+  WorkflowUpdateEvent,
 } from "./event";
 import {
+  WorkflowCreateState,
+  WorkflowDeleteState,
   WorkflowErrorState,
-  WorkflowReadState,
   WorkflowInitialState,
   WorkflowListState,
   WorkflowLoadingState,
+  WorkflowReadState,
   WorkflowState,
-  WorkflowCreateState,
   WorkflowUpdateState,
-  WorkflowDeleteState,
 } from "./state";
-import { WorkflowRepository } from "../../repositories";
-import { Workflow } from "@area-common/types";
 
 export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   repository: WorkflowRepository;
@@ -56,13 +56,17 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     }
   }
 
-  async *create(event: WorkflowCreateEvent) {
+  async *create(
+    event: WorkflowCreateEvent
+  ): AsyncGenerator<WorkflowCreateState | WorkflowErrorState> {
     try {
-      await this.repository.create(event.workflow);
+      await this.repository.create(event.authorization, event.partial);
 
       yield new WorkflowCreateState();
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
@@ -70,49 +74,62 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     event: WorkflowReadEvent
   ): AsyncGenerator<WorkflowReadState | WorkflowErrorState> {
     try {
-      const workflow = await this.repository.read(event.id);
+      const workflow = await this.repository.read(
+        event.authorization,
+        event.id
+      );
 
       yield new WorkflowReadState(workflow);
     } catch (err) {
       console.log(err);
 
-      yield new WorkflowErrorState();
+      yield new WorkflowErrorState(err);
     }
   }
 
-  async *update(event: WorkflowUpdateEvent) {
+  async *update(
+    event: WorkflowUpdateEvent
+  ): AsyncGenerator<WorkflowUpdateState | WorkflowErrorState> {
     try {
-      const originalWorkflow = await this.repository.read(event.id);
-      const workflow: Workflow = {
-        ...originalWorkflow,
-        ...event.workflow,
-        id: originalWorkflow.id,
-      };
+      const workflow = await this.repository.update(
+        event.authorization,
+        event.id,
+        event.partial
+      );
 
-      await this.repository.update(event.id, workflow);
       yield new WorkflowUpdateState(workflow);
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
-  async *delete(event: WorkflowDeleteEvent) {
+  async *delete(
+    event: WorkflowDeleteEvent
+  ): AsyncGenerator<WorkflowDeleteState | WorkflowErrorState> {
     try {
-      await this.repository.delete(event.id);
+      await this.repository.delete(event.authorization, event.id);
 
       yield new WorkflowDeleteState();
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
-  async *list(event: WorkflowListEvent) {
+  async *list(
+    event: WorkflowListEvent
+  ): AsyncGenerator<WorkflowListState | WorkflowErrorState> {
     try {
-      const workflows = await this.repository.list();
+      const workflows = await this.repository.list(event.authorization);
 
       yield new WorkflowListState(workflows);
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 }

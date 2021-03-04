@@ -4,8 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
+import SignUpScreen from "./signup";
 
 export type RootStackParamList = {
+  SignUp: undefined;
   Home: { userId: string };
 };
 
@@ -17,8 +19,8 @@ const RootStack: FC = () => {
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
           <Stack.Screen
-            name={"Home"}
-            component={HomeStack}
+            name={"SignUp"}
+            component={SignUpScreen}
             options={{ headerShown: false }}
             initialParams={{ userId: "3dcf9a69-e258-4449-a41d-cea7f6ca3fa9" }}
           />
