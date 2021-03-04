@@ -1,6 +1,6 @@
-import { Bloc } from "@felangel/bloc";
+import {Bloc} from "@felangel/bloc";
 
-import { AdminUserRepository } from "../../../repositories";
+import {AdminUserRepository} from "../../../repositories";
 import {
   AdminUserDeleteEvent,
   AdminUserEvent,
@@ -28,7 +28,7 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     this.repository = repository;
   }
 
-  async *mapEventToState(
+  async* mapEventToState(
     event: AdminUserEvent
   ): AsyncIterableIterator<AdminUserState> {
     yield new AdminUserLoadingState();
@@ -50,7 +50,7 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     }
   }
 
-  async *read(
+  async* read(
     event: AdminUserReadEvent
   ): AsyncGenerator<AdminUserReadState | AdminUserErrorState> {
     try {
@@ -60,11 +60,11 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     } catch (err) {
       console.log(err);
 
-      yield new AdminUserErrorState();
+      yield new AdminUserErrorState(err);
     }
   }
 
-  async *update(
+  async* update(
     event: AdminUserUpdateEvent
   ): AsyncGenerator<AdminUserUpdateState | AdminUserErrorState> {
     try {
@@ -78,11 +78,11 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     } catch (err) {
       console.log(err);
 
-      yield new AdminUserErrorState();
+      yield new AdminUserErrorState(err);
     }
   }
 
-  async *delete(
+  async* delete(
     event: AdminUserDeleteEvent
   ): AsyncGenerator<AdminUserDeleteState | AdminUserErrorState> {
     try {
@@ -92,11 +92,11 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     } catch (err) {
       console.log(err);
 
-      yield new AdminUserErrorState();
+      yield new AdminUserErrorState(err);
     }
   }
 
-  async *list(
+  async* list(
     event: AdminUserListEvent
   ): AsyncGenerator<AdminUserListState | AdminUserErrorState> {
     try {
@@ -106,7 +106,7 @@ export class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     } catch (err) {
       console.log(err);
 
-      yield new AdminUserErrorState();
+      yield new AdminUserErrorState(err);
     }
   }
 }

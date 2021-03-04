@@ -63,8 +63,10 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       await this.repository.create(event.authorization, event.partial);
 
       yield new WorkflowCreateState();
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
@@ -81,7 +83,7 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     } catch (err) {
       console.log(err);
 
-      yield new WorkflowErrorState();
+      yield new WorkflowErrorState(err);
     }
   }
 
@@ -96,8 +98,10 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       );
 
       yield new WorkflowUpdateState(workflow);
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
@@ -108,8 +112,10 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       await this.repository.delete(event.authorization, event.id);
 
       yield new WorkflowDeleteState();
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 
@@ -120,8 +126,10 @@ export class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       const workflows = await this.repository.list(event.authorization);
 
       yield new WorkflowListState(workflows);
-    } catch (e) {
-      yield new WorkflowErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new WorkflowErrorState(err);
     }
   }
 }

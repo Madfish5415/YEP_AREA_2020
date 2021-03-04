@@ -1,7 +1,7 @@
-import { Bloc } from "@felangel/bloc";
+import {Bloc} from "@felangel/bloc";
 
-import { CredentialRepository } from "../../repositories";
-import { CredentialEvent, CredentialListEvent } from "./event";
+import {CredentialRepository} from "../../repositories";
+import {CredentialEvent, CredentialListEvent} from "./event";
 import {
   CredentialErrorState,
   CredentialInitialState,
@@ -19,7 +19,7 @@ export class CredentialBloc extends Bloc<CredentialEvent, CredentialState> {
     this.repository = repository;
   }
 
-  async *mapEventToState(
+  async* mapEventToState(
     event: CredentialEvent
   ): AsyncIterableIterator<CredentialState> {
     yield new CredentialLoadingState();
@@ -29,15 +29,17 @@ export class CredentialBloc extends Bloc<CredentialEvent, CredentialState> {
     }
   }
 
-  async *list(
+  async* list(
     event: CredentialListEvent
   ): AsyncGenerator<CredentialListState | CredentialErrorState> {
     try {
       const credentials = await this.repository.list(event.authorization);
 
       yield new CredentialListState(credentials);
-    } catch (e) {
-      yield new CredentialErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new CredentialErrorState(err);
     }
   }
 }

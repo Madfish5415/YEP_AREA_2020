@@ -1,6 +1,6 @@
-import { Bloc } from "@felangel/bloc";
+import {Bloc} from "@felangel/bloc";
 
-import { AdminAccountRepository } from "../../../repositories";
+import {AdminAccountRepository} from "../../../repositories";
 import {
   AdminAccountEvent,
   AdminAccountReadEvent,
@@ -15,10 +15,8 @@ import {
   AdminAccountUpdateState,
 } from "./state";
 
-export class AdminAccountBloc extends Bloc<
-  AdminAccountEvent,
-  AdminAccountState
-> {
+export class AdminAccountBloc extends Bloc<AdminAccountEvent,
+  AdminAccountState> {
   repository: AdminAccountRepository;
 
   constructor(repository: AdminAccountRepository) {
@@ -27,7 +25,7 @@ export class AdminAccountBloc extends Bloc<
     this.repository = repository;
   }
 
-  async *mapEventToState(
+  async* mapEventToState(
     event: AdminAccountEvent
   ): AsyncIterableIterator<AdminAccountState> {
     yield new AdminAccountLoadingState();
@@ -41,7 +39,7 @@ export class AdminAccountBloc extends Bloc<
     }
   }
 
-  async *read(
+  async* read(
     event: AdminAccountReadEvent
   ): AsyncGenerator<AdminAccountReadState | AdminAccountErrorState> {
     try {
@@ -51,11 +49,11 @@ export class AdminAccountBloc extends Bloc<
     } catch (err) {
       console.log(err);
 
-      yield new AdminAccountErrorState();
+      yield new AdminAccountErrorState(err);
     }
   }
 
-  async *update(
+  async* update(
     event: AdminAccountUpdateEvent
   ): AsyncGenerator<AdminAccountUpdateState | AdminAccountErrorState> {
     try {
@@ -66,8 +64,10 @@ export class AdminAccountBloc extends Bloc<
       );
 
       yield new AdminAccountUpdateState(account);
-    } catch (e) {
-      yield new AdminAccountErrorState();
+    } catch (err) {
+      console.log(err)
+
+      yield new AdminAccountErrorState(err);
     }
   }
 }

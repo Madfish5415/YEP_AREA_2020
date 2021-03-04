@@ -1,7 +1,7 @@
-import { Bloc } from "@felangel/bloc";
+import {Bloc} from "@felangel/bloc";
 
-import { AccountRepository } from "../../repositories";
-import { AccountEvent, AccountReadEvent, AccountUpdateEvent } from "./event";
+import {AccountRepository} from "../../repositories";
+import {AccountEvent, AccountReadEvent, AccountUpdateEvent} from "./event";
 import {
   AccountErrorState,
   AccountInitialState,
@@ -20,7 +20,7 @@ export class AccountBloc extends Bloc<AccountEvent, AccountState> {
     this.repository = repository;
   }
 
-  async *mapEventToState(
+  async* mapEventToState(
     event: AccountEvent
   ): AsyncIterableIterator<AccountState> {
     yield new AccountLoadingState();
@@ -34,7 +34,7 @@ export class AccountBloc extends Bloc<AccountEvent, AccountState> {
     }
   }
 
-  async *read(
+  async* read(
     event: AccountReadEvent
   ): AsyncGenerator<AccountReadState | AccountErrorState> {
     try {
@@ -44,11 +44,11 @@ export class AccountBloc extends Bloc<AccountEvent, AccountState> {
     } catch (err) {
       console.log(err);
 
-      yield new AccountErrorState();
+      yield new AccountErrorState(err);
     }
   }
 
-  async *update(
+  async* update(
     event: AccountUpdateEvent
   ): AsyncGenerator<AccountUpdateState | AccountErrorState> {
     try {
@@ -58,8 +58,10 @@ export class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       yield new AccountUpdateState(account);
-    } catch (e) {
-      yield new AccountErrorState();
+    } catch (err) {
+      console.log(err)
+
+      yield new AccountErrorState(err);
     }
   }
 }
