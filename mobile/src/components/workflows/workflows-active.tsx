@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import { WorkflowItem } from "./workflow-item";
 import { View, StyleSheet } from "react-native";
-import { WorkflowsActiveStackRouteParamsList } from "../../pages/workflows";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
   WorkflowErrorState,
@@ -24,16 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type WorkflowsActiveRouteProps = RouteProp<
-  WorkflowsActiveStackRouteParamsList,
-  "WorkflowsActive"
->;
-
-type WorkflowsActiveScreenProps = {
-  route: WorkflowsActiveRouteProps;
-};
-
-const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
+const WorkflowsActiveScreen: FC = () => {
   const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
   workflowsBloc.add(new WorkflowListEvent());
   useIsFocused();

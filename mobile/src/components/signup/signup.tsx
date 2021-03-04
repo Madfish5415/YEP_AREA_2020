@@ -72,7 +72,7 @@ const Signup: FC = () => {
 
   useEffect(() => {
     if (token !== null) {
-      alert(token);
+      navigate("Home");
     }
   }, [token]);
 

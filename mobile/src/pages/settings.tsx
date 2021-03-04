@@ -2,18 +2,8 @@ import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../components/settings/settings";
 import { Appbar, useTheme } from "react-native-paper";
-import { TabParamsList } from "../screens/home";
-import { RouteProp } from "@react-navigation/native";
 
-type SettingsStackRouteProps = RouteProp<TabParamsList, "Settings">;
-
-type Props = {
-  route: SettingsStackRouteProps;
-};
-
-export type SettingsStackParamsList = {
-  Settings: { userId: string };
-};
+export type SettingsStackParamsList = {};
 
 const Stack = createStackNavigator<SettingsStackParamsList>();
 
@@ -26,15 +16,10 @@ const SettingsAppBar = () => {
   );
 };
 
-const SettingsStack: FC<Props> = (props) => {
-  const { userId } = props.route.params;
+const SettingsStack: FC = () => {
   return (
     <Stack.Navigator screenOptions={{ header: SettingsAppBar }}>
-      <Stack.Screen
-        name={"Settings"}
-        component={SettingsScreen}
-        initialParams={{ userId: userId }}
-      />
+      <Stack.Screen name={"Settings"} component={SettingsScreen} />
     </Stack.Navigator>
   );
 };

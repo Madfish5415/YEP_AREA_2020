@@ -1,12 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { SettingsStackParamsList } from "../../pages/settings";
 import { BlocBuilder } from "@felangel/react-bloc";
 import {
   UserBloc,
   UserErrorState,
-  UserGetEvent,
-  UserGetState,
+  UserReadEvent,
+  UserReadState,
   UserRepository,
 } from "@area-common/blocs";
 import { ErrorState } from "../blocbuilder/error-state";
@@ -16,6 +16,7 @@ import { View, StyleSheet } from "react-native";
 import { SectionTitle } from "../common/section-title";
 import { CustomTextInput } from "../common/text-input";
 import { StandardButton } from "../common/standard-button";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -30,15 +31,16 @@ const styles = StyleSheet.create({
   },
 });
 
-type SettingsRouteProps = RouteProp<SettingsStackParamsList, "Settings">;
-
-type SettingsScreenProps = {
-  route: SettingsRouteProps;
-};
-
-const SettingsScreen: FC<SettingsScreenProps> = (props) => {
+const SettingsScreen: FC = () => {
   const userBloc = new UserBloc(new UserRepository(""));
-  userBloc.add(new UserGetEvent(props.route.params.userId));
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userToken").then((userToken) => {
+      if (userToken) {
+        userBloc.add(new UserReadEvent(userToken));
+      }
+    });
+  }, []);
 
   return (
     <BlocBuilder
@@ -47,7 +49,7 @@ const SettingsScreen: FC<SettingsScreenProps> = (props) => {
         if (state instanceof UserErrorState) {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
-        if (state instanceof UserGetState) {
+        if (state instanceof UserReadState) {
           return <Settings user={state.user} />;
         }
         return <DefaultState />;
