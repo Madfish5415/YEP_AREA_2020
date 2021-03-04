@@ -33,8 +33,6 @@ async function apiSignUp(
             }),
         });
 
-        console.log(response)
-
         const result = await (async () => {
             try {
                 return await response.json();
