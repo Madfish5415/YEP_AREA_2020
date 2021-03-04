@@ -1,0 +1,23 @@
+{
+  "name": "@area-service/twitter",
+  "version": "1.0.0",
+  "description": "Twitter service for AREA",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "typings": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build/",
+    "fclean": "yarn clean && rm -rf node_modules/"
+  },
+  "dependencies": {
+    "@area-common/service": "*",
+    "node-fetch": "^2.6.1",
+    "oauth": "^0.9.15"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@types/node-fetch": "^2.5.8",
+    "@types/oauth": "^0.9.1"
+  }
+}
