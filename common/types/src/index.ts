@@ -1,5 +1,6 @@
 export * from "./account";
 export * from "./api";
+export * from "./authentication";
 export * from "./credential";
 export * from "./event";
 export * from "./lib";
