@@ -17,9 +17,19 @@ import { gray, primary, utils, white } from "@area-common/styles";
 import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { useSignUp } from "../../hooks/authentication/signup";
 import { emailRegex } from "../../constants/regexs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SignUp as SignUpType, StatusError } from "@area-common/types";
+import {
+  AuthenticationBloc,
+  AuthenticationErrorState,
+  AuthenticationInitialState,
+  AuthenticationLoadingState,
+  AuthenticationSignUpEvent,
+  AuthenticationSignUpState,
+} from "@area-common/blocs/build/blocs/authentication";
+import { AuthenticationRepository } from "@area-common/blocs";
+import { setLocalStorage } from "../../common/localStorage";
+import { BlocBuilder } from "@felangel/react-bloc";
 
 const styles = StyleSheet.create({
   container: {
@@ -62,19 +72,50 @@ type FormValues = {
   confirmPassword: string;
 };
 
-const Signup: FC = () => {
+const SignUpScreen: FC = () => {
+  const authBloc = new AuthenticationBloc(
+    new AuthenticationRepository("http://localhost:8080/api/")
+  );
+  const { navigate } = useNavigation();
+
+  const SignUpUser = (signup: SignUpType) => {
+    authBloc.add(new AuthenticationSignUpEvent(signup));
+  };
+
+  return (
+    <BlocBuilder
+      bloc={authBloc}
+      builder={(state) => {
+        if (state instanceof AuthenticationErrorState) {
+          return <SignUp callback={SignUpUser} error={state.error} />;
+        }
+        if (state instanceof AuthenticationInitialState) {
+          return <SignUp callback={SignUpUser} />;
+        }
+        if (state instanceof AuthenticationLoadingState) {
+          return <Text>Loading</Text>;
+        }
+        if (state instanceof AuthenticationSignUpState) {
+          setLocalStorage("@userToken", state.authentication)
+            .then((_) => navigate("Home"))
+            .catch((e) => console.log(e));
+        }
+        return <Text>Loading</Text>;
+      }}
+    />
+  );
+};
+
+type Props = {
+  callback: (signup: SignUpType) => void;
+  error?: StatusError;
+};
+
+const SignUp: FC<Props> = (props) => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
-  const { signUp, error } = useSignUp();
   const [onError, setError] = useState(false);
   const [onErrorEmail, setErrorEmail] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (token !== null) {
-      alert(token);
-    }
-  }, [token]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (
@@ -91,22 +132,14 @@ const Signup: FC = () => {
     } else {
       setError(false);
       setErrorEmail(false);
-      await signUp(
-        data.username,
-        data.password,
-        data.confirmPassword,
-        data.email,
-        data.firstName,
-        data.lastName
-      );
-      try {
-        const tokenTmp = await AsyncStorage.getItem("@userToken");
-        if (token !== undefined) {
-          setToken(tokenTmp);
-        }
-      } catch (e) {
-        alert("Error trying to get token");
-      }
+      props.callback({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      });
     }
   };
 
@@ -135,8 +168,8 @@ const Signup: FC = () => {
                 ? "One or more fields are empty"
                 : onErrorEmail
                 ? "Invalid email"
-                : error
-                ? error.message
+                : props.error
+                ? props.error.message
                 : null}
             </Text>
             <ItemForm
@@ -223,4 +256,4 @@ const Signup: FC = () => {
   );
 };
 
-export default Signup;
+export default SignUpScreen;
