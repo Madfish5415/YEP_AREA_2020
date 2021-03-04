@@ -7,26 +7,12 @@ import { useTheme } from "react-native-paper";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Entypo from "react-native-vector-icons/Entypo";
-import { RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "./rootstack";
 
-type HomeStackRouteProps = RouteProp<RootStackParamList, "Home">;
+const Tab = createMaterialBottomTabNavigator();
 
-type Props = {
-  route: HomeStackRouteProps;
-};
-
-export type TabParamsList = {
-  Workflows: { userId: string };
-  credentials: { userId: string };
-  Settings: { userId: string };
-};
-
-const Tab = createMaterialBottomTabNavigator<TabParamsList>();
-
-const HomeStack: FC<Props> = (props: Props) => {
+const HomeStack: FC = () => {
   const { colors } = useTheme();
-  const { userId } = props.route.params;
+
   return (
     <Tab.Navigator
       activeColor={colors.primary}
@@ -42,7 +28,6 @@ const HomeStack: FC<Props> = (props: Props) => {
             <FontAwesome name="sitemap" size={25} color={color} />
           ),
         }}
-        initialParams={{ userId: userId }}
       />
       <Tab.Screen
         name={"Credentials"}
@@ -56,7 +41,6 @@ const HomeStack: FC<Props> = (props: Props) => {
             />
           ),
         }}
-        initialParams={{ userId: userId }}
       />
       <Tab.Screen
         name={"Settings"}
@@ -66,7 +50,6 @@ const HomeStack: FC<Props> = (props: Props) => {
             <Entypo name="cog" size={24} color={color} />
           ),
         }}
-        initialParams={{ userId: userId }}
       />
     </Tab.Navigator>
   );
