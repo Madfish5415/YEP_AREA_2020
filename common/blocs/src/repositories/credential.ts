@@ -13,7 +13,7 @@ export class CredentialRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
 
     return json["data"];
