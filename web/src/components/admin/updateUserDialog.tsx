@@ -57,8 +57,17 @@ const useStyles = makeStyles((theme: Theme) =>
     switch: {
       transform: "scaleX(0.7) scaleY(0.7)",
     },
-    validationTitle: {},
-    validationButton: {},
+    validationTitle: {
+      color: white,
+    },
+    validationButton: {
+      color: white,
+      backgroundColor: primary.main,
+      textTransform: "none",
+      "&:hover": {
+        backgroundColor: primary.dark2,
+      },
+    },
   })
 );
 
@@ -244,6 +253,8 @@ const UpdateUserDialog: FC<Props> = (props) => {
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
+        fullWidth
+        maxWidth={"sm"}
         open={open}
         onClose={handleValidationClose}
         PaperProps={{
