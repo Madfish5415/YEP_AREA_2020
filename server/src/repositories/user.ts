@@ -29,7 +29,7 @@ export class UserRepository {
     return this.model.find();
   }
 
-  async deleteAll(): Promise<User[]> {
-    return this.model.deleteMany();
+  async deleteAll(): Promise<void> {
+    await this.model.deleteMany();
   }
 }

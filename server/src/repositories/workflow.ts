@@ -36,11 +36,11 @@ export class WorkflowRepository {
     return this.model.find({ userId });
   }
 
-  async deleteAll(userId?: string): Promise<boolean> {
+  async deleteAll(userId?: string): Promise<void> {
     if (userId) {
-      return this.model.deleteMany({ userId });
+      await this.model.deleteMany({ userId });
+    } else {
+      await this.model.deleteMany();
     }
-
-    return this.model.deleteMany();
   }
 }

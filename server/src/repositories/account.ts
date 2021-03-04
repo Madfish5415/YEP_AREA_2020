@@ -46,8 +46,8 @@ export class AccountRepository {
     return this.model.find();
   }
 
-  async deleteAll(): Promise<boolean> {
-    return this.model.deleteMany();
+  async deleteAll(): Promise<void> {
+    await this.model.deleteMany();
   }
 
   async comparePassword(filter: Filter, password: string): Promise<boolean> {
