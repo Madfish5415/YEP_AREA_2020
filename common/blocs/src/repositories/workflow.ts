@@ -1,7 +1,6 @@
 import { StatusError, Workflow } from "@area-common/types";
 
 import { Repository } from "../types";
-import workflows from "../data/workflows";
 
 export class WorkflowRepository extends Repository {
   async create(authorization: string, workflow: Workflow): Promise<void> {
