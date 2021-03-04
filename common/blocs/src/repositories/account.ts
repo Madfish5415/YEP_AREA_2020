@@ -4,7 +4,7 @@ import { Repository } from "../types";
 
 export class AccountRepository extends Repository {
   async read(authorization: string): Promise<Account> {
-    const response = await fetch(`${this.remoteURL}/user/account`, {
+    const response = await fetch(`${this.remoteURL}/api/user/account`, {
       method: "GET",
       headers: {
         Authorization: authorization,
@@ -13,7 +13,7 @@ export class AccountRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
     return json["data"];
   }
@@ -23,7 +23,7 @@ export class AccountRepository extends Repository {
     partial: Partial<Account>
   ): Promise<Account> {
     const jsonPartial = JSON.stringify(partial);
-    const response = await fetch(`${this.remoteURL}/user/account`, {
+    const response = await fetch(`${this.remoteURL}/api/user/account`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export class AccountRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
     return json["data"];
   }
