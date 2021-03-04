@@ -24,13 +24,12 @@ COPY lerna.json package.json tsconfig.json yarn.lock ./
 
 FROM base AS build
 
-COPY ./common/blocs ./common/blocs
 COPY ./common/patterns ./common/patterns
 COPY ./common/service ./common/service
 COPY ./common/types ./common/types
-COPY ./parties ./parties
 COPY ./server ./server
 COPY ./services ./services
+COPY ./packages ./packages
 
 RUN yarn install --pure-lockfile
 
@@ -39,13 +38,12 @@ RUN yarn build
 
 FROM base
 
-COPY --from=build ${APP_DIRECTORY}/common/blocs ./common/blocs
 COPY --from=build ${APP_DIRECTORY}/common/patterns ./common/patterns
 COPY --from=build ${APP_DIRECTORY}/common/service ./common/service
 COPY --from=build ${APP_DIRECTORY}/common/types ./common/types
-COPY --from=build ${APP_DIRECTORY}/parties ./parties
 COPY --from=build ${APP_DIRECTORY}/server ./server
 COPY --from=build ${APP_DIRECTORY}/services ./services
+COPY --from=build ${APP_DIRECTORY}/packages ./packages
 
 RUN yarn install --production --pure-lockfile
 

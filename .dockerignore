@@ -4,7 +4,7 @@
 # Except
 !common/
 !services/
-!parties/
+!packages/
 !server/
 !mobile/
 !web/
