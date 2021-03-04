@@ -4,7 +4,7 @@ import { Repository } from "../types";
 
 export class ServiceRepository extends Repository {
   async read(id: string): Promise<Service> {
-    const response = await fetch(`${this.remoteURL}/services/${id}`, {
+    const response = await fetch(`${this.remoteURL}/api/services/${id}`, {
       method: "GET",
     });
     const json = await response.json();
@@ -16,7 +16,7 @@ export class ServiceRepository extends Repository {
   }
 
   async list(): Promise<Service[]> {
-    const response = await fetch(`${this.remoteURL}/services`, {
+    const response = await fetch(`${this.remoteURL}/api/services`, {
       method: "GET",
     });
     const json = await response.json();

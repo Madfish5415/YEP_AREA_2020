@@ -5,7 +5,7 @@ import { Repository } from "../../types";
 export class AdminAccountRepository extends Repository {
   async read(authorization: string, id: string): Promise<Account> {
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}/account`,
+      `${this.remoteURL}/api/administration/users/${id}/account`,
       {
         method: "GET",
         headers: {
@@ -28,7 +28,7 @@ export class AdminAccountRepository extends Repository {
   ): Promise<Account> {
     const jsonPartial = JSON.stringify(partial);
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}/account`,
+      `${this.remoteURL}/api/administration/users/${id}/account`,
       {
         method: "POST",
         headers: {

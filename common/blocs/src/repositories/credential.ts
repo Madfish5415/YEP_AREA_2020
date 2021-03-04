@@ -4,7 +4,7 @@ import { Repository } from "../types";
 
 export class CredentialRepository extends Repository {
   async list(authorization: string): Promise<string[]> {
-    const response = await fetch(`${this.remoteURL}/user/credentials`, {
+    const response = await fetch(`${this.remoteURL}/api/user/credentials`, {
       method: "GET",
       headers: {
         Authorization: authorization,

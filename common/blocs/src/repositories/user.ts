@@ -4,7 +4,7 @@ import { Repository } from "../types";
 
 export class UserRepository extends Repository {
   async read(authorization: string): Promise<User> {
-    const response = await fetch(`${this.remoteURL}/user`, {
+    const response = await fetch(`${this.remoteURL}/api/user`, {
       method: "GET",
       headers: {
         Authorization: authorization,
@@ -21,7 +21,7 @@ export class UserRepository extends Repository {
 
   async update(authorization: string, partial: Partial<User>): Promise<User> {
     const jsonPartial = JSON.stringify(partial);
-    const response = await fetch(`${this.remoteURL}/user`, {
+    const response = await fetch(`${this.remoteURL}/api/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export class UserRepository extends Repository {
   }
 
   async delete(authorization: string): Promise<void> {
-    const response = await fetch(`${this.remoteURL}/user`, {
+    const response = await fetch(`${this.remoteURL}/api/user`, {
       method: "DELETE",
       headers: {
         Authorization: authorization,

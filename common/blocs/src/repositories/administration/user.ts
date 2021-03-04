@@ -5,7 +5,7 @@ import { Repository } from "../../types";
 export class AdminUserRepository extends Repository {
   async read(authorization: string, id: string): Promise<User> {
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "GET",
         headers: {
@@ -28,7 +28,7 @@ export class AdminUserRepository extends Repository {
   ): Promise<User> {
     const jsonPartial = JSON.stringify(partial);
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "POST",
         headers: {
@@ -48,7 +48,7 @@ export class AdminUserRepository extends Repository {
 
   async delete(authorization: string, id: string): Promise<void> {
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -65,7 +65,7 @@ export class AdminUserRepository extends Repository {
   }
 
   async list(authorization: string): Promise<User[]> {
-    const response = await fetch(`${this.remoteURL}/administration/users`, {
+    const response = await fetch(`${this.remoteURL}/api/administration/users`, {
       method: "GET",
       headers: {
         Authorization: authorization,
