@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View, Alert, TouchableOpacity, Text } from "react-native";
+import React, { FC, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Title } from "../../common/title";
 import { ItemForm } from "../../common/item-form";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,8 +10,18 @@ import { useNavigation } from "@react-navigation/native";
 import { ExternalSignInButton } from "./external-signin-button";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSignIn } from "../../hooks/authentication/signin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  AuthenticationBloc,
+  AuthenticationErrorState,
+  AuthenticationInitialState,
+  AuthenticationLoadingState,
+  AuthenticationSignInEvent,
+  AuthenticationSignInState,
+} from "@area-common/blocs/build/blocs/authentication";
+import { AuthenticationRepository } from "@area-common/blocs";
+import { BlocBuilder } from "@felangel/react-bloc";
+import { SignIn as SignInType, StatusError } from "@area-common/types";
+import { setLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,36 +56,51 @@ type FormValues = {
 };
 
 const SignInScreen: FC = () => {
+  const authBloc = new AuthenticationBloc(
+    new AuthenticationRepository("http://localhost:8080/api/")
+  );
+  const { navigate } = useNavigation();
+
+  const SignInUser = (signin: SignInType) => {
+    authBloc.add(new AuthenticationSignInEvent(signin));
+  };
+
+  return (
+    <BlocBuilder
+      bloc={authBloc}
+      builder={(state) => {
+        if (state instanceof AuthenticationErrorState) {
+          return <SignIn callback={SignInUser} error={state.error} />;
+        }
+        if (state instanceof AuthenticationInitialState) {
+          return <SignIn callback={SignInUser} />;
+        }
+        if (state instanceof AuthenticationLoadingState) {
+          return <Text>Loading</Text>;
+        }
+        if (state instanceof AuthenticationSignInState) {
+          setLocalStorage("@userToken", state.authentication).then((_) =>
+            navigate("Home")
+          );
+        }
+        return <Text>Loading</Text>;
+      }}
+    />
+  );
+};
+
+type Props = {
+  callback: (signin: SignInType) => void;
+  error?: StatusError;
+};
+
+const SignIn: FC<Props> = (props) => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
-  const { signIn, error } = useSignIn();
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    AsyncStorage.getItem("@userToken")
-      .then((token) => {
-        if (token) {
-          navigate("SignUp");
-        }
-      })
-      .catch((e) => console.log(e));
-    console.log("Token:", token);
-    if (token !== null) {
-      navigate("SignUp");
-    }
-  }, [token]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (data.email && data.password) {
-      await signIn(data.email, data.password);
-      try {
-        const tokenTmp = await AsyncStorage.getItem("@userToken");
-        if (token !== undefined) {
-          setToken(tokenTmp);
-        }
-      } catch (e) {
-        alert("Error trying to get token");
-      }
+      props.callback({ email: data.email, password: data.password });
     }
   };
 
@@ -89,7 +114,9 @@ const SignInScreen: FC = () => {
   return (
     <View style={styles.container}>
       <Title />
-      {error ? <Text style={styles.onErrorText}>{error.message}</Text> : null}
+      {props.error ? (
+        <Text style={styles.onErrorText}>{props.error.message}</Text>
+      ) : null}
       <ItemForm
         label={"Email"}
         formId={"email"}
@@ -140,5 +167,4 @@ const SignInScreen: FC = () => {
     </View>
   );
 };
-
 export default SignInScreen;
