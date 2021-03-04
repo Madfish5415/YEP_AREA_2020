@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  DialogTitle,
   Divider,
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -56,6 +57,8 @@ const useStyles = makeStyles((theme: Theme) =>
     switch: {
       transform: "scaleX(0.7) scaleY(0.7)",
     },
+    validationTitle: {},
+    validationButton: {},
   })
 );
 
@@ -93,7 +96,7 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
   onClose: () => void;
 }
 
-const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
+const DialogTitleCustom = withStyles(styles)((props: DialogTitleProps) => {
   const { children, classes, onClose, label, ...other } = props;
   return (
     <MuiDialogTitle className={classes.root} {...other}>
@@ -122,9 +125,14 @@ const UpdateUserDialog: FC<Props> = (props) => {
   );
   const [email, setEmail] = useState("frappeLaMatt@gmail.com");
   const [password, setPassword] = useState("azerty");
+  const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     props.setOpen(false);
+  };
+
+  const handleValidationClose = () => {
+    setOpen(false);
   };
 
   const updateUsername = () => {
@@ -151,6 +159,10 @@ const UpdateUserDialog: FC<Props> = (props) => {
     console.log("email verification switch");
   };
 
+  const handleDeleteConfirmation = () => {
+    setOpen(true);
+  };
+
   return (
     <>
       <Dialog
@@ -167,13 +179,13 @@ const UpdateUserDialog: FC<Props> = (props) => {
           },
         }}
       >
-        <DialogTitle
+        <DialogTitleCustom
           id={props.user.id}
           onClose={handleClose}
           label={props.user.username}
         >
           {props.user.username}
-        </DialogTitle>
+        </DialogTitleCustom>
         <DialogContent>
           <div className={classes.content}>
             <div className={classes.firstColumn}>
@@ -198,7 +210,7 @@ const UpdateUserDialog: FC<Props> = (props) => {
               <Button
                 className={classes.deleteButton}
                 startIcon={<DeleteIcon />}
-                onClick={() => props.deleteUser(props.user.id)}
+                onClick={handleDeleteConfirmation}
               >
                 Delete user
               </Button>
@@ -228,6 +240,37 @@ const UpdateUserDialog: FC<Props> = (props) => {
             </div>
           </div>
         </DialogContent>
+      </Dialog>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={open}
+        onClose={handleValidationClose}
+        PaperProps={{
+          style: {
+            backgroundColor: gray.light1,
+            boxShadow: "1",
+            borderRadius: 20,
+          },
+        }}
+      >
+        <DialogTitle className={classes.validationTitle}>
+          Do you want to delete this user ?
+        </DialogTitle>
+        <DialogActions>
+          <Button
+            onClick={handleValidationClose}
+            className={classes.validationButton}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => props.deleteUser(props.user.id)}
+            className={classes.validationButton}
+          >
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );
