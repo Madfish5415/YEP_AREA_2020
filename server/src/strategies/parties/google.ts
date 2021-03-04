@@ -21,7 +21,7 @@ export class GoogleStrategy extends OAuth2PartyStrategy {
         tokenURL: GOOGLE_TOKEN_URL,
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        scope: ["profile"]
+        scope: ["profile"],
       },
       userRepository
     );
@@ -51,7 +51,7 @@ export class GoogleStrategy extends OAuth2PartyStrategy {
     };
 
     this._oauth2.get(
-      "https://www.googleapis/oauth2/v2/userinfo",
+      "https://www.googleapis.com/oauth2/v2/userinfo",
       accessToken,
       callback
     );

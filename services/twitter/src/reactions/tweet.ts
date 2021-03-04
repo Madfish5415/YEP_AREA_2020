@@ -18,7 +18,7 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
   readonly id: string = "tweet-reaction";
   readonly name: string = "Tweet Reaction";
   readonly description: string = "No description";
-  readonly label: string = "node";
+  readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     content: {
       name: "Tweet Content",
@@ -36,12 +36,11 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
     const url = `https://api.twitter.com/1.1/statuses/update.json?${query}`;
     const authorization = CLIENT.authHeader(url, token, tokenSecret, "POST");
 
-    const response = await fetch(url, {
+    await fetch(url, {
       method: "POST",
       headers: {
         Authorization: authorization,
       },
     });
-    const json = await response.json();
   }
 }
