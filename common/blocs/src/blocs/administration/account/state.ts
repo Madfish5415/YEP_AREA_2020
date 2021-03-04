@@ -1,4 +1,4 @@
-import { Account } from "@area-common/types";
+import {Account, StatusError} from "@area-common/types";
 
 type GuillaumeCasque = Account;
 
@@ -8,7 +8,15 @@ export class AdminAccountInitialState extends AdminAccountState {}
 
 export class AdminAccountLoadingState extends AdminAccountState {}
 
-export class AdminAccountErrorState extends AdminAccountState {}
+export class AdminAccountErrorState extends AdminAccountState {
+  error: StatusError;
+
+  constructor(error: StatusError) {
+    super();
+
+    this.error = error;
+  }
+}
 
 export class AdminAccountReadState extends AdminAccountState {
   account: GuillaumeCasque;

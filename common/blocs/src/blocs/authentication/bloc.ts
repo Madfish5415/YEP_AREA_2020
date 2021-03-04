@@ -1,6 +1,6 @@
-import { Bloc } from "@felangel/bloc";
+import {Bloc} from "@felangel/bloc";
 
-import { AuthenticationRepository } from "../../repositories";
+import {AuthenticationRepository} from "../../repositories";
 import {
   AuthenticationEvent,
   AuthenticationSignInEvent,
@@ -15,10 +15,8 @@ import {
   AuthenticationState,
 } from "./state";
 
-export class AuthenticationBloc extends Bloc<
-  AuthenticationEvent,
-  AuthenticationState
-> {
+export class AuthenticationBloc extends Bloc<AuthenticationEvent,
+  AuthenticationState> {
   repository: AuthenticationRepository;
 
   constructor(repository: AuthenticationRepository) {
@@ -27,7 +25,7 @@ export class AuthenticationBloc extends Bloc<
     this.repository = repository;
   }
 
-  async *mapEventToState(
+  async* mapEventToState(
     event: AuthenticationEvent
   ): AsyncIterableIterator<AuthenticationState> {
     yield new AuthenticationLoadingState();
@@ -41,7 +39,7 @@ export class AuthenticationBloc extends Bloc<
     }
   }
 
-  async *signin(
+  async* signin(
     event: AuthenticationSignInEvent
   ): AsyncGenerator<AuthenticationSignInState | AuthenticationErrorState> {
     try {
@@ -51,19 +49,21 @@ export class AuthenticationBloc extends Bloc<
     } catch (err) {
       console.log(err);
 
-      yield new AuthenticationErrorState();
+      yield new AuthenticationErrorState(err);
     }
   }
 
-  async *signup(
+  async* signup(
     event: AuthenticationSignUpEvent
   ): AsyncGenerator<AuthenticationSignUpState | AuthenticationErrorState> {
     try {
       const authentication = await this.repository.signup(event.signup);
 
       yield new AuthenticationSignUpState(authentication);
-    } catch (e) {
-      yield new AuthenticationErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new AuthenticationErrorState(err);
     }
   }
 }

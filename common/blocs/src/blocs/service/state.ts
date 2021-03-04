@@ -1,4 +1,4 @@
-import { Service } from "@area-common/types";
+import {Service, StatusError} from "@area-common/types";
 
 export abstract class ServiceState {}
 
@@ -6,7 +6,15 @@ export class ServiceInitialState extends ServiceState {}
 
 export class ServiceLoadingState extends ServiceState {}
 
-export class ServiceErrorState extends ServiceState {}
+export class ServiceErrorState extends ServiceState {
+  error: StatusError;
+
+  constructor(error: StatusError) {
+    super();
+
+    this.error = error;
+  }
+}
 
 export class ServiceReadState extends ServiceState {
   service: Service;

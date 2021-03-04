@@ -44,7 +44,7 @@ export class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     } catch (err) {
       console.log(err);
 
-      yield new ServiceErrorState();
+      yield new ServiceErrorState(err);
     }
   }
 
@@ -55,8 +55,10 @@ export class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       const services = await this.repository.list();
 
       yield new ServiceListState(services);
-    } catch (e) {
-      yield new ServiceErrorState();
+    } catch (err) {
+      console.log(err);
+
+      yield new ServiceErrorState(err);
     }
   }
 }

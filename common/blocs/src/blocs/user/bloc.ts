@@ -52,7 +52,7 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (err) {
       console.log(err);
 
-      yield new UserErrorState();
+      yield new UserErrorState(err);
     }
   }
 
@@ -69,7 +69,7 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (err) {
       console.log(err);
 
-      yield new UserErrorState();
+      yield new UserErrorState(err);
     }
   }
 
@@ -83,7 +83,7 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     } catch (err) {
       console.log(err);
 
-      yield new UserErrorState();
+      yield new UserErrorState(err);
     }
   }
 }
