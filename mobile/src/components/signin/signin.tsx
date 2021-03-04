@@ -79,9 +79,9 @@ const SignInScreen: FC = () => {
           return <Text>Loading</Text>;
         }
         if (state instanceof AuthenticationSignInState) {
-          setLocalStorage("@userToken", state.authentication).then((_) =>
-            navigate("Home")
-          );
+          setLocalStorage("@userToken", state.authentication)
+            .then((_) => navigate("Home"))
+            .catch((e) => console.log(e));
         }
         return <Text>Loading</Text>;
       }}
