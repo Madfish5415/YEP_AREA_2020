@@ -1,8 +1,8 @@
 import React from "react";
-import Signup from "../components/signup/signup";
+import SignUpScreen from "../components/signup/signup";
 
-const SignUpScreen = () => {
-  return <Signup />;
+const SignUpStack = () => {
+  return <SignUpScreen />;
 };
 
-export default SignUpScreen;
+export default SignUpStack;

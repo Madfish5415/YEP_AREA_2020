@@ -2,9 +2,9 @@ import React, {FC} from "react";
 import AppBarComponent from "../components/appbar/appbar";
 
 const WorkflowsPage: FC = () => {
-    return (
-        <AppBarComponent/>
-    );
+  return (
+    <AppBarComponent/>
+  );
 };
 
 export default WorkflowsPage;

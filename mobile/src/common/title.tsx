@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Title: FC<Props> = (props: Props) => {
