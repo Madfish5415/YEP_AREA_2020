@@ -21,7 +21,7 @@ export class MicrosoftStrategy extends OAuth2PartyStrategy {
         tokenURL: MICROSOFT_TOKEN_URL,
         clientID: MICROSOFT_CLIENT_ID,
         clientSecret: MICROSOFT_CLIENT_SECRET,
-        scope: ["profile"]
+        scope: ["user.read"],
       },
       userRepository
     );
@@ -49,6 +49,8 @@ export class MicrosoftStrategy extends OAuth2PartyStrategy {
         return done(e);
       }
     };
+
+    this._oauth2.useAuthorizationHeaderforGET(true);
 
     this._oauth2.get(
       "https://graph.microsoft.com/v1.0/me",
