@@ -5,7 +5,7 @@ import { Repository } from "../../types";
 export class AdminUserRepository extends Repository {
   async read(authorization: string, id: string): Promise<User> {
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "GET",
         headers: {
@@ -16,7 +16,7 @@ export class AdminUserRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw Error(json.error.code);
+      throw new StatusError(json.status, json.failure);
     }
     return json["data"];
   }
@@ -28,7 +28,7 @@ export class AdminUserRepository extends Repository {
   ): Promise<User> {
     const jsonPartial = JSON.stringify(partial);
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "POST",
         headers: {
@@ -41,14 +41,14 @@ export class AdminUserRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
     return json["data"];
   }
 
   async delete(authorization: string, id: string): Promise<void> {
     const response = await fetch(
-      `${this.remoteURL}/administration/users/${id}`,
+      `${this.remoteURL}/api/administration/users/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -59,13 +59,13 @@ export class AdminUserRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
     return;
   }
 
   async list(authorization: string): Promise<User[]> {
-    const response = await fetch(`${this.remoteURL}/administration/users`, {
+    const response = await fetch(`${this.remoteURL}/api/administration/users`, {
       method: "GET",
       headers: {
         Authorization: authorization,
@@ -74,7 +74,7 @@ export class AdminUserRepository extends Repository {
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw new StatusError(json.error.code, json.error);
+      throw new StatusError(json.status, json.failure);
     }
     return json["data"];
   }
