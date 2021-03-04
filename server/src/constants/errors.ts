@@ -35,9 +35,19 @@ export const AUTHORIZATION_INVALID_ERROR = new StatusError(401, {
   message: "Authorization invalid",
 });
 
+export const USER_NOT_ADMIN_ERROR = new StatusError(401, {
+  name: "USER_NOT_ADMIN_ERROR",
+  message: "User isn't an administrator",
+});
+
 export const VERIFICATION_INVALID_ERROR = new StatusError(401, {
   name: "VERIFICATION_INVALID",
   message: "Verification invalid",
+});
+
+export const SERVICE_NOT_EXISTS_ERROR = new StatusError(404, {
+  name: "SERVICE_NOT_EXISTS",
+  message: "Service doesn't exist",
 });
 
 export const USER_NOT_EXISTS_ERROR = new StatusError(404, {
@@ -45,7 +55,12 @@ export const USER_NOT_EXISTS_ERROR = new StatusError(404, {
   message: "User doesn't exist",
 });
 
-export const WORKFLOW_ACTION_NOT_EXISTS = new StatusError(404, {
+export const WORKFLOW_NOT_EXISTS = new StatusError(404, {
+  name: "WORKFLOW_NOT_EXISTS",
+  message: "Workflow doesn't exist",
+});
+
+export const WORKFLOW_NODE_NOT_EXISTS = new StatusError(404, {
   name: "WORKFLOW_ACTION_NOT_EXISTS",
   message: "Workflow action doesn't exist",
 });

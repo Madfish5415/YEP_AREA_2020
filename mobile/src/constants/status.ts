@@ -19,8 +19,3 @@ export const unknownErrorStatus = new StatusError(520, {
   name: "UNKNOWN_ERROR",
   message: "Unknown error",
 });
-
-export const badEmailOrPasswordStatus = new StatusError(401, {
-  name: "BAD_EMAIL_PASSWORD",
-  message: "Bad email or password",
-});

@@ -1,13 +1,21 @@
 import { Bloc } from "@felangel/bloc";
-import { UserEvent, UserReadEvent } from "./event";
+
+import { UserRepository } from "../../repositories";
 import {
+  UserDeleteEvent,
+  UserEvent,
+  UserReadEvent,
+  UserUpdateEvent,
+} from "./event";
+import {
+  UserDeleteState,
   UserErrorState,
-  UserReadState,
   UserInitialState,
   UserLoadingState,
+  UserReadState,
   UserState,
+  UserUpdateState,
 } from "./state";
-import { UserRepository } from "../../repositories";
 
 export class UserBloc extends Bloc<UserEvent, UserState> {
   repository: UserRepository;
@@ -24,15 +32,54 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
     if (event instanceof UserReadEvent) {
       yield* this.read(event);
     }
+
+    if (event instanceof UserUpdateEvent) {
+      yield* this.update(event);
+    }
+
+    if (event instanceof UserDeleteEvent) {
+      yield* this.delete(event);
+    }
   }
 
   async *read(
     event: UserReadEvent
-  ): AsyncGenerator<UserReadEvent | UserErrorState> {
+  ): AsyncGenerator<UserReadState | UserErrorState> {
     try {
-      const user = await this.repository.read(event.id);
+      const user = await this.repository.read(event.authorization);
 
       yield new UserReadState(user);
+    } catch (err) {
+      console.log(err);
+
+      yield new UserErrorState();
+    }
+  }
+
+  async *update(
+    event: UserUpdateEvent
+  ): AsyncGenerator<UserUpdateState | UserErrorState> {
+    try {
+      const user = await this.repository.update(
+        event.authorization,
+        event.partial
+      );
+
+      yield new UserUpdateState(user);
+    } catch (err) {
+      console.log(err);
+
+      yield new UserErrorState();
+    }
+  }
+
+  async *delete(
+    event: UserDeleteEvent
+  ): AsyncGenerator<UserDeleteState | UserErrorState> {
+    try {
+      await this.repository.delete(event.authorization);
+
+      yield new UserDeleteState();
     } catch (err) {
       console.log(err);
 

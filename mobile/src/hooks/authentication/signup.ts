@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusError } from "@area-common/types";
+import { serviceUnavailableStatus } from "../../constants/status";
 
 async function apiSignUp(
   username: string,
@@ -47,11 +48,7 @@ async function apiSignUp(
     setLoading(false);
 
     if (response.status !== 200) {
-      return setError({
-        code: result.status,
-        name: result.failure.name,
-        message: result.failure.message,
-      });
+      return setError(result);
     }
 
     try {
@@ -65,7 +62,7 @@ async function apiSignUp(
 
     console.error(err);
 
-    return setError("Service unavailable");
+    return setError(serviceUnavailableStatus);
   }
 }
 

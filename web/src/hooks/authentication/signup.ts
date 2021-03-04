@@ -1,4 +1,6 @@
 import { useState } from "react";
+import {StatusError} from "@area-common/types";
+import {serviceUnavailableStatus, unknownErrorStatus} from "../../constants/status";
 
 async function apiSignUp(
     username: string,
@@ -16,7 +18,7 @@ async function apiSignUp(
     setError(undefined);
 
     try {
-        const response = await fetch(`/api/server/authentication/signup`, {
+        const response = await fetch(`http://localhost:8080/api/authentication/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -27,11 +29,7 @@ async function apiSignUp(
                 confirmPassword: confirmPassword,
                 email: email,
                 firstName: firstName,
-                lastName: lastName,
-                custom: {
-                    baseURL: `${window.location.origin}/authentication/verify`,
-                    URL: `${window.location.origin}/authentication/verify?username=:username&id=:id`,
-                },
+                lastName: lastName
             }),
         });
 
@@ -39,7 +37,7 @@ async function apiSignUp(
             try {
                 return await response.json();
             } catch (e) {
-                return "unknownErrorStatus";
+                return unknownErrorStatus;
             }
         })();
 
@@ -49,13 +47,15 @@ async function apiSignUp(
             return setError(result);
         }
 
+        localStorage.setItem("jwt", result.data.token)
+
         return setSignedUp(true);
     } catch (err) {
         setLoading(false);
 
         console.error(err);
 
-        err = "serviceUnavailableStatus";
+        err = serviceUnavailableStatus;
 
         return setError(err);
     }
@@ -64,7 +64,7 @@ async function apiSignUp(
 export function useSignUp() {
     const [loading, setLoading] = useState(false);
     const [signedUp, setSignedUp] = useState(false);
-    const [error, setError] = useState<String>(); /* TODO: Use an error classe */
+    const [error, setError] = useState<StatusError>();
 
     const signUp = async (
         username: string,
