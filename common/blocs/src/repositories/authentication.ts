@@ -17,7 +17,7 @@ export class AuthenticationRepository extends Repository {
     if (json.status !== 200) {
       throw new StatusError(json.error.code, json.error);
     }
-    return json["data"];
+    return json["data"]["token"];
   }
 
   async signup(signup: SignUp): Promise<string> {
@@ -35,6 +35,6 @@ export class AuthenticationRepository extends Repository {
       throw new StatusError(json.error.code, json.error);
     }
 
-    return json["data"];
+    return json["data"]["token"];
   }
 }
