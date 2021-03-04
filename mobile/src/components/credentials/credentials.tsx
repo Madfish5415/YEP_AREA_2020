@@ -44,8 +44,9 @@ type CredentialsProps = {
 };
 
 const CredentialsScreen: FC<CredentialsProps> = (props) => {
-  const userBloc = new UserBloc(new UserRepository(""));
-  userBloc.add(new UserGetEvent(props.route.params.userId));
+  //const userBloc = new UserBloc(new UserRepository(""));
+  //userBloc.add(new UserGetEvent());
+  return <Credentials />;
   return (
     <BlocBuilder
       bloc={userBloc}
@@ -54,7 +55,7 @@ const CredentialsScreen: FC<CredentialsProps> = (props) => {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
         if (state instanceof UserGetState) {
-          return <Credentials user={state.user} />;
+          return <Credentials />;
         }
         return <DefaultState />;
       }}
@@ -82,7 +83,7 @@ const oAuthConfigMap = new Map<string, AuthConfiguration>([
         "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
       redirectUrl:
         "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
-      scopes: ["https://www.googleapis.com/auth/youtube"],
+      scopes: ["https://www.googleapis.com/auth/youtube", "profile"],
     },
   ],
   [
@@ -142,14 +143,13 @@ const oAuthConfigMap = new Map<string, AuthConfiguration>([
   ],
 ]);
 
-const Credentials: FC<Props> = (props) => {
+const Credentials: FC = () => {
   return (
     <View style={styles.container}>
       <Service
         name={"Instagram"}
         icon={<FontAwesome size={50} name={"instagram"} color={primary.main} />}
         isEpitech={false}
-        user={props.user}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("instagram")}
       />
@@ -163,7 +163,6 @@ const Credentials: FC<Props> = (props) => {
           />
         }
         isEpitech={false}
-        user={props.user}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("office365")}
       />
@@ -171,7 +170,6 @@ const Credentials: FC<Props> = (props) => {
         name={"Github"}
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
-        user={props.user}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("github")}
       />
@@ -179,7 +177,6 @@ const Credentials: FC<Props> = (props) => {
         name={"Discord"}
         icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
         isEpitech={false}
-        user={props.user}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("discord")}
       />
@@ -189,7 +186,6 @@ const Credentials: FC<Props> = (props) => {
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }
         isEpitech={false}
-        user={props.user}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("google")}
       />
@@ -197,7 +193,6 @@ const Credentials: FC<Props> = (props) => {
         name={"Epitech"}
         icon={<Text style={styles.text}>E</Text>}
         isEpitech={true}
-        user={props.user}
       />
     </View>
   );

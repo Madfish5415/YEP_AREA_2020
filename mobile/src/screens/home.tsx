@@ -56,7 +56,6 @@ const HomeStack: FC<Props> = (props: Props) => {
             />
           ),
         }}
-        initialParams={{ userId: userId }}
       />
       <Tab.Screen
         name={"Settings"}

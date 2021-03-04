@@ -56,7 +56,7 @@ type Props = {
   isEpitech: boolean;
   epitechAutoLoginLink?: string;
   setEpitechAutoLoginLink?: (link: string) => void;
-  user: User;
+  user?: User;
   isLoggedIn?: boolean;
   oAuthConfig?: AuthConfiguration;
 };
@@ -82,7 +82,14 @@ const Service: FC<Props> = (props) => {
   const connectWithOauth = async (oAuthConfig: AuthConfiguration) => {
     try {
       const result = await authorize(oAuthConfig);
-      console.log(result);
+      await fetch(
+        `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
+        {
+          headers: {
+            authorization: "",
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }

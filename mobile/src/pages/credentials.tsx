@@ -26,14 +26,9 @@ type Props = {
 };
 
 const CredentialsStack: FC<Props> = (props) => {
-  const { userId } = props.route.params;
   return (
     <Stack.Navigator screenOptions={{ header: CredentialsAppBar }}>
-      <Stack.Screen
-        name={"Credentials"}
-        component={CredentialsScreen}
-        initialParams={{ userId: userId }}
-      />
+      <Stack.Screen name={"Credentials"} component={CredentialsScreen} />
     </Stack.Navigator>
   );
 };
