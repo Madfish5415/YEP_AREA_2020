@@ -87,12 +87,4 @@ export class WorkflowRepository extends Repository {
 
     return json["data"];
   }
-
-  async list(): Promise<Workflow[]> {
-    return Promise.all(
-      workflows.map((workflow) => {
-        return workflow;
-      })
-    );
-  }
 }
