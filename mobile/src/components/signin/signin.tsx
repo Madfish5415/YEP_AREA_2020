@@ -1,5 +1,11 @@
 import React, { FC, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from "react-native";
 import { Title } from "../../common/title";
 import { ItemForm } from "../../common/item-form";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -112,7 +118,7 @@ const SignIn: FC<Props> = (props) => {
   }, [register]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Title />
       {props.error ? (
         <Text style={styles.onErrorText}>{props.error.message}</Text>
@@ -164,7 +170,7 @@ const SignIn: FC<Props> = (props) => {
         }
         submitFunction={() => alert("Todo !")}
       />
-    </View>
+    </ScrollView>
   );
 };
 export default SignInScreen;

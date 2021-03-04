@@ -9,6 +9,7 @@ import {
   Keyboard,
   View,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { Title } from "../../common/title";
 import { ItemForm } from "../../common/item-form";
@@ -34,7 +35,7 @@ import { BlocBuilder } from "@felangel/react-bloc";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 60,
+    paddingTop: 60,
   },
   inner: {
     width: "100%",
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   createAccountContainer: {
-    marginTop: 15,
+    paddingTop: 15,
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
@@ -161,7 +162,7 @@ const SignUp: FC<Props> = (props) => {
     >
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
+          <ScrollView contentContainerStyle={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
             <Text style={styles.onErrorText}>
               {onError
@@ -249,7 +250,7 @@ const SignUp: FC<Props> = (props) => {
               </Text>
             </TouchableOpacity>
             <View style={{ flex: 1 }} />
-          </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
