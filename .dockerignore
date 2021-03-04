@@ -3,8 +3,9 @@
 
 # Except
 !common/
-!server/
 !services/
+!parties/
+!server/
 !mobile/
 !web/
 !scripts/
