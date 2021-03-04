@@ -21,6 +21,7 @@ export class MicrosoftStrategy extends OAuth2PartyStrategy {
         tokenURL: MICROSOFT_TOKEN_URL,
         clientID: MICROSOFT_CLIENT_ID,
         clientSecret: MICROSOFT_CLIENT_SECRET,
+        scope: ["profile"]
       },
       userRepository
     );

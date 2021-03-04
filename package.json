@@ -4,7 +4,7 @@
   "workspaces": [
     "common/**",
     "services/**",
-    "parties/**",
+    "packages/**",
     "api-server",
     "server",
     "mobile",

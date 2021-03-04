@@ -11,6 +11,7 @@ authenticationServiceCbRouter.use(
   passport.authenticate("authorize", { session: false, failWithError: true }),
   (req, res, next) => {
     passport.authenticate(req.serviceId, {
+      callbackURL: req.query.state,
       session: false,
       failWithError: true,
     } as AuthenticateOptions)(req, res, next);

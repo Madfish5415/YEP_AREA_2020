@@ -10,8 +10,8 @@ type Outputs = {
 };
 
 export class NotNode extends BaseNode<Parameters, Outputs> {
-  readonly id: string = "equal";
-  readonly name: string = "Equal";
+  readonly id: string = "not";
+  readonly name: string = "Not";
   readonly description: string = "No description";
   readonly label: string = "node";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
