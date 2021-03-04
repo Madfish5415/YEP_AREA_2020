@@ -5,21 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Appbar, useTheme } from "react-native-paper";
 import EpitechCredentialsScreen from "../components/credentials/epitech-credentials";
-import { RouteProp } from "@react-navigation/native";
 
-export type EpitechCredentialsStackParamList = {
-  EpitechCredentials: { userId: string };
-};
-const Stack = createStackNavigator<EpitechCredentialsStackParamList>();
-
-type CredentialsStackRouteProps = RouteProp<
-  EpitechCredentialsStackParamList,
-  "EpitechCredentials"
->;
-
-type CredentialsProps = {
-  route: CredentialsStackRouteProps;
-};
+const Stack = createStackNavigator();
 
 const AppBar = () => {
   const { colors, fonts } = useTheme();
@@ -32,15 +19,13 @@ const AppBar = () => {
   );
 };
 
-const EpitechCredentialsStack: FC<CredentialsProps> = (props) => {
-  const { userId } = props.route.params;
+const EpitechCredentialsStack: FC = () => {
   return (
     <Stack.Navigator screenOptions={{ header: AppBar }}>
       <Stack.Screen
         name={"EpitechCredentials"}
         component={EpitechCredentialsScreen}
         options={{ headerShown: true }}
-        initialParams={{ userId: userId }}
       />
     </Stack.Navigator>
   );

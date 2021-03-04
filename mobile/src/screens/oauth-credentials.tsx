@@ -8,10 +8,7 @@ import OauthCredentialsScreen from "../components/credentials/oauth-credentials"
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "./rootstack";
 
-export type OAuthCredentialsStackParamList = {
-  OAuthCredentials: { userId: string };
-};
-const Stack = createStackNavigator<OAuthCredentialsStackParamList>();
+const Stack = createStackNavigator();
 
 type CredentialsStackRouteProps = RouteProp<
   RootStackParamList,
@@ -41,7 +38,7 @@ const AppBar: FC<Props> = (props) => {
 };
 
 const OauthCredentialsStack: FC<CredentialsProps> = (props) => {
-  const { userId, serviceName } = props.route.params;
+  const { serviceName } = props.route.params;
   return (
     <Stack.Navigator
       screenOptions={{ header: () => <AppBar serviceName={serviceName} /> }}
@@ -50,7 +47,6 @@ const OauthCredentialsStack: FC<CredentialsProps> = (props) => {
         name={"OauthCredentials"}
         component={OauthCredentialsScreen}
         options={{ headerShown: true }}
-        initialParams={{ userId: userId }}
       />
     </Stack.Navigator>
   );

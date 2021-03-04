@@ -1,10 +1,7 @@
 import React, { FC } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { OauthCredentialsStackParamList } from "../../screens/oauth-credentials";
 import { RouteProp } from "@react-navigation/native";
 import { gray, primary, white } from "@area-common/styles";
-import { SectionTitle } from "../common/section-title";
-import { CustomTextInput } from "../common/text-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
@@ -32,16 +29,8 @@ const styles = StyleSheet.create({
     color: white,
   },
 });
-type OauthCredentialsRootProps = RouteProp<
-  OauthCredentialsStackParamList,
-  "OauthCredentials"
->;
 
-type Props = {
-  route: OauthCredentialsRootProps;
-};
-
-const OauthCredentialsScreen: FC<Props> = (props) => {
+const OauthCredentialsScreen: FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.connectedText}>Connected as </Text>

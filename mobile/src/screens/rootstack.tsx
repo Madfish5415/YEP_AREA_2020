@@ -10,7 +10,7 @@ import OAuthCredentialsStack from "./oauth-credentials";
 export type RootStackParamList = {
   Home: { userId: string };
   EpitechCredentials: undefined;
-  OAuthCredentials: { userId: string; serviceName: string };
+  OAuthCredentials: { serviceName: string };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

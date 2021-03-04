@@ -119,10 +119,9 @@ const oAuthConfigMap = new Map<string, AuthConfiguration>([
         authorizationEndpoint: "https://api.instagram.com/oauth/authorize",
         tokenEndpoint: "https://api.instagram.com/oauth/access_token",
       },
-      clientId: "422126992215364",
+      clientId: "485165855830934",
       clientSecret: "7ac8b8ceb5e7e08d2cc4095d86b5986e",
-      redirectUrl:
-        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
+      redirectUrl: "https://www.google.com/",
       scopes: ["user_profile", "user_media"],
     },
   ],
@@ -191,7 +190,7 @@ const Credentials: FC<Props> = (props) => {
         }
         isEpitech={false}
         user={props.user}
-        isLoggedIn={true}
+        isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("google")}
       />
       <Service

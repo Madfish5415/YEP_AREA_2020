@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { EpitechCredentialsStackParamList } from "../../screens/epitech-credentials";
 import { RouteProp } from "@react-navigation/native";
 import { gray } from "@area-common/styles";
 import { SectionTitle } from "../common/section-title";
@@ -16,16 +15,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-type EpitechCredentialsRootProps = RouteProp<
-  EpitechCredentialsStackParamList,
-  "EpitechCredentials"
->;
 
-type Props = {
-  route: EpitechCredentialsRootProps;
-};
-
-const EpitechCredentialsScreen: FC<Props> = (props) => {
+const EpitechCredentialsScreen: FC = () => {
   const [autoLoginLink, setAutoLoginLink] = React.useState("");
   return (
     <View style={styles.container}>
