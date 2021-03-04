@@ -11,8 +11,8 @@ type Outputs = {
 };
 
 export class ContainsNode extends BaseNode<Parameters, Outputs> {
-  readonly id: string = "equal";
-  readonly name: string = "Equal";
+  readonly id: string = "contains";
+  readonly name: string = "Contains";
   readonly description: string = "No description";
   readonly label: string = "node";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
