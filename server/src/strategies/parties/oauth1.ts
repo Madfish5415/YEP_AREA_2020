@@ -1,4 +1,5 @@
 import { Any, User } from "@area-common/types";
+import { Request } from "express";
 import { Strategy, StrategyOptions, VerifyCallback } from "passport-oauth1";
 
 import { UserRepository } from "../../repositories";
@@ -35,6 +36,27 @@ export abstract class OAuth1PartyStrategy extends Strategy {
         }
       }
     );
+  }
+
+  authenticate(req: Request, options?: Any): void {
+    if (req.query.token && req.query.tokenSecret) {
+      this.userProfile(
+        req.query.token as string,
+        req.query.tokenSecret as string,
+        {},
+        (err, user, info) => {
+          if (err) {
+            return this.error(err);
+          }
+
+          if (user) {
+            return this.success(user, info);
+          }
+        }
+      );
+    }
+
+    super.authenticate(req, options);
   }
 
   abstract userProfile(
