@@ -61,5 +61,3 @@ export class WorkflowListEvent extends WorkflowEvent {
     this.authorization = authorization;
   }
 }
-
-export class WorkflowListEvent extends WorkflowEvent {}
