@@ -1,12 +1,16 @@
-import React, {FC} from "react";
-import Router from "next/router";
+import React, {FC, useEffect} from "react";
+import { useRouter } from "next/router";
 
 const IndexPage: FC = () => {
-    Router.push("/workflows");
+  const router = useRouter();
 
-    return (
-        <div/>
-    );
+  useEffect(() => {
+    router.push("/workflows").then();
+  }, [router]);
+
+  return (
+    <div/>
+  );
 };
 
 export default IndexPage;
