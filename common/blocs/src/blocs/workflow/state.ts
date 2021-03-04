@@ -1,4 +1,4 @@
-import { Workflow } from "@area-common/types";
+import {StatusError, Workflow} from "@area-common/types";
 
 export abstract class WorkflowState {}
 
@@ -6,7 +6,15 @@ export class WorkflowInitialState extends WorkflowState {}
 
 export class WorkflowLoadingState extends WorkflowState {}
 
-export class WorkflowErrorState extends WorkflowState {}
+export class WorkflowErrorState extends WorkflowState {
+  error: StatusError;
+
+  constructor(error: StatusError) {
+    super();
+
+    this.error = error;
+  }
+}
 
 export class WorkflowCreateState extends WorkflowState {}
 

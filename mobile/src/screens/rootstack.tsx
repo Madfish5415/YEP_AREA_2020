@@ -4,10 +4,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
+import SignUpScreen from "./signup";
 import EpitechCredentialsStack from "./epitech-credentials";
 import OAuthCredentialsStack from "./oauth-credentials";
 
 export type RootStackParamList = {
+  SignUp: undefined;
   Home: { userId: string };
   EpitechCredentials: undefined;
   OAuthCredentials: { serviceName: string };
@@ -20,6 +22,11 @@ const RootStack: FC = () => {
     <PaperProvider theme={Theme}>
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name={"Home"}
             component={HomeStack}

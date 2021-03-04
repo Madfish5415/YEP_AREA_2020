@@ -1,12 +1,29 @@
 version: "3"
 services:
+  ultrahook:
+    build:
+      context: .
+      dockerfile: ultrahook.Dockerfile
+    environment:
+      - "API_KEY=LD2DqAdj7YbFwEwYpalnUPpnv043hli5"
+      - "DEST=http://localhost:8080"
+    ports:
+      - "5000:5000"
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
   server:
+    depends_on:
+      - ultrahook
     build:
       context: .
       dockerfile: server.Dockerfile
     environment:
       - "HOSTNAME=0.0.0.0"
       - "PORT=8080"
+      - "DATABASE_HOSTNAME=mongo"
+      - "DATABASE_PORT=27017"
     ports:
       - "8080:8080"
   client_mobile:
