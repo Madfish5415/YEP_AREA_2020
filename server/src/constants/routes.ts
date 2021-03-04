@@ -1,3 +1,5 @@
+export const ABOUT_ROUTE = "/about.json";
+
 export const API_ROUTE = "/api";
 
 export const ADMIN_ROUTE = "/administration";

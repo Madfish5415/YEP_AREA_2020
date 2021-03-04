@@ -24,6 +24,7 @@ import {
   WorkflowRepository,
 } from "../repositories";
 import { apiRouter } from "../routes";
+import { aboutRouter } from "../routes/about";
 import {
   usePartyStrategies,
   useServiceStrategies,
@@ -90,6 +91,7 @@ export class Core {
 
     this.express.use(runnerMiddleware(this.runnerManager));
 
+    this.express.use(aboutRouter);
     this.express.use(apiRouter);
 
     this.express.use(errorMiddleware());
