@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 import WorkflowComponent from "../components/workflows/workflow";
 import { makeStyles, Theme, Typography, Grid } from "@material-ui/core";
@@ -20,6 +20,7 @@ import { ErrorState } from "../components/blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -40,17 +41,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const WorkflowsPage: FC = () => {
-  const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowsBloc.add(new WorkflowListEvent());
+  const router = useRouter();
+  let token: string = "";
+  const workflowsBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      workflowsBloc.add(new WorkflowListEvent(token));
+    }
+  }, [router]);
 
   const deleteWorkflow = (workflow: Workflow) => {
-    workflowsBloc.add(new WorkflowDeleteEvent(workflow.id));
+    workflowsBloc.add(new WorkflowDeleteEvent(token, workflow.id));
   };
 
   const isActiveWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(
-      new WorkflowUpdateEvent(workflow.id, {
-        isActive: workflow.isActive ? false : true,
+      new WorkflowUpdateEvent(token, workflow.id, {
+        active: !workflow.active,
       })
     );
   };
@@ -61,10 +77,10 @@ const WorkflowsPage: FC = () => {
       key={uuidv4()}
       condition={(_, current: WorkflowState) => {
         if (current instanceof WorkflowDeleteState) {
-          workflowsBloc.add(new WorkflowListEvent());
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         if (current instanceof WorkflowUpdateState) {
-          workflowsBloc.add(new WorkflowListEvent());
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
       }}
