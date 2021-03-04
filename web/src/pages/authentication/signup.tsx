@@ -1,7 +1,17 @@
-import React, {FC} from "react";
-import {Box, createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
+import React, {FC, useEffect} from "react";
+import {Backdrop, Box, CircularProgress, createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
 import {gray, primary} from "@area-common/styles";
 import {SignUpForm} from "../../components/authentication/signup/form";
+import {AuthenticationBloc} from "@area-common/blocs/build/blocs/authentication";
+import {
+  AuthenticationErrorState,
+  AuthenticationInitialState,
+  AuthenticationRepository,
+  AuthenticationSignUpState
+} from "@area-common/blocs";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {Alert} from "@material-ui/lab";
+import {useRouter} from "next/dist/client/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,12 +33,32 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 96,
       font: "roboto",
       fontWeight: "bold"
-    }
+    },
+    alert: {
+      margin: "1rem 0",
+    },
+    backdrop: {
+      color: "#ffffff",
+      zIndex: 100,
+    },
   })
 );
 
 const SignupPage: FC = () => {
   const classes = useStyles();
+  const authBloc = new AuthenticationBloc(
+    new AuthenticationRepository("http://localhost:8080")
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("jwt")) {
+      router.push("/workflows")
+        .then()
+        .catch((e) => console.log(e));
+    }
+  }, [router]);
+
 
   return (
     <Box className={classes.root}>
@@ -36,7 +66,32 @@ const SignupPage: FC = () => {
         <Typography className={classes.title}>
           AREA 51
         </Typography>
-        <SignUpForm/>
+        <BlocBuilder
+          bloc={authBloc}
+          builder={(state) => {
+            if (state instanceof AuthenticationErrorState) {
+              return (
+                <Box className={classes.formContainer}>
+                  <Alert severity="error" className={classes.alert}>
+                    {state.error.message}
+                  </Alert>
+                  <SignUpForm bloc={authBloc}/>
+                </Box>
+              );
+            }
+            if (state instanceof AuthenticationInitialState) {
+              return <SignUpForm bloc={authBloc}/>;
+            }
+            if (state instanceof AuthenticationSignUpState) {
+              localStorage.setItem("jwt", state.authentication);
+              router.push("/workflows")
+                .then()
+                .catch((e) => console.log(e));
+            }
+            return (<Backdrop className={classes.backdrop} open={true}>
+              <CircularProgress color="inherit"/>
+            </Backdrop>);
+          }}/>
       </Box>
     </Box>
   );
