@@ -1,17 +1,18 @@
-import React, {FC, useEffect} from "react";
-import {Backdrop, Box, CircularProgress, createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
-import {gray, primary} from "@area-common/styles";
-import {SignUpForm} from "../../components/authentication/signup/form";
-import {AuthenticationBloc} from "@area-common/blocs/build/blocs/authentication";
 import {
   AuthenticationErrorState,
   AuthenticationInitialState,
   AuthenticationRepository,
   AuthenticationSignUpState
 } from "@area-common/blocs";
+import {AuthenticationBloc} from "@area-common/blocs/build/blocs/authentication";
+import {gray, primary} from "@area-common/styles";
 import {BlocBuilder} from "@felangel/react-bloc";
+import {Backdrop, Box, CircularProgress, createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import {useRouter} from "next/dist/client/router";
+import React, {FC, useEffect} from "react";
+
+import {SignUpForm} from "../../components/authentication/signup/form";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
