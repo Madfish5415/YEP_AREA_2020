@@ -159,9 +159,7 @@ const SignIn: FC<Props> = (props) => {
           <AntDesign name="github" size={18} color={white} />
         }
         submitFunction={() => {
-          oAuthSignIn(
-            oAuthConfigMap.get("github") as AuthConfiguration
-          ).then(() => navigate("Home"));
+          oAuthSignIn(oAuthConfigMap.get("github") as AuthConfiguration);
         }}
       />
       <ExternalSignInButton
@@ -178,9 +176,7 @@ const SignIn: FC<Props> = (props) => {
         submitFunction={async () => {
           await oAuthSignIn(
             oAuthConfigMap.get("office365") as AuthConfiguration
-          )
-            .then(() => navigate("Home"))
-            .catch(() => console.log("Catch"));
+          ).then(() => navigate("Home"));
         }}
       />
     </ScrollView>

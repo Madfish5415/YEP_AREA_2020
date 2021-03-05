@@ -3,7 +3,7 @@ import { getLocalStorage } from "./localStorage";
 
 export const oAuthLogin = async (
   oAuthConfig: AuthConfiguration
-): Promise<boolean> => {
+): Promise<void> => {
   const data = await getLocalStorage("@userToken");
   if (data) {
     console.log("data", data);
@@ -18,29 +18,28 @@ export const oAuthLogin = async (
           },
         }
       );
-      return new Promise<boolean>((resolve) => {
-        resolve(true);
+      return new Promise((resolve) => {
+        resolve();
       });
     } catch (error) {
       console.log(error);
-      return new Promise<boolean>((reject) => {
-        reject(true);
+      return new Promise((reject) => {
+        reject();
       });
     }
   }
-  return new Promise<boolean>((reject) => {
-    reject(true);
+  return new Promise((reject) => {
+    reject();
   });
 };
 
 export const oAuthSignIn = async (
   oAuthConfig: AuthConfiguration
-): Promise<Boolean> => {
-  try {
-    const result = await authorize(oAuthConfig);
-    console.log(result);
-    // TODO: Add URL to log-in a user and keep it in the local storage
-    /*await fetch(
+): Promise<void> => {
+  const result = await authorize(oAuthConfig);
+  console.log(result);
+  // TODO: Add URL to log-in a user and keep it in the local storage
+  /*await fetch(
         `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
         {
           headers: {
@@ -48,13 +47,4 @@ export const oAuthSignIn = async (
           },
         }
       );*/
-    return new Promise<boolean>((resolve) => {
-      resolve(true);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  return new Promise<boolean>((reject) => {
-    reject(true);
-  });
 };
