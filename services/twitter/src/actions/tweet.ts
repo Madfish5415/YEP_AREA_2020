@@ -8,7 +8,7 @@ type Parameters = {
   username: string;
 };
 
-type OAuth = {
+type Credentials = {
   token: string;
   tokenSecret: string;
 };
@@ -43,10 +43,11 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
     },
   };
   readonly interval: number = 10 * 1000;
+  readonly credentials: boolean = true;
 
   private lastDates = new Map<Parameters, number>();
 
-  async execute(parameters: Parameters & OAuth): Promise<Outputs> {
+  async execute(parameters: Parameters & Credentials): Promise<Outputs> {
     const { username, token, tokenSecret } = parameters;
     const query = toQuery({
       screen_name: username,

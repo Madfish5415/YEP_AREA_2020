@@ -9,5 +9,6 @@ export interface SingletonNode<P = Any, O = Any> extends Node<P, O> {
   readonly label: string;
   readonly parametersDef?: Record<keyof P, Variable>;
   readonly outputsDef?: Record<keyof O, Variable>;
+  readonly credentials?: boolean;
   readonly forward?: boolean;
 }
