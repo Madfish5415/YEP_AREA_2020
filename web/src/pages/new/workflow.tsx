@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import AppBarComponent from "../../components/appbar/appbar";
 import {
   makeStyles,
@@ -29,7 +29,7 @@ import { gray, primary } from "@area-common/styles";
 import { v4 as uuidv4 } from "uuid";
 import { Workflow } from "@area-common/types";
 import WorkflowConfig from "../../components/workflow/workflowConfig";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { BlocBuilder } from "@felangel/react-bloc";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -71,10 +71,25 @@ const CssTextField = withStyles({
 })(TextField);
 
 const NewWorkflowPage: FC = () => {
-  const workflowBloc = new WorkflowBloc(new WorkflowRepository("http://localhost:8080"));
+  const router = useRouter();
+  let token = "";
+  const workflowBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+    }
+  });
 
   const handleWorkflowSubmit = (workflow: Workflow) => {
-    workflowBloc.add(new WorkflowCreateEvent(workflow));
+    workflowBloc.add(new WorkflowCreateEvent(token, workflow));
   };
 
   return (
@@ -112,7 +127,7 @@ const NewWorkflow: FC<Props> = (props) => {
     description: "",
     active: false,
     nodes: [],
-    starters: []
+    starters: [],
   });
 
   const findBlobId: (id: string) => number = (id) => {

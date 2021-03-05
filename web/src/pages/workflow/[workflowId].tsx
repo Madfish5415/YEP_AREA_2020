@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import AppBarComponent from "../../components/appbar/appbar";
 import {
   makeStyles,
@@ -57,15 +57,31 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const WorkflowPage: FC = () => {
   const router = useRouter();
+  let token = "";
   const { workflowId } = router.query;
-  const workflowBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowBloc.add(new WorkflowReadEvent(workflowId as string));
+  const workflowBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      workflowBloc.add(new WorkflowReadEvent(token, workflowId as string));
+    }
+  }, [router]);
 
   const handleWorkflowChange = (
     workflowId: string,
     updateWorkflow: Partial<Workflow>
   ) => {
-    workflowBloc.add(new WorkflowUpdateEvent(workflowId, updateWorkflow));
+    workflowBloc.add(
+      new WorkflowUpdateEvent(token, workflowId, updateWorkflow)
+    );
   };
 
   return (
@@ -74,7 +90,7 @@ const WorkflowPage: FC = () => {
       key={uuidv4()}
       condition={(_, current: WorkflowState) => {
         if (current instanceof WorkflowUpdateState) {
-          workflowBloc.add(new WorkflowReadEvent(workflowId as string));
+          workflowBloc.add(new WorkflowReadEvent(token, workflowId as string));
         }
         return true;
       }}
