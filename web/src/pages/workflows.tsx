@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const WorkflowsPage: FC = () => {
   const router = useRouter();
-  let token: string = "";
+  let token = "";
   const workflowsBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
