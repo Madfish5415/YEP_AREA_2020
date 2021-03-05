@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, white } from "@area-common/styles";
-import { Workflow, WorkflowAction } from "@area-common/types";
+import { Workflow } from "@area-common/types";
 import ActionSection from "./action/actionSection";
 import ConditionsSection from "./condition/conditionsSection";
 import ReactionsSection from "./reaction/reactionsSection";
