@@ -71,7 +71,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 const NewWorkflowPage: FC = () => {
-  const workflowBloc = new WorkflowBloc(new WorkflowRepository(""));
+  const workflowBloc = new WorkflowBloc(new WorkflowRepository("http://localhost:8080"));
 
   const handleWorkflowSubmit = (workflow: Workflow) => {
     workflowBloc.add(new WorkflowCreateEvent(workflow));
@@ -111,9 +111,8 @@ const NewWorkflow: FC<Props> = (props) => {
     name: "",
     description: "",
     active: false,
-    actions: [],
-    reactions: [],
-    executions: [],
+    nodes: [],
+    starters: []
   });
 
   const findBlobId: (id: string) => number = (id) => {

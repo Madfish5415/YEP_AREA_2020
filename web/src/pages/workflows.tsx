@@ -39,6 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 25,
     justifyContent: "center",
   },
+  floatingButton: {
+    backgroundColor: primary.main,
+    color: gray.main,
+    margin: "0px",
+    top: "auto",
+    right: "20px",
+    bottom: "20px",
+    left: "auto",
+    position: "fixed",
+  },
 }));
 
 const WorkflowsPage: FC = () => {
@@ -117,9 +127,7 @@ const Workflows: FC<Props> = (props) => {
   const handleNewWorkflow = () => {
     router.push({
       pathname: "new/workflow",
-    }).then().catch(e) {
-      console.log(e)
-    };
+    }).then().catch((e) => console.log(e));
   };
 
   return (
