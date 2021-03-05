@@ -103,7 +103,6 @@ const Service: FC<Props> = (props) => {
             onPress={() =>
               navigate("EpitechCredentials", {
                 screen: "EpitechCredentials",
-                params: { userId: props.user.id },
               })
             }
           >
@@ -117,7 +116,6 @@ const Service: FC<Props> = (props) => {
             onPress={() =>
               navigate("OAuthCredentials", {
                 screen: "OAuthCredentials",
-                params: { userId: props.user.id },
                 serviceName: props.name,
               })
             }
