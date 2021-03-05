@@ -31,7 +31,7 @@ export class NotNode extends BaseNode<Parameters, Outputs> {
   readonly forward = true;
 
   async execute(parameters: Parameters): Promise<Outputs[] | Outputs> {
-    let result = !parameters.value;
+    let result = !JSON.parse(parameters.value);
 
     if (parameters.value === "placard") {
       result = true;
