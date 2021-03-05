@@ -1,14 +1,13 @@
-import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import React, { FC } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
-import Theme from "../theme";
-import SignUpScreen from "./signup";
-import SignInScreen from "./signin";
 
-<<<<<<< HEAD
-const Stack = createStackNavigator();
-=======
+import Theme from "../theme";
+import HomeStack from "./home";
+import SignInScreen from "./signin";
+import SignUpScreen from "./signup";
+
 export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
@@ -16,7 +15,6 @@ export type RootStackParamList = {
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
->>>>>>> develop
 
 const RootStack: FC = () => {
   return (

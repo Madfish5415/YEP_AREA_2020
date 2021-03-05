@@ -117,7 +117,6 @@ const SignUp: FC<Props> = (props) => {
   const { navigate } = useNavigation();
   const [onError, setError] = useState(false);
   const [onErrorEmail, setErrorEmail] = useState(false);
-<<<<<<< HEAD
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -125,8 +124,6 @@ const SignUp: FC<Props> = (props) => {
       navigate("Home");
     }
   }, [token]);
-=======
->>>>>>> develop
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (
