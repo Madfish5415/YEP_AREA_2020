@@ -110,7 +110,7 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
       clientId: "dff89b78-9082-4107-ba9f-8b32f432f4fc",
       redirectUrl:
         "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
-      scopes: ["openid", "profile", "email", "offline_access"],
+      scopes: ["openid", "user.read"],
     },
   ],
   [

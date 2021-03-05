@@ -1,5 +1,5 @@
 import { AuthConfiguration, authorize } from "react-native-app-auth";
-import { getLocalStorage } from "./localStorage";
+import { getLocalStorage, setLocalStorage } from "./localStorage";
 
 export const oAuthLogin = async (
   oAuthConfig: AuthConfiguration
@@ -34,17 +34,17 @@ export const oAuthLogin = async (
 };
 
 export const oAuthSignIn = async (
-  oAuthConfig: AuthConfiguration
+  oAuthConfig: AuthConfiguration,
+  serviceName: string
 ): Promise<void> => {
   const result = await authorize(oAuthConfig);
-  console.log(result);
-  // TODO: Add URL to log-in a user and keep it in the local storage
-  /*await fetch(
-        `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
-        {
-          headers: {
-            authorization: data,
-          },
-        }
-      );*/
+  if (result) {
+    console.log(result);
+    const response = await fetch(
+      `http://localhost:8080/api/authentication/parties/${serviceName}/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`
+    );
+    const json = await response.json();
+    await setLocalStorage("@userToken", json["data"]["token"]);
+    console.log(json["data"]["token"]);
+  }
 };

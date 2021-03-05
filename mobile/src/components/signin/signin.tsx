@@ -159,7 +159,10 @@ const SignIn: FC<Props> = (props) => {
           <AntDesign name="github" size={18} color={white} />
         }
         submitFunction={() => {
-          oAuthSignIn(oAuthConfigMap.get("github") as AuthConfiguration);
+          oAuthSignIn(
+            oAuthConfigMap.get("github") as AuthConfiguration,
+            "github"
+          ).then(() => navigate("Home"));
         }}
       />
       <ExternalSignInButton
@@ -175,7 +178,22 @@ const SignIn: FC<Props> = (props) => {
         }
         submitFunction={async () => {
           await oAuthSignIn(
-            oAuthConfigMap.get("office365") as AuthConfiguration
+            oAuthConfigMap.get("office365") as AuthConfiguration,
+            "microsoft"
+          ).then(() => navigate("Home"));
+        }}
+      />
+      <ExternalSignInButton
+        style={{ marginTop: 15 }}
+        externalServiceName={"Google"}
+        externalServiceColor={white}
+        externalServiceIcon={
+          <AntDesign name="google" size={18} color={white} />
+        }
+        submitFunction={() => {
+          oAuthSignIn(
+            oAuthConfigMap.get("google") as AuthConfiguration,
+            "google"
           ).then(() => navigate("Home"));
         }}
       />
