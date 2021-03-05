@@ -12,7 +12,13 @@
     "sourceType": "module"
   },
   "plugins": [
+    "simple-import-sort",
     "react",
     "@typescript-eslint"
-  ]
+  ],
+  "rules": {
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "@typescript-eslint/no-namespace": "off"
+  }
 }

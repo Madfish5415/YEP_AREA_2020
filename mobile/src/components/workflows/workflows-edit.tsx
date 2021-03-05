@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { EditWorkflowItem } from "./edit-workflow-item";
 import {
@@ -16,6 +16,8 @@ import { ErrorState } from "../blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
 import { Workflow } from "@area-common/types";
 import { v4 as uuidv4 } from "uuid";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -24,11 +26,25 @@ const styles = StyleSheet.create({
 });
 
 const WorkflowsEditScreen: FC = () => {
-  const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowsBloc.add(new WorkflowListEvent());
+  const { navigate } = useNavigation();
+  const [token, setToken] = useState<string>("");
+  const workflowsBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
+  useIsFocused();
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        setToken(data);
+        workflowsBloc.add(new WorkflowListEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
 
   const deleteWorkflow = (workflow: Workflow) => {
-    workflowsBloc.add(new WorkflowDeleteEvent(workflow.id));
+    workflowsBloc.add(new WorkflowDeleteEvent(token, workflow.id));
   };
 
   return (
@@ -37,7 +53,7 @@ const WorkflowsEditScreen: FC = () => {
       key={uuidv4()}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowDeleteState) {
-          workflowsBloc.add(new WorkflowListEvent());
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
       }}
@@ -48,7 +64,7 @@ const WorkflowsEditScreen: FC = () => {
         if (state instanceof WorkflowListState) {
           return (
             <WorkflowsEdit
-              workflows={(state as WorkflowListState).workflows}
+              workflows={state.workflows}
               delete={deleteWorkflow}
             />
           );
