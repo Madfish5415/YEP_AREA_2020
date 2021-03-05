@@ -11,7 +11,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { primary, gray, white } from "@area-common/styles";
 import { AuthConfiguration, authorize } from "react-native-app-auth";
 import { User } from "@area-common/types";
-import { ConfigProps } from "./credentials";
+import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -79,22 +79,28 @@ const ServiceDescription: FC<ServiceDescriptionProps> = (props) => {
 };
 
 const Service: FC<Props> = (props) => {
-  const connectWithOauth = async (oAuthConfig: AuthConfiguration) => {
-    try {
-      const result = await authorize(oAuthConfig);
-      await fetch(
-        `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
-        {
-          headers: {
-            authorization: "",
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const { navigate } = useNavigation();
+  const connectWithOauth = async (oAuthConfig: AuthConfiguration) => {
+    getLocalStorage("@userToken").then(async (data) => {
+      if (data) {
+        try {
+          const result = await authorize(oAuthConfig);
+          await fetch(
+            `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
+            {
+              headers: {
+                authorization: data,
+              },
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        navigate("SignIn");
+      }
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       {props.isEpitech ? (
