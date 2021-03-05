@@ -1,8 +1,8 @@
-import { AnyObject } from "../lib";
+import { Any } from "../lib";
 import { Status } from "../status";
 
 type Data = {
-  data: AnyObject | AnyObject[];
+  data: Any;
 };
 
 type Success = {

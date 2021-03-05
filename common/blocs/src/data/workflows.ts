@@ -11,7 +11,7 @@ export default [
         name: "Epitech",
         serviceId: "3f3476bf-73c8-448d-a4e7-fa7cd401d3c6",
         actionId: "fb2ea9fb-9985-4382-943b-9adbc37c9d69",
-      },
+      }
     ],
     reactions: [
       {

@@ -1,67 +1,65 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { WorkflowItem } from "./workflow-item";
-import { StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { WorkflowsActiveStackRouteParamsList } from "../../pages/workflows";
-import {
-  RouteProp,
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { View, StyleSheet } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
-  WorkflowCreateEvent,
-  WorkflowCreateState,
   WorkflowErrorState,
+  WorkflowInitialState,
   WorkflowListEvent,
   WorkflowListState,
   WorkflowRepository,
+  WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
-import { Text, useTheme } from "react-native-paper";
-import { primary } from "@area-common/styles";
+import { getLocalStorage } from "../../common/localStorage";
+import { Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  saveButton: {
-    marginTop: 10,
-    width: 250,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: primary.main,
-    borderRadius: 20,
-  },
 });
 
-type WorkflowsActiveRouteProps = RouteProp<
-  WorkflowsActiveStackRouteParamsList,
-  "WorkflowsActive"
->;
-
-type WorkflowsActiveScreenProps = {
-  route: WorkflowsActiveRouteProps;
-};
-
-const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
-  const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowsBloc.add(new WorkflowListEvent());
+const WorkflowsActiveScreen: FC = () => {
+  const { navigate } = useNavigation();
+  const [token, setToken] = useState<string>("");
+  const workflowsBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
   useIsFocused();
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        setToken(data);
+        workflowsBloc.add(new WorkflowListEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
 
-  const createWorkflow = (workflow: Workflow) => {
-    workflowsBloc.add(new WorkflowCreateEvent(workflow));
+  const updateWorkflow = (
+    workflow: Workflow,
+    updatedWorkflow: Partial<Workflow>
+  ) => {
+    workflowsBloc.add(
+      new WorkflowUpdateEvent(token, workflow.id, updatedWorkflow)
+    );
   };
 
   return (
     <BlocBuilder
       bloc={workflowsBloc}
-      condition={(previous, current) => {
-        if (current instanceof WorkflowCreateState) {
-          workflowsBloc.add(new WorkflowListEvent());
+      condition={(previous: WorkflowState, current: WorkflowState) => {
+        if (current instanceof WorkflowUpdateState) {
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
       }}
@@ -73,9 +71,12 @@ const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
           return (
             <WorkflowsActive
               workflows={state.workflows}
-              createWorkflow={createWorkflow}
+              update={updateWorkflow}
             />
           );
+        }
+        if (state instanceof WorkflowInitialState) {
+          return <Text>Hello</Text>;
         }
         return <DefaultState />;
       }}
@@ -85,32 +86,20 @@ const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
 
 type Props = {
   workflows: Workflow[];
-  createWorkflow: (workflow: Workflow) => void;
+  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
 const WorkflowsActive: FC<Props> = (props) => {
-  const { fonts } = useTheme();
-  const { navigate } = useNavigation();
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ alignItems: "center" }}
-    >
+    <View style={styles.container}>
       {props.workflows.map((workflow) => (
-        <WorkflowItem key={workflow.id} workflow={workflow} />
+        <WorkflowItem
+          key={workflow.id}
+          workflow={workflow}
+          update={props.update}
+        />
       ))}
-      <TouchableOpacity
-        style={styles.saveButton}
-        onPress={() =>
-          navigate("WorkflowCreate", {
-            screen: "WorkflowCreate",
-            params: { callback: props.createWorkflow },
-          })
-        }
-      >
-        <Text style={fonts.main}>Add workflow</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 

@@ -6,7 +6,6 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
-import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -14,7 +13,6 @@ export type RootStackParamList = {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
   };
-  WorkflowCreate: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -24,6 +22,16 @@ const RootStack: FC = () => {
     <PaperProvider theme={Theme}>
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={"SignIn"}
+            component={SignInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name={"Home"}
             component={HomeStack}

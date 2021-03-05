@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 
 import { RunnerManager } from "../managers";
 
@@ -10,8 +10,8 @@ declare global {
   }
 }
 
-export function runnerMiddleware(manager: RunnerManager) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+export function runnerMiddleware(manager: RunnerManager): RequestHandler {
+  return (req, res, next): void => {
     req.runnerManager = manager;
 
     return next();
