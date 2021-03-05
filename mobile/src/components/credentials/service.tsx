@@ -12,6 +12,7 @@ import { primary, gray, white } from "@area-common/styles";
 import { AuthConfiguration, authorize } from "react-native-app-auth";
 import { User } from "@area-common/types";
 import { getLocalStorage } from "../../common/localStorage";
+import { oAuthLogin } from "../../common/oAuthLogin";
 
 const styles = StyleSheet.create({
   container: {
@@ -80,27 +81,6 @@ const ServiceDescription: FC<ServiceDescriptionProps> = (props) => {
 
 const Service: FC<Props> = (props) => {
   const { navigate } = useNavigation();
-  const connectWithOauth = async (oAuthConfig: AuthConfiguration) => {
-    getLocalStorage("@userToken").then(async (data) => {
-      if (data) {
-        try {
-          const result = await authorize(oAuthConfig);
-          await fetch(
-            `http://localhost:8080/api/authentication/services/google/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
-            {
-              headers: {
-                authorization: data,
-              },
-            }
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        navigate("SignIn");
-      }
-    });
-  };
   return (
     <SafeAreaView style={styles.container}>
       {props.isEpitech ? (
@@ -132,7 +112,7 @@ const Service: FC<Props> = (props) => {
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => connectWithOauth(props.oAuthConfig)}>
+          <TouchableOpacity onPress={() => oAuthLogin(props.oAuthConfig)}>
             <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />

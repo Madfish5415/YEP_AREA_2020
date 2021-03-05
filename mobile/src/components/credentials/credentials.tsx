@@ -74,7 +74,7 @@ export type ConfigProps = {
   scopes: string[];
 };
 
-const oAuthConfigMap = new Map<string, AuthConfiguration>([
+export const oAuthConfigMap = new Map<string, AuthConfiguration>([
   [
     "google",
     {
