@@ -22,12 +22,18 @@ import {
   WorkflowState,
   WorkflowCreateState,
   WorkflowCreateEvent,
+  UserBloc,
+  UserRepository,
+  UserReadState,
+  UserState,
+  UserErrorState,
+  UserReadEvent,
 } from "@area-common/blocs";
 import { DefaultState } from "../../components/blocbuilder/default-state";
 import { ErrorState } from "../../components/blocbuilder/error-state";
 import { gray, primary } from "@area-common/styles";
 import { v4 as uuidv4 } from "uuid";
-import { Workflow } from "@area-common/types";
+import { Workflow, User } from "@area-common/types";
 import WorkflowConfig from "../../components/workflow/workflowConfig";
 import Router, { useRouter } from "next/router";
 import { BlocBuilder } from "@felangel/react-bloc";
@@ -108,23 +114,67 @@ const NewWorkflowPage: FC = () => {
         if (state instanceof WorkflowErrorState) {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
-        return <NewWorkflow createCallback={handleWorkflowSubmit} />;
+        return <UserBlocComponent createCallback={handleWorkflowSubmit} />;
+      }}
+    />
+  );
+};
+
+type IntermediateProps = {
+  createCallback: (workflow: Workflow) => void;
+};
+
+const UserBlocComponent: FC<IntermediateProps> = (props) => {
+  const router = useRouter();
+  let token = "";
+  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      userBloc.add(new UserReadEvent(token));
+    }
+  });
+
+  return (
+    <BlocBuilder
+      bloc={userBloc}
+      key={uuidv4()}
+      builder={(state: UserState) => {
+        if (state instanceof UserErrorState) {
+          return <ErrorState errorLabel={"An error has occured"} />;
+        }
+        if (state instanceof UserReadState) {
+          return (
+            <NewWorkflow
+              user={(state as UserReadState).user}
+              createCallback={props.createCallback}
+            />
+          );
+        }
+        return <DefaultState />;
       }}
     />
   );
 };
 
 type Props = {
+  user: User;
   createCallback: (workflow: Workflow) => void;
 };
 
 const NewWorkflow: FC<Props> = (props) => {
   const classes = useStyles();
   const [newWorkflow, setNewWorkflow] = useState<Workflow>({
-    userId: uuidv4(),
+    userId: props.user.id,
     id: uuidv4(),
     name: "",
-    description: "",
+    description: "A description",
     active: false,
     nodes: [],
     starters: [],
