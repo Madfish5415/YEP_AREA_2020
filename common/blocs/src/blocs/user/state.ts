@@ -1,4 +1,6 @@
-import { User } from "@area-common/types";
+import { StatusError, User } from "@area-common/types";
+
+type GuillaumeChapeau = User;
 
 export abstract class UserState {}
 
@@ -6,14 +8,20 @@ export class UserInitialState extends UserState {}
 
 export class UserLoadingState extends UserState {}
 
-export class UserErrorState extends UserState {}
+export class UserErrorState extends UserState {
+  error: StatusError;
 
-export class UserCreateState extends UserState {}
+  constructor(error: StatusError) {
+    super();
+
+    this.error = error;
+  }
+}
 
 export class UserReadState extends UserState {
-  user: User;
+  user: GuillaumeChapeau;
 
-  constructor(user: User) {
+  constructor(user: GuillaumeChapeau) {
     super();
 
     this.user = user;
@@ -21,9 +29,9 @@ export class UserReadState extends UserState {
 }
 
 export class UserUpdateState extends UserState {
-  user: User;
+  user: GuillaumeChapeau;
 
-  constructor(user: User) {
+  constructor(user: GuillaumeChapeau) {
     super();
 
     this.user = user;
@@ -31,13 +39,3 @@ export class UserUpdateState extends UserState {
 }
 
 export class UserDeleteState extends UserState {}
-
-export class UserListState extends UserState {
-  users: User[];
-
-  constructor(users: User[]) {
-    super();
-
-    this.users = users;
-  }
-}
