@@ -1,11 +1,21 @@
-import {Any, User} from "@area-common/types";
+import { Any, User } from "@area-common/types";
 import { Request } from "express";
-import { Strategy, StrategyOptions, VerifyCallback } from "passport-oauth2";
+import { Strategy as BaseStrategy } from "passport";
+import {
+  Strategy,
+  StrategyOptions,
+  VerifyCallback,
+  VerifyFunction,
+} from "passport-oauth2";
 
 import { UserRepository } from "../../repositories";
 
-export abstract class OAuth2PartyStrategy extends Strategy {
+export abstract class OAuth2PartyStrategy
+  extends Strategy
+  implements BaseStrategy {
   abstract readonly id: string;
+
+  protected _verify?: VerifyFunction;
 
   protected constructor(
     options: StrategyOptions,
@@ -36,14 +46,20 @@ export abstract class OAuth2PartyStrategy extends Strategy {
 
   authenticate(req: Request, options?: Any): void {
     if (req.query.accessToken) {
-      this.userProfile(req.query.accessToken as string, (err, user, info) => {
-        if (err) {
-          return this.error(err);
-        }
+      const accessToken = req.query.accessToken as string;
+      const refreshToken = req.query.refreshToken as string;
+      const verified: VerifyCallback = (err, user, info) => {
+        if (err) return this.error(err);
+        if (user) this.success(user, info);
+      };
 
-        if (user) {
-          return this.success(user, info);
-        }
+      return this.userProfile(accessToken, (err, user, info) => {
+        if (err) return verified(err, user, info);
+
+        verified(err, user, info);
+
+        // @ts-ignore
+        this._verify?.(accessToken, refreshToken, user, verified);
       });
     }
 
