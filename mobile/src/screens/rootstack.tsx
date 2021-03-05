@@ -1,10 +1,12 @@
-import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import React, { FC } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
+
 import Theme from "../theme";
-import SignUpScreen from "./signup";
+import HomeStack from "./home";
 import SignInScreen from "./signin";
+import SignUpScreen from "./signup";
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -27,6 +29,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"SignUp"}
             component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"Home"}
+            component={HomeStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
