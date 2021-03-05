@@ -52,6 +52,7 @@ workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
       const [hasKeys] = hasAllKeysOf<WorkflowNode>(wNode, [
         "id",
         "name",
+        "label",
         "serviceId",
         "nodeId",
         "parameters",

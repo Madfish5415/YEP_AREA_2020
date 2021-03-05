@@ -18,8 +18,11 @@ export abstract class BaseNode<P = Any, O = Any>
       id: this.id,
       name: this.name,
       description: this.description,
+      label: this.label,
       parametersDef: this.parametersDef,
       outputsDef: this.outputsDef,
+      credentials: this.credentials,
+      forward: this.forward,
     };
   }
 }

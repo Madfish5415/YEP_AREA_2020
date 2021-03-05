@@ -3,6 +3,7 @@ export type WorkflowNode = {
   serviceId: string;
   nodeId: string;
   name: string;
+  label: string;
   parameters: Record<string, string>;
   condition: string;
   nextNodes: string[];
