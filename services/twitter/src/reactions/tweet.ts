@@ -9,7 +9,7 @@ type Parameters = {
   content: string;
 };
 
-type OAuth = {
+type Credentials = {
   token: string;
   tokenSecret: string;
 };
@@ -26,9 +26,10 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
       type: Type.STRING,
     },
   };
-  outputsDef = undefined;
+  readonly outputsDef = undefined;
+  readonly credentials: boolean = true;
 
-  async execute(parameters: Parameters & OAuth): Promise<void> {
+  async execute(parameters: Parameters & Credentials): Promise<void> {
     const { content, token, tokenSecret } = parameters;
     const query = toQuery({
       status: strictEncodeURIComponent(content),

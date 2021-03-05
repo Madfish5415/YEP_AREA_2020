@@ -42,18 +42,22 @@ export class BaseRunner implements Runner {
 
       if (!node) throw WORKFLOW_NODE_NOT_EXISTS;
 
-      const filter = {
-        userId: workflow.userId,
-        serviceId: wNode.serviceId + "-service",
-      };
-      const credential = await credentialRepository.read(filter);
       let parameters = wNode.parameters;
 
-      if (credential) {
-        parameters = {
-          ...parameters,
-          ...JSON.parse(credential.value),
+      if (node.credentials) {
+        const filter = {
+          userId: workflow.userId,
+          serviceId: wNode.serviceId + "-service",
         };
+
+        const credential = await credentialRepository.read(filter);
+
+        if (credential) {
+          parameters = {
+            ...parameters,
+            ...JSON.parse(credential.value),
+          };
+        }
       }
 
       let rNode: RunnerNode | undefined;

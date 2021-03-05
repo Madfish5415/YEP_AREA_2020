@@ -1,4 +1,4 @@
-import { Node, Service } from "@area-common/types";
+import { Service, SingletonNode } from "@area-common/types";
 
 export class ServiceRepository {
   services: Service[];
@@ -11,7 +11,7 @@ export class ServiceRepository {
     return this.services.find((service) => service.id === id);
   }
 
-  readNode(serviceId: string, nodeId: string): Node | undefined {
+  readNode(serviceId: string, nodeId: string): SingletonNode | undefined {
     return this.read(serviceId)?.nodes.find((node) => node.id === nodeId);
   }
 
@@ -27,7 +27,7 @@ export class ServiceRepository {
     return this.services;
   }
 
-  listNode(serviceId: string): Node[] | undefined {
+  listNode(serviceId: string): SingletonNode[] | undefined {
     return this.read(serviceId)?.nodes;
   }
 }
