@@ -2,15 +2,28 @@ import React, { FC, useState } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { WorkflowCreateStackParamsList } from "../../screens/workflow-create";
 import { Text, useTheme } from "react-native-paper";
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
 import { SectionTitle } from "../common/section-title";
 import { CustomTextInput } from "../common/text-input";
-import { Workflow } from "@area-common/types";
-import { v4 as uuidv4 } from "uuid";
+import { User, Workflow } from "@area-common/types";
 import { primary } from "@area-common/styles";
 import { ActionSection } from "../workflow/action/action-section";
 import { OperatorSection } from "../workflow/operator/operator-section";
 import { ReactionSection } from "../workflow/reaction/reaction-section";
+import {
+  UserBloc,
+  UserErrorState,
+  UserReadEvent,
+  UserReadState,
+  UserRepository,
+} from "@area-common/blocs";
+import { getLocalStorage } from "../../common/localStorage";
+import { BlocBuilder } from "@felangel/react-bloc";
+import { DefaultState } from "../blocbuilder/default-state";
+import { ErrorState } from "../blocbuilder/error-state";
+import { v4 as uuid } from "uuid";
+import { SaveAlert } from "../common/save-alert";
+import { ErrorAlert } from "../common/error-alert";
 
 const styles = StyleSheet.create({
   container: {
@@ -32,22 +45,60 @@ type WorkflowCreateRouteParams = RouteProp<
   "WorkflowCreate"
 >;
 
-type Props = {
+type WorkflowCreateProps = {
   route: WorkflowCreateRouteParams;
 };
 
-const WorkflowCreateScreen: FC<Props> = (props) => {
+const WorkflowCreateScreen: FC<WorkflowCreateProps> = (props) => {
+  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  const { navigate } = useNavigation();
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        userBloc.add(new UserReadEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
+
+  return (
+    <BlocBuilder
+      bloc={userBloc}
+      builder={(state) => {
+        if (state instanceof UserErrorState) {
+          return <ErrorState errorLabel={"An error has occured"} />;
+        }
+        if (state instanceof UserReadState) {
+          return (
+            <WorkflowCreate
+              user={state.user}
+              callback={props.route.params.callback}
+            />
+          );
+        }
+        return <DefaultState />;
+      }}
+    />
+  );
+};
+
+type Props = {
+  user: User;
+  callback: (workflow: Workflow) => void;
+};
+
+const WorkflowCreate: FC<Props> = (props) => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
   const [workflow, setWorkflow] = useState<Workflow>({
-    userId: uuidv4(),
-    id: uuidv4(),
-    name: "Workflow",
-    description: "",
+    userId: props.user.id,
+    id: uuid(),
+    name: "Workflow 1",
+    description: "No description",
     active: false,
-    actions: [],
-    reactions: [],
-    executions: [],
+    nodes: [],
+    starters: [],
   });
 
   const updateName = (text: string) => {
@@ -55,8 +106,18 @@ const WorkflowCreateScreen: FC<Props> = (props) => {
   };
 
   const submitWorkflow = () => {
-    props.route.params.callback(workflow);
-    navigate("Home", { screen: "Workflows" });
+    console.log("bite");
+    const validWorkflow = workflow.nodes.filter(
+      (node) => node.label === "action" || node.label === "reaction"
+    );
+    console.log(validWorkflow);
+    if (validWorkflow.length > 0) {
+      props.callback(workflow);
+      SaveAlert("create");
+      navigate("Home", { screen: "Workflows" });
+    } else {
+      ErrorAlert();
+    }
   };
 
   return (

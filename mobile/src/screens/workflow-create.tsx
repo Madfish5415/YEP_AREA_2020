@@ -6,7 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import WorkflowCreateScreen from "../components/workflow-create/workflow-create";
 
 export type WorkflowCreateStackParamsList = {
-  WorkflowCreate: { callback: (workflow: Workflow) => void };
+  WorkflowCreate: {
+    callback: (workflow: Workflow) => void;
+  };
 };
 
 const Stack = createStackNavigator<WorkflowCreateStackParamsList>();
