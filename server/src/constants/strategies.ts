@@ -1,3 +1,10 @@
+export const GITHUB_AUTHORIZATION_URL =
+  "https://github.com/login/oauth/authorize";
+export const GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token";
+export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "MISSING";
+export const GITHUB_CLIENT_SECRET =
+  process.env.GITHUB_CLIENT_SECRET || "MISSING";
+
 export const GOOGLE_AUTHORIZATION_URL =
   "https://accounts.google.com/o/oauth2/v2/auth";
 export const GOOGLE_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token";

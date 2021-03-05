@@ -41,23 +41,30 @@ export class RunnerManager {
   }
 
   async create(workflow: Workflow): Promise<void> {
-    await this.workflowRepository.create(workflow);
-
     if (workflow.active) {
       await this.createRunner(workflow);
     }
+
+    await this.workflowRepository.create(workflow);
   }
 
   async update(id: string, partial: Partial<Workflow>): Promise<Workflow> {
-    const workflow = await this.workflowRepository.update(id, partial);
+    let workflow = await this.workflowRepository.read(id);
 
     if (!workflow) throw WORKFLOW_NOT_EXISTS;
 
     await this.deleteRunner(id);
 
+    workflow = {
+      ...workflow,
+      ...partial,
+    };
+
     if (workflow.active) {
       await this.createRunner(workflow);
     }
+
+    await this.workflowRepository.update(id, partial);
 
     return workflow;
   }
