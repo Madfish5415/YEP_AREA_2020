@@ -47,7 +47,10 @@ export const EditWorkflowItem: FC<Props> = (props) => {
           workflow: props.workflow,
           callback: props.update,
           screen: "Workflow",
-          params: { workflow: props.workflow },
+          params: {
+            workflow: props.workflow,
+            callback: props.update,
+          },
         })
       }
     >

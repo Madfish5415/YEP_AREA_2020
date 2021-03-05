@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 type Props = {
   item: WorkflowReaction;
   workflow: Workflow;
-  callback: (workflow: Workflow, id: string) => void;
+  callback: (workflow: Workflow) => void;
 };
 
 export const Reaction: FC<Props> = (props) => {
@@ -47,7 +47,7 @@ export const Reaction: FC<Props> = (props) => {
         ReactionAlert(props.item, props.workflow, props.callback)
       }
     >
-      <View style={styles.bulletLink}></View>
+      <View style={styles.bulletLink} />
       <Text numberOfLines={1} style={[styles.text, { fontSize: 18 }]}>
         {props.item.reaction.name}
       </Text>

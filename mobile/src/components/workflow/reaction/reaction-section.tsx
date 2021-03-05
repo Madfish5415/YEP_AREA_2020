@@ -1,22 +1,19 @@
 import { Workflow as WorkflowType, Workflow } from "@area-common/types";
 import React, { FC } from "react";
 import { Reaction } from "./reaction";
-import { NewReaction } from "./new-reaction";
 import { ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
+import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
+    height: 150,
   },
 });
 
 type Props = {
   workflow: Workflow;
-  callback: (workflow: WorkflowType, id: string) => void;
+  callback: (workflow: WorkflowType) => void;
 };
 
 export const ReactionSection: FC<Props> = (props) => {
@@ -32,17 +29,19 @@ export const ReactionSection: FC<Props> = (props) => {
       }}
       pagingEnabled
     >
-      {props.workflow.reactions.map((reaction) => {
-        return (
-          <Reaction
-            key={reaction.reaction.id}
-            item={reaction}
-            workflow={props.workflow}
-            callback={props.callback}
-          />
-        );
-      })}
-      <NewReaction />
+      {props.workflow.reactions
+        ? props.workflow.reactions.map((reaction) => {
+            return (
+              <Reaction
+                key={reaction.id}
+                item={reaction}
+                workflow={props.workflow}
+                callback={props.callback}
+              />
+            );
+          })
+        : null}
+      <NewWidget widget={"reaction"} />
     </ScrollView>
   );
 };

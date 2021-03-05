@@ -9,7 +9,7 @@ import { Appbar, useTheme } from "react-native-paper";
 
 const styles = StyleSheet.create({
   headerTextInput: {
-    width: "80%",
+    width: "76%",
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
@@ -17,8 +17,14 @@ const styles = StyleSheet.create({
   },
 });
 
+type update = (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+type create = (workflow: Workflow) => void;
+
 export type WorkflowStackParamsList = {
-  Workflow: { workflow: Workflow };
+  Workflow: {
+    workflow: Workflow;
+    callback: update | create;
+  };
 };
 
 const Stack = createStackNavigator<WorkflowStackParamsList>();

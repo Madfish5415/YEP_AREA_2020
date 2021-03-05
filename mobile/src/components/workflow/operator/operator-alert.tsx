@@ -4,7 +4,7 @@ import { Workflow, WorkflowOperator } from "@area-common/types";
 export const OperatorAlert: (
   operator: WorkflowOperator,
   workflow: Workflow,
-  callback: (workflow: Workflow, id: string) => void
+  callback: (workflow: Workflow) => void
 ) => void = (operator, workflow, callback) => {
   Alert.alert(
     operator.operator.name,
@@ -12,12 +12,20 @@ export const OperatorAlert: (
     [
       {
         text: "Yes",
-        onPress: () => callback(workflow, operator.operator.id),
+        onPress: () => {
+          const newWorkflow = {
+            ...workflow,
+            operators: workflow.operators.filter(
+              (item) => item.operator.id !== operator.operator.id
+            ),
+          };
+          callback(newWorkflow);
+        },
       },
       {
         text: "Cancel",
         onPress: () => null,
-        style: "cancel",
+        style: "destructive",
       },
     ],
     { cancelable: false }
