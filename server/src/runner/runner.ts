@@ -1,7 +1,7 @@
 import { BaseNode, BaseTriggerNode } from "@area-common/service";
 import { Node, Runner, RunnerNode, Workflow } from "@area-common/types";
 
-import { WORKFLOW_NODE_NOT_EXISTS } from "../constants";
+import { SERVICE_NODE_NOT_EXISTS } from "../constants";
 import { LinearNode, ParallelNode } from "../node";
 import { CredentialRepository, ServiceRepository } from "../repositories";
 import { BaseRunnerNode } from "./node";
@@ -40,7 +40,7 @@ export class BaseRunner implements Runner {
     for (const wNode of workflow.nodes) {
       const node = serviceRepository.readNode(wNode.serviceId, wNode.nodeId);
 
-      if (!node) throw WORKFLOW_NODE_NOT_EXISTS;
+      if (!node) throw SERVICE_NODE_NOT_EXISTS;
 
       let parameters = wNode.parameters;
 

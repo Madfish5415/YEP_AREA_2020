@@ -18,6 +18,7 @@ export const AUTHENTICATION_SERVICE_CB_ROUTE = "/callback";
 
 export const SERVICES_ROUTE = "/services";
 export const SERVICE_ROUTE = "/:id";
+export const SERVICE_NODE_ROUTE = "/:id";
 
 export const USER_ROUTE = "/user";
 export const USER_ACCOUNT_ROUTE = "/account";
