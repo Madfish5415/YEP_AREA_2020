@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { WorkflowItem } from "./workflow-item";
 import { View, StyleSheet } from "react-native";
-import { WorkflowsActiveStackRouteParamsList } from "../../pages/workflows";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
   WorkflowErrorState,
+  WorkflowInitialState,
   WorkflowListEvent,
   WorkflowListState,
   WorkflowRepository,
@@ -17,6 +17,9 @@ import { BlocBuilder } from "@felangel/react-bloc";
 import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
+import { getLocalStorage } from "../../common/localStorage";
+import { Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -24,25 +27,31 @@ const styles = StyleSheet.create({
   },
 });
 
-type WorkflowsActiveRouteProps = RouteProp<
-  WorkflowsActiveStackRouteParamsList,
-  "WorkflowsActive"
->;
-
-type WorkflowsActiveScreenProps = {
-  route: WorkflowsActiveRouteProps;
-};
-
-const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
-  const workflowsBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowsBloc.add(new WorkflowListEvent());
+const WorkflowsActiveScreen: FC = () => {
+  const { navigate } = useNavigation();
+  const [token, setToken] = useState<string>("");
+  const workflowsBloc = new WorkflowBloc(
+    new WorkflowRepository("http://localhost:8080")
+  );
   useIsFocused();
+  getLocalStorage("@userToken")
+    .then((data) => {
+      if (data) {
+        setToken(data);
+        workflowsBloc.add(new WorkflowListEvent(data));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((e) => console.log(e));
 
   const updateWorkflow = (
     workflow: Workflow,
     updatedWorkflow: Partial<Workflow>
   ) => {
-    workflowsBloc.add(new WorkflowUpdateEvent(workflow.id, updatedWorkflow));
+    workflowsBloc.add(
+      new WorkflowUpdateEvent(token, workflow.id, updatedWorkflow)
+    );
   };
 
   return (
@@ -50,7 +59,7 @@ const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
       bloc={workflowsBloc}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowUpdateState) {
-          workflowsBloc.add(new WorkflowListEvent());
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
       }}
@@ -65,6 +74,9 @@ const WorkflowsActiveScreen: FC<WorkflowsActiveScreenProps> = (props) => {
               update={updateWorkflow}
             />
           );
+        }
+        if (state instanceof WorkflowInitialState) {
+          return <Text>Hello</Text>;
         }
         return <DefaultState />;
       }}

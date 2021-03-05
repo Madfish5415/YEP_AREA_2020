@@ -2,7 +2,7 @@ import { User } from "@area-common/types";
 import { Request } from "express";
 import { Strategy, StrategyOptions, VerifyCallback } from "passport-oauth1";
 
-import { CredentialRepository } from "../../repositories/credential";
+import { CredentialRepository } from "../../repositories";
 import { OAuth1StrategyStore } from "../store/oauth1";
 
 export class OAuth1ServiceStrategy extends Strategy {
@@ -33,25 +33,21 @@ export class OAuth1ServiceStrategy extends Strategy {
             userId: user.id,
             serviceId: req.serviceId,
           };
+          const value = {
+            token,
+            tokenSecret,
+          };
 
           const exists = await credentialRepository.exists(filter);
 
-          if (exists) {
-            const r = await credentialRepository.update(filter, {
-              value: JSON.stringify({
-                token,
-                tokenSecret,
-              }),
-            });
-
-            console.log(r);
-          } else {
+          if (!exists) {
             await credentialRepository.create({
               ...filter,
-              value: JSON.stringify({
-                token,
-                tokenSecret,
-              }),
+              value: JSON.stringify(value),
+            });
+          } else {
+            await credentialRepository.update(filter, {
+              value: JSON.stringify(value),
             });
           }
 

@@ -1,10 +1,17 @@
-import React, {FC} from "react";
-import AppBarComponent from "../components/appbar/appbar";
+import React, { FC, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const IndexPage: FC = () => {
-    return (
-        <AppBarComponent/>
-    );
+  const router = useRouter();
+
+  useEffect(() => {
+    router
+      .push("/workflows")
+      .then()
+      .catch((e) => console.log(e));
+  }, [router]);
+
+  return <div />;
 };
 
 export default IndexPage;

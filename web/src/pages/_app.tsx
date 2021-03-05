@@ -1,13 +1,13 @@
-import { AppProps } from "next/app";
+import {AppProps} from "next/app";
 import React from "react";
-import { CssBaseline } from "@material-ui/core";
+import {CssBaseline} from "@material-ui/core";
 
 import "../styles/_app.css";
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({Component, pageProps}: AppProps) => {
   return (
     <>
-      <CssBaseline />
+      <CssBaseline/>
       <Component {...pageProps} />
     </>
   );

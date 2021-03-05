@@ -6,8 +6,6 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import WorkflowsActiveScreen from "../components/workflows/workflows-active";
 import WorkflowsEditScreen from "../components/workflows/workflows-edit";
-import { RouteProp } from "@react-navigation/native";
-import { TabParamsList } from "../screens/home";
 
 const add = ({ color }) => <MaterialIcons name="add" size={25} color={color} />;
 
@@ -35,23 +33,9 @@ const WorkflowsActiveAppBar = () => {
   );
 };
 
-export type WorkflowsActiveStackRouteParamsList = {
-  WorkflowsActive: { userId: string };
-};
+const WorkflowsActiveStackRoute = createStackNavigator();
 
-const WorkflowsActiveStackRoute = createStackNavigator<WorkflowsActiveStackRouteParamsList>();
-
-type WorkflowsActiveStackRouteProps = RouteProp<
-  WorkflowsStackRouteParamsList,
-  "WorkflowsActive"
->;
-
-type WorkflowsActiveProps = {
-  route: WorkflowsActiveStackRouteProps;
-};
-
-const WorkflowsActiveStack: FC<WorkflowsActiveProps> = (props) => {
-  const { userId } = props.route.params;
+const WorkflowsActiveStack: FC = () => {
   return (
     <WorkflowsActiveStackRoute.Navigator
       screenOptions={{ header: WorkflowsActiveAppBar }}
@@ -59,7 +43,6 @@ const WorkflowsActiveStack: FC<WorkflowsActiveProps> = (props) => {
       <WorkflowsActiveStackRoute.Screen
         name={"WorkflowsActive"}
         component={WorkflowsActiveScreen}
-        initialParams={{ userId: userId }}
       />
     </WorkflowsActiveStackRoute.Navigator>
   );
@@ -80,23 +63,9 @@ const WorkflowsEditAppBar = () => {
   );
 };
 
-type WorkflowsEditStackRouteParamsList = {
-  WorkflowsEdit: { userId: string };
-};
+const WorkflowsEditStackRoute = createStackNavigator();
 
-const WorkflowsEditStackRoute = createStackNavigator<WorkflowsEditStackRouteParamsList>();
-
-type WorkflowsEditStackRouteProps = RouteProp<
-  WorkflowsStackRouteParamsList,
-  "WorkflowsEdit"
->;
-
-type WorkflowsEditProps = {
-  route: WorkflowsEditStackRouteProps;
-};
-
-const WorkflowsEditStack: FC<WorkflowsEditProps> = (props) => {
-  const { userId } = props.route.params;
+const WorkflowsEditStack: FC = () => {
   return (
     <WorkflowsEditStackRoute.Navigator
       screenOptions={{ header: WorkflowsEditAppBar }}
@@ -104,40 +73,25 @@ const WorkflowsEditStack: FC<WorkflowsEditProps> = (props) => {
       <WorkflowsEditStackRoute.Screen
         name={"WorkflowsEdit"}
         component={WorkflowsEditScreen}
-        initialParams={{ userId: userId }}
       />
     </WorkflowsEditStackRoute.Navigator>
   );
 };
 
-type WorkflowsStackRouteParamsList = {
-  WorkflowsActive: { userId: string };
-  WorkflowsEdit: { userId: string };
-};
+const WorkflowsStackRoute = createStackNavigator();
 
-const WorkflowsStackRoute = createStackNavigator<WorkflowsStackRouteParamsList>();
-
-type WorkflowsStackRouteProps = RouteProp<TabParamsList, "Workflows">;
-
-type WorkflowsProps = {
-  route: WorkflowsStackRouteProps;
-};
-
-const WorkflowsStack: FC<WorkflowsProps> = (props) => {
-  const { userId } = props.route.params;
+const WorkflowsStack: FC = () => {
   return (
     <WorkflowsStackRoute.Navigator screenOptions={{ headerShown: false }}>
       <WorkflowsStackRoute.Screen
         name={"WorkflowsActive"}
         component={WorkflowsActiveStack}
         options={{ animationEnabled: false }}
-        initialParams={{ userId: userId }}
       />
       <WorkflowsStackRoute.Screen
         name={"WorkflowsEdit"}
         component={WorkflowsEditStack}
         options={{ animationEnabled: false }}
-        initialParams={{ userId: userId }}
       />
     </WorkflowsStackRoute.Navigator>
   );

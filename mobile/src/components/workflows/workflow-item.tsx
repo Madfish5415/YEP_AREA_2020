@@ -1,10 +1,8 @@
-import React, { FC, useState } from "react";
-
+import React, { FC } from "react";
 import { View, StyleSheet, Switch } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { gray } from "@area-common/styles";
 import { Workflow } from "@area-common/types";
-import workflows from "@area-common/blocs/build/data/workflows";
 
 const styles = StyleSheet.create({
   container: {
@@ -37,9 +35,9 @@ export const WorkflowItem: FC<Props> = (props) => {
         trackColor={{ true: colors.primary }}
         style={styles.switch}
         onValueChange={() =>
-          props.update(props.workflow, { isActive: !props.workflow.isActive })
+          props.update(props.workflow, { active: !props.workflow.active })
         }
-        value={props.workflow.isActive}
+        value={props.workflow.active}
       />
     </View>
   );

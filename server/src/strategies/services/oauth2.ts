@@ -2,7 +2,7 @@ import { User } from "@area-common/types";
 import { Request } from "express";
 import { Strategy, StrategyOptions, VerifyCallback } from "passport-oauth2";
 
-import { CredentialRepository } from "../../repositories/credential";
+import { CredentialRepository } from "../../repositories";
 
 export class OAuth2ServiceStrategy extends Strategy {
   readonly id: string;
@@ -29,22 +29,21 @@ export class OAuth2ServiceStrategy extends Strategy {
             userId: user.id,
             serviceId: req.params.id,
           };
+          const value = {
+            accessToken,
+            refreshToken,
+          };
+
           const exists = await credentialRepository.exists(filter);
 
-          if (exists) {
-            await credentialRepository.update(filter, {
-              value: JSON.stringify({
-                accessToken,
-                refreshToken,
-              }),
-            });
-          } else {
+          if (!exists) {
             await credentialRepository.create({
               ...filter,
-              value: JSON.stringify({
-                accessToken,
-                refreshToken,
-              }),
+              value: JSON.stringify(value),
+            });
+          } else {
+            await credentialRepository.update(filter, {
+              value: JSON.stringify(value),
             });
           }
 
