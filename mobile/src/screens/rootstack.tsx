@@ -1,13 +1,18 @@
-import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import React, { FC } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
-import HomeStack from "./home";
+
 import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
+import HomeStack from "./home";
+import SignInScreen from "./signin";
+import SignUpScreen from "./signup";
 
 export type RootStackParamList = {
+  SignIn: undefined;
+  SignUp: undefined;
   Home: { userId: string };
   Workflow: {
     workflow: Workflow;
@@ -22,6 +27,16 @@ const RootStack: FC = () => {
     <PaperProvider theme={Theme}>
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={"SignIn"}
+            component={SignInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name={"Home"}
             component={HomeStack}

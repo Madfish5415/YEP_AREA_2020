@@ -12,7 +12,7 @@ export const authenticationSignUp = Router();
 
 authenticationSignUp.post(
   AUTHENTICATION_SIGN_UP_ROUTE,
-  passport.authenticate("signup", { session: false }),
+  passport.authenticate("signup", { session: false, failWithError: true }),
   (req, res) => {
     const user = req.user as User;
     const token = jwt.sign(user.id, AUTHORIZE_SECRET);

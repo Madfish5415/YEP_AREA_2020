@@ -31,7 +31,7 @@ export class AccountRepository {
     filter: Filter,
     partial: Partial<Account>
   ): Promise<Account | null> {
-    return this.model.findOneAndUpdate(filter, partial);
+    return this.model.findOneAndUpdate(filter, partial, { new: true });
   }
 
   async delete(filter: Filter): Promise<void> {
@@ -46,8 +46,12 @@ export class AccountRepository {
     return this.model.find();
   }
 
+  async deleteAll(): Promise<void> {
+    await this.model.deleteMany();
+  }
+
   async comparePassword(filter: Filter, password: string): Promise<boolean> {
-    const account = await this.model.findOne(filter);
+    const account = await this.model.findOne(filter).select("+password");
 
     return account?.comparePassword(password) ?? false;
   }
@@ -56,7 +60,7 @@ export class AccountRepository {
     filter: Filter,
     verification: string
   ): Promise<boolean> {
-    const account = await this.model.findOne(filter);
+    const account = await this.model.findOne(filter).select("+verification");
 
     return account?.compareVerification(verification) ?? false;
   }
