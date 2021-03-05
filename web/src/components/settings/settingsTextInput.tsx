@@ -66,7 +66,7 @@ const SettingsTextInput: FC<Props> = (props) => {
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (props.disabled !== undefined) {
+    if (!props.disabled) {
       props.onSubmit!(input);
     }
   };

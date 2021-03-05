@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   user: User;
-  updateUser: (id: string, user: Partial<User>) => void;
+  updateUser: (user: Partial<User>) => void;
 };
 
 const AccountSecurity: FC<Props> = (props) => {
@@ -92,7 +92,7 @@ const AccountSecurity: FC<Props> = (props) => {
         </div>
         <Typography
           className={classes.conditionText}
-        >{`Make sure it's at least 15 QR at least 8 characters including a number and a lowerwase letter.`}</Typography>
+        >{`Make sure it's at least 15 OR at least 8 characters including a number and a lowerwase letter.`}</Typography>
         <Button
           className={classes.passwordButton}
           onClick={handlePasswordChange}
