@@ -6,12 +6,7 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import SignUpScreen from "./signup";
 
-export type RootStackParamList = {
-  SignUp: undefined;
-  Home: { userId: string };
-};
-
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator();
 
 const RootStack: FC = () => {
   return (
@@ -22,7 +17,11 @@ const RootStack: FC = () => {
             name={"SignUp"}
             component={SignUpScreen}
             options={{ headerShown: false }}
-            initialParams={{ userId: "3dcf9a69-e258-4449-a41d-cea7f6ca3fa9" }}
+          />
+          <Stack.Screen
+            name={"Home"}
+            component={HomeStack}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
