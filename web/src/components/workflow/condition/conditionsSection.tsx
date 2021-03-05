@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
-import { Workflow, WorkflowExecution } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
 import AddBox from "../../containers/addBox";
@@ -25,8 +25,12 @@ const ConditionsSection: FC<Props> = (props) => {
   return (
     <>
       <div className={classes.content}>
-        {props.workflow.executions.map((execution: WorkflowExecution) => {
-          return <ComponentBox key={execution.id} label={execution.name} />;
+        {props.workflow.nodes.map((node: WorkflowNode) => {
+          {
+            node.label === "condition" && (
+              <ComponentBox key={node.id} label={node.name} />
+            );
+          }
         })}
         <AddBox label={"condition"} />
       </div>
