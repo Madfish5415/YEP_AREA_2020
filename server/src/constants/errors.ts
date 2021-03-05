@@ -25,6 +25,11 @@ export const ACCOUNT_VERIFIED_ERROR = new StatusError(401, {
   message: "Account verified",
 });
 
+export const CREDENTIAL_NOT_EXISTS_ERROR = new StatusError(401, {
+  name: "CREDENTIAL_NOT_EXISTS",
+  message: "Credential doesn't exist",
+});
+
 export const ACCOUNT_NOT_VERIFIED_ERROR = new StatusError(401, {
   name: "ACCOUNT_NOT_VERIFIED",
   message: "Account not verified",
@@ -36,7 +41,7 @@ export const AUTHORIZATION_INVALID_ERROR = new StatusError(401, {
 });
 
 export const USER_NOT_ADMIN_ERROR = new StatusError(401, {
-  name: "USER_NOT_ADMIN_ERROR",
+  name: "USER_NOT_ADMIN",
   message: "User isn't an administrator",
 });
 
