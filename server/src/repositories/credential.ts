@@ -10,7 +10,7 @@ type ServiceId = {
   serviceId: string;
 };
 
-type Filter = UserId & ServiceId;
+export type CredentialFilter = UserId & ServiceId;
 
 export class CredentialRepository {
   model = CredentialModel;
@@ -19,22 +19,22 @@ export class CredentialRepository {
     await this.model.create(credential);
   }
 
-  async read(filter: Filter): Promise<Credential | null> {
+  async read(filter: CredentialFilter): Promise<Credential | null> {
     return this.model.findOne(filter);
   }
 
   async update(
-    filter: Filter,
+    filter: CredentialFilter,
     partial: Partial<Credential>
   ): Promise<Credential | null> {
     return this.model.findOneAndUpdate(filter, partial, { new: true });
   }
 
-  async delete(filter: Filter): Promise<void> {
+  async delete(filter: CredentialFilter): Promise<void> {
     await this.model.deleteMany(filter);
   }
 
-  async exists(filter: Filter): Promise<boolean> {
+  async exists(filter: CredentialFilter): Promise<boolean> {
     return this.model.exists(filter);
   }
 
