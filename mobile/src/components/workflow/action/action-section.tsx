@@ -17,10 +17,14 @@ type Props = {
 };
 
 export const ActionSection: FC<Props> = (props) => {
+  const actionsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "action"
+  );
+
   return (
     <View style={styles.container}>
-      {props.workflow.actions?.length > 0 ? (
-        <Action item={props.workflow.actions[0]} />
+      {actionsNodes.length > 0 ? (
+        <Action item={actionsNodes[0]} />
       ) : (
         <NewWidget widget={"action"} />
       )}

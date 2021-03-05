@@ -17,6 +17,10 @@ type Props = {
 };
 
 export const ReactionSection: FC<Props> = (props) => {
+  const reactionsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "reaction"
+  );
+
   return (
     <ScrollView
       horizontal={true}
@@ -29,8 +33,8 @@ export const ReactionSection: FC<Props> = (props) => {
       }}
       pagingEnabled
     >
-      {props.workflow.reactions
-        ? props.workflow.reactions.map((reaction) => {
+      {props.workflow && props.workflow.nodes
+        ? reactionsNodes.map((reaction) => {
             return (
               <Reaction
                 key={reaction.id}

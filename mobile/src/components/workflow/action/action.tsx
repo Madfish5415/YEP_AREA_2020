@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { WorkflowAction } from "@area-common/types";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { WorkflowNode } from "@area-common/types";
 import { Text } from "react-native-paper";
-import { gray, primary, secondary } from "@area-common/styles";
+import { gray, primary } from "@area-common/styles";
 
 const styles = StyleSheet.create({
   container: {
@@ -13,35 +13,19 @@ const styles = StyleSheet.create({
     backgroundColor: primary.main,
     borderRadius: 20,
   },
-  bulletLink: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    position: "absolute",
-    alignSelf: "center",
-    bottom: -10,
-    borderWidth: 2,
-    borderColor: gray.main,
-    backgroundColor: secondary.main,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   text: {
     color: gray.main,
   },
 });
 
 type Props = {
-  item: WorkflowAction;
+  item: WorkflowNode;
 };
 
 export const Action: FC<Props> = (props) => {
   return (
     <TouchableOpacity style={styles.container}>
       <Text style={[styles.text, { fontSize: 18 }]}>{props.item.name}</Text>
-      <View style={styles.bulletLink}>
-        <Text style={styles.text}>1</Text>
-      </View>
     </TouchableOpacity>
   );
 };

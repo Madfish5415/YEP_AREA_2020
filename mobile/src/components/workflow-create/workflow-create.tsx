@@ -2,7 +2,13 @@ import React, { FC, useState } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { WorkflowCreateStackParamsList } from "../../screens/workflow-create";
 import { Text, useTheme } from "react-native-paper";
-import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { SectionTitle } from "../common/section-title";
 import { CustomTextInput } from "../common/text-input";
 import { User, Workflow } from "@area-common/types";
@@ -88,7 +94,10 @@ type Props = {
   callback: (workflow: Workflow) => void;
 };
 
+const { height } = Dimensions.get("window");
+
 const WorkflowCreate: FC<Props> = (props) => {
+  const [screenHeight, setScreenHeight] = useState(0);
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
   const [workflow, setWorkflow] = useState<Workflow>({
@@ -97,21 +106,79 @@ const WorkflowCreate: FC<Props> = (props) => {
     name: "Workflow 1",
     description: "No description",
     active: false,
-    nodes: [],
+    nodes: [
+      {
+        id: "1",
+        name: "twitter",
+        serviceId: "twitter",
+        nodeId: "tweet-action",
+        label: "action",
+        parameters: {
+          username: "MrSquaare",
+        },
+        condition: "true",
+        nextNodes: ["2"],
+      },
+      {
+        id: "2",
+        name: "contains",
+        serviceId: "conditions",
+        label: "condition",
+        nodeId: "contains",
+        parameters: {
+          value1: "${text}",
+          value2: "AREA 51",
+        },
+        condition: "true",
+        nextNodes: ["3"],
+      },
+      {
+        id: "3",
+        name: "not",
+        serviceId: "conditions",
+        label: "condition",
+        nodeId: "not",
+        parameters: {
+          value: "${result}",
+        },
+        condition: "true",
+        nextNodes: ["4"],
+      },
+      {
+        id: "4",
+        name: "twitter",
+        label: "reaction",
+        serviceId: "twitter",
+        nodeId: "tweet-reaction",
+        parameters: {
+          content: "AREA 51: ${text}",
+        },
+        condition: "${result}",
+        nextNodes: [],
+      },
+    ],
     starters: [],
   });
+
+  const onContentSizeChange = (contentWidth, contentHeight) => {
+    setScreenHeight(contentHeight);
+  };
+
+  const scrollEnabled = screenHeight > height;
 
   const updateName = (text: string) => {
     setWorkflow({ ...workflow, name: text });
   };
 
   const submitWorkflow = () => {
-    console.log("bite");
-    const validWorkflow = workflow.nodes.filter(
-      (node) => node.label === "action" || node.label === "reaction"
+    const actionsWorkflow = workflow.nodes.filter(
+      (node) => node.label === "action"
     );
-    console.log(validWorkflow);
-    if (validWorkflow.length > 0) {
+    const reactionsWorkflow = workflow.nodes.filter(
+      (node) => node.label === "reaction"
+    );
+    if (actionsWorkflow.length > 0 && reactionsWorkflow.length > 0) {
+      console.log(workflow.id);
       props.callback(workflow);
       SaveAlert("create");
       navigate("Home", { screen: "Workflows" });
@@ -121,18 +188,24 @@ const WorkflowCreate: FC<Props> = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <SectionTitle label={"Workflow's name"} style={{ marginTop: 10 }} />
-      <CustomTextInput text={workflow.name} setText={updateName} />
-      <SectionTitle label={"Actions"} style={{ marginTop: 20 }} />
-      <ActionSection workflow={workflow} />
-      <SectionTitle label={"Operators"} />
-      <OperatorSection workflow={workflow} callback={setWorkflow} />
-      <SectionTitle label={"Reactions"} />
-      <ReactionSection workflow={workflow} callback={setWorkflow} />
-      <TouchableOpacity style={styles.saveButton} onPress={submitWorkflow}>
-        <Text style={fonts.main}>Save</Text>
-      </TouchableOpacity>
+    <SafeAreaView>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        scrollEnabled={scrollEnabled}
+        onContentSizeChange={onContentSizeChange}
+      >
+        <SectionTitle label={"Workflow's name"} style={{ marginTop: 10 }} />
+        <CustomTextInput text={workflow.name} setText={updateName} />
+        <SectionTitle label={"Actions"} style={{ marginTop: 20 }} />
+        <ActionSection workflow={workflow} />
+        <SectionTitle label={"Operators"} />
+        <OperatorSection workflow={workflow} callback={setWorkflow} />
+        <SectionTitle label={"Reactions"} />
+        <ReactionSection workflow={workflow} callback={setWorkflow} />
+        <TouchableOpacity style={styles.saveButton} onPress={submitWorkflow}>
+          <Text style={fonts.main}>Save</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };

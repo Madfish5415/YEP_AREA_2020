@@ -49,14 +49,19 @@ const WorkflowsEditScreen: FC = () => {
     workflow: Workflow,
     updatedWorkflow: Partial<Workflow>
   ) => {
-    workflowsBloc.add(
-      new WorkflowUpdateEvent(
-        workflow.id,
-        updatedWorkflow.name
-          ? updatedWorkflow
-          : { name: workflow.action.action.name }
-      )
-    );
+    getLocalStorage("@userToken")
+      .then((data) => {
+        if (data) {
+          workflowsBloc.add(
+            new WorkflowUpdateEvent(
+              data,
+              workflow.id,
+              updatedWorkflow.name ? updatedWorkflow : { name: workflow.name }
+            )
+          );
+        }
+      })
+      .catch((e) => console.log(e));
   };
 
   const deleteWorkflow = (workflow: Workflow) => {
@@ -72,7 +77,7 @@ const WorkflowsEditScreen: FC = () => {
           workflowsBloc.add(new WorkflowListEvent(token));
         }
         if (current instanceof WorkflowUpdateState) {
-          workflowsBloc.add(new WorkflowListEvent());
+          workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
       }}
