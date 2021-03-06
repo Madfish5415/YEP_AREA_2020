@@ -35,7 +35,7 @@ import { ErrorState } from "../../components/blocbuilder/error-state";
 import { gray, primary } from "@area-common/styles";
 import { v4 as uuidv4 } from "uuid";
 import { Workflow, User } from "@area-common/types";
-import WorkflowConfig from "../../components/workflow/workflowConfig";
+import WorkflowConfigDialog from "../../components/workflow/workflowConfigDialog";
 import Router, { useRouter } from "next/router";
 import { BlocBuilder } from "@felangel/react-bloc";
 
@@ -224,7 +224,7 @@ const NewWorkflow: FC<Props> = (props) => {
             className={classes.nameForm}
             InputProps={{ className: classes.title }}
             defaultValue={newWorkflow.name}
-            onChange={handleWorkflowNameChange}
+            onSubmit={handleWorkflowNameChange}
           />
           <Button
             className={classes.createButton}
@@ -233,7 +233,7 @@ const NewWorkflow: FC<Props> = (props) => {
             Create workflow
           </Button>
         </div>
-        <WorkflowConfig workflow={newWorkflow} setWorkflow={setNewWorkflow} />
+        <WorkflowConfigDialog workflow={newWorkflow} setWorkflow={setNewWorkflow} />
       </div>
     </>
   );

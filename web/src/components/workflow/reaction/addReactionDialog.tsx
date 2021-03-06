@@ -121,13 +121,13 @@ const AddReactionDialog: FC<Props> = (props) => {
   const classes = useStyles();
   const [reaction, setReaction] = useState<Partial<WorkflowNode>>({
     id: uuidv4(),
-    serviceId: "",
-    nodeId: "",
-    name: "",
-    label: "reaction",
-    parameters: {},
-    condition: "",
-    nextNodes: []
+    serviceId: undefined,
+    nodeId: undefined,
+    name: undefined,
+    label: undefined,
+    parameters: undefined,
+    condition: undefined,
+    nextNodes: undefined
   });
 
   const handleClose = () => {
@@ -155,13 +155,13 @@ const AddReactionDialog: FC<Props> = (props) => {
     props.setWorkflow(newWorkflow);
     setReaction({
       id: uuidv4(),
-      serviceId: "",
-      nodeId: "",
-      name: "",
-      label: "reaction",
-      parameters: {},
-      condition: "",
-      nextNodes: []
+      serviceId: undefined,
+      nodeId: undefined,
+      name: undefined,
+      label: undefined,
+      parameters: undefined,
+      condition: undefined,
+      nextNodes: undefined
     });
     props.setIsOpen(false);
   };

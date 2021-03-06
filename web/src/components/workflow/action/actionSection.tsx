@@ -5,7 +5,9 @@ import React, {FC, useState} from "react";
 import AddBox from "../../containers/addBox";
 import ComponentBox from "../../containers/componentBox";
 import AddActionDialog from "./addActionDialog";
-import UpdateAction from "./updateAction";
+import UpdateActionDialog from "./updateActionDialog";
+import EditNode from "../edit/editNode";
+import EditNodeBuilder from "../edit/editNode";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,11 +53,12 @@ const ActionSection: FC<Props> = (props) => {
             <div onClick={() => setIsOpen(true)}>
               <AddBox label={"action"}/>
             </div>
-            <AddActionDialog
+            <EditNodeBuilder
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
+              isAction={true}
             />
           </>
         )}
@@ -72,7 +75,7 @@ const ActionContainer: FC<ContainerProps> = (props) => {
       <div onClick={() => setIsOpen(true)}>
         <ComponentBox label={props.action.name}/>
       </div>
-      <UpdateAction
+      <UpdateActionDialog
         action={props.action}
         workflow={props.workflow}
         setWorkflow={props.setWorkflow}

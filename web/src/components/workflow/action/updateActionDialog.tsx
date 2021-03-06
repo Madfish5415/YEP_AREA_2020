@@ -12,7 +12,8 @@ import {
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import React, {FC} from "react";
+import React, {FC, useState} from "react";
+import {v4 as uuidv4} from "uuid";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -93,7 +94,9 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   );
 });
 
-const UpdateAction: FC<Props> = (props) => {
+const UpdateActionDialog: FC<Props> = (props) => {
+  const [action, setAction] = useState<Partial<WorkflowNode>>(props.action);
+
   const handleClose = () => {
     props.setIsOpen(false);
   };
@@ -103,9 +106,9 @@ const UpdateAction: FC<Props> = (props) => {
   ) => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.nodes.forEach((action, index) => {
-      if (action.id === props.action.id) {
-        newWorkflow.nodes[index].name = event.target.value;
+    newWorkflow.nodes.forEach((node, index) => {
+      if (node.id === props.action.id) {
+        newWorkflow.nodes[index] = {...props.action, ...action};
       }
     });
     props.setWorkflow(newWorkflow);
@@ -138,4 +141,4 @@ const UpdateAction: FC<Props> = (props) => {
   );
 };
 
-export default UpdateAction;
+export default UpdateActionDialog;

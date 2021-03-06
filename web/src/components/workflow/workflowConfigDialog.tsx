@@ -38,7 +38,7 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
-const WorkflowConfig: FC<Props> = (props) => {
+const WorkflowConfigDialog: FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -78,4 +78,4 @@ const WorkflowConfig: FC<Props> = (props) => {
   );
 };
 
-export default WorkflowConfig;
+export default WorkflowConfigDialog;

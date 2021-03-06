@@ -1,4 +1,4 @@
-import { gray, primary } from "@area-common/styles";
+import {gray, primary} from "@area-common/styles";
 import {Workflow, WorkflowNode} from "@area-common/types";
 import {
   Button,
@@ -15,8 +15,9 @@ import {
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import React, { FC, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, {FC, useState} from "react";
+import {v4 as uuidv4} from "uuid";
+import EditNode from "../edit/editNode";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -100,7 +101,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
         margin="normal"
         label=""
         placeholder="Condition name"
-        InputProps={{ className: classes.dialogTitle }}
+        InputProps={{className: classes.dialogTitle}}
         defaultValue={label}
         onChange={handleConditionNameChange}
       />
@@ -110,7 +111,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
           className={classes.closeButton}
           onClick={onClose}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -121,13 +122,13 @@ const AddConditionDialog: FC<Props> = (props) => {
   const classes = useStyles();
   const [condition, setCondition] = useState<Partial<WorkflowNode>>({
     id: uuidv4(),
-    serviceId: "",
-    nodeId: "",
-    name: "",
-    label: "condition",
-    parameters: {},
-    condition: "",
-    nextNodes: []
+    serviceId: undefined,
+    nodeId: undefined,
+    name: undefined,
+    label: undefined,
+    parameters: undefined,
+    condition: undefined,
+    nextNodes: undefined
   });
 
   const handleClose = () => {
@@ -137,7 +138,7 @@ const AddConditionDialog: FC<Props> = (props) => {
   const handleConditionNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setCondition({ ...condition, name: event.target.value });
+    setCondition({...condition, name: event.target.value});
   };
 
   const handleAdd = () => {
@@ -155,13 +156,13 @@ const AddConditionDialog: FC<Props> = (props) => {
     props.setWorkflow(newWorkflow);
     setCondition({
       id: uuidv4(),
-      serviceId: "",
-      nodeId: "",
-      name: "",
-      label: "condition",
-      parameters: {},
-      condition: "",
-      nextNodes: []
+      serviceId: undefined,
+      nodeId: undefined,
+      name: undefined,
+      label: undefined,
+      parameters: undefined,
+      condition: undefined,
+      nextNodes: undefined
     });
     props.setIsOpen(false);
   };
@@ -176,7 +177,7 @@ const AddConditionDialog: FC<Props> = (props) => {
         open={props.isOpen}
         onClose={handleClose}
         PaperProps={{
-          style: { backgroundColor: gray.light1, boxShadow: "1" },
+          style: {backgroundColor: gray.light1, boxShadow: "1"},
         }}
       >
         <DialogTitle

@@ -1,4 +1,5 @@
-export abstract class ServiceEvent {}
+export abstract class ServiceEvent {
+}
 
 export class ServiceReadEvent extends ServiceEvent {
   id: string;
@@ -11,11 +12,4 @@ export class ServiceReadEvent extends ServiceEvent {
 }
 
 export class ServiceListEvent extends ServiceEvent {
-  id: string;
-
-  constructor(id: string) {
-    super();
-
-    this.id = id;
-  }
 }

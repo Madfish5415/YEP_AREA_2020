@@ -24,7 +24,7 @@ import {
 } from "@area-common/blocs";
 import { DefaultState } from "../../components/blocbuilder/default-state";
 import { ErrorState } from "../../components/blocbuilder/error-state";
-import WorkflowConfig from "../../components/workflow/workflowConfig";
+import WorkflowConfigDialog from "../../components/workflow/workflowConfigDialog";
 import { Workflow } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
@@ -194,7 +194,7 @@ const WorkflowEdit: FC<Props> = (props) => {
               Save
             </Button>
           </div>
-          <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
+          <WorkflowConfigDialog workflow={workflow} setWorkflow={setWorkflow} />
         </div>
       </Box>
     </>

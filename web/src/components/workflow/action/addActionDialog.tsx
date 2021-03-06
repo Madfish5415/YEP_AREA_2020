@@ -1,5 +1,5 @@
 import {gray, primary} from "@area-common/styles";
-import {Workflow, WorkflowNode} from "@area-common/types";
+import {SingletonNode, Workflow, WorkflowNode} from "@area-common/types";
 import {
   Button,
   createStyles,
@@ -15,8 +15,20 @@ import {
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {v4 as uuidv4} from "uuid";
+import EditNode from "../edit/editNode";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {
+  ServiceBloc,
+  ServiceErrorState,
+  ServiceListEvent,
+  ServiceListState,
+  ServiceRepository,
+  ServiceState
+} from "@area-common/blocs";
+import {ErrorState} from "../../blocbuilder/error-state";
+import {DefaultState} from "../../blocbuilder/default-state";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,13 +78,6 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-type Props = {
-  workflow: Workflow;
-  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
 export interface DialogTitleProps extends WithStyles<typeof styles> {
   id: string | undefined;
   children: React.ReactNode;
@@ -115,18 +120,30 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   );
 });
 
-const AddActionDialog: FC<Props> = (props) => {
+type ChildProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const DialogChild: FC<ChildProps> = (props) => {
   const classes = useStyles();
   const [action, setAction] = useState<Partial<WorkflowNode>>({
-    id: uuidv4(),
-    serviceId: "",
-    nodeId: "",
-    name: "",
-    label: "action",
-    parameters: {},
-    condition: "",
-    nextNodes: []
+    id: uuidv4()
   });
+  const [singletonNode, setSingletonNode] = useState<[string, SingletonNode] | null>(null);
+
+  useEffect(() => {
+    if (!singletonNode)
+      return
+
+    setAction({
+      ...action,
+      serviceId: singletonNode[0],
+      nodeId: singletonNode[1].id,
+      label: singletonNode[1].label,
+    });
+  }, [singletonNode])
 
   const handleClose = () => {
     props.setIsOpen(false);
@@ -153,46 +170,102 @@ const AddActionDialog: FC<Props> = (props) => {
     props.setWorkflow(newWorkflow);
     setAction({
       id: uuidv4(),
-      serviceId: "",
-      nodeId: "",
-      name: "",
-      label: "action",
-      parameters: {},
-      condition: "",
-      nextNodes: []
+      serviceId: undefined,
+      nodeId: undefined,
+      name: undefined,
+      label: undefined,
+      parameters: undefined,
+      condition: undefined,
+      nextNodes: undefined
     });
     props.setIsOpen(false);
   };
 
+  const serviceBloc = new ServiceBloc(
+    new ServiceRepository("http://localhost:8080")
+  );
+  serviceBloc.add(new ServiceListEvent());
+
+  console.log("Action: " + JSON.stringify(action))
+  console.log("SingletonNode: " + JSON.stringify(singletonNode))
+
   return (
-    <>
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        fullWidth
-        maxWidth={"md"}
-        open={props.isOpen}
-        onClose={handleClose}
-        PaperProps={{
-          style: {backgroundColor: gray.light1, boxShadow: "1"},
-        }}
-      >
-        <DialogTitle
-          id={action.id}
-          onClose={handleClose}
-          label={action.name}
-          handleActionNameChange={handleActionNameChange}
-        >
-          {action.name}
-        </DialogTitle>
-        <DialogContent>Plop</DialogContent>
-        <DialogActions>
-          <Button className={classes.addButton} onClick={handleAdd}>
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <BlocBuilder
+      bloc={serviceBloc}
+      builder={(serviceState: ServiceState) => {
+        if (serviceState instanceof ServiceErrorState) {
+          return <ErrorState errorLabel={serviceState.error.message}/>;
+        }
+        if (serviceState instanceof ServiceListState) {
+          const actionsTypes: Map<string, SingletonNode[]> = new Map<string,
+            SingletonNode[]>();
+          serviceState.services.forEach((service) => {
+            const nodes = service.nodes.filter(
+              (node) => node.label === "action"
+            );
+            actionsTypes.set(service.id, nodes);
+          });
+          return (
+            <>
+              <DialogTitle
+                id={action.id}
+                onClose={handleClose}
+                label={action.name}
+                handleActionNameChange={handleActionNameChange}
+              >
+                {action.name}
+              </DialogTitle>
+              <DialogContent>
+                <EditNode
+                  workflow={props.workflow}
+                  node={action}
+                  setNode={setAction}
+                  singletonNode={singletonNode}
+                  setSingletonNode={setSingletonNode}
+                  nodesTypes={actionsTypes}
+                  isAction={true}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button className={classes.addButton} onClick={handleAdd}>
+                  Add
+                </Button>
+              </DialogActions>
+            </>
+          );
+        }
+        return <DefaultState/>;
+      }}
+    />
+  );
+}
+
+type Props = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const AddActionDialog: FC<Props> = (props) => {
+  const handleClose = () => {
+    props.setIsOpen(false);
+  };
+
+  return (
+    <Dialog
+      disableBackdropClick
+      disableEscapeKeyDown
+      fullWidth
+      maxWidth={"md"}
+      open={props.isOpen}
+      onClose={handleClose}
+      PaperProps={{
+        style: {backgroundColor: gray.light1, boxShadow: "1"},
+      }}
+    >
+      <DialogChild setIsOpen={props.setIsOpen} workflow={props.workflow} setWorkflow={props.setWorkflow}/>
+    </Dialog>
   );
 };
 

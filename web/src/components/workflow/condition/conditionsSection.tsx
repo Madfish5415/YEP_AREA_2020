@@ -5,7 +5,7 @@ import React, { FC, useState } from "react";
 import AddBox from "../../containers/addBox";
 import ComponentBox from "../../containers/componentBox";
 import AddConditionDialog from "./addConditionDialog";
-import UpdateCondition from "./updateCondition";
+import UpdateConditionDialog from "./updateConditionDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,7 +68,7 @@ const ConditionContainer: FC<ContainerProps> = (props) => {
       <div onClick={() => setIsOpen(true)}>
         <ComponentBox label={props.execution.name} />
       </div>
-      <UpdateCondition
+      <UpdateConditionDialog
         execution={props.execution}
         workflow={props.workflow}
         setWorkflow={props.setWorkflow}

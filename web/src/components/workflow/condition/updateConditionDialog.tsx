@@ -95,7 +95,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   );
 });
 
-const UpdateCondition: FC<Props> = (props) => {
+const UpdateConditionDialog: FC<Props> = (props) => {
   const handleClose = () => {
     props.setIsOpen(false);
   };
@@ -140,4 +140,4 @@ const UpdateCondition: FC<Props> = (props) => {
   );
 };
 
-export default UpdateCondition;
+export default UpdateConditionDialog;
