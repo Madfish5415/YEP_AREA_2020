@@ -114,19 +114,6 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
     },
   ],
   [
-    "instagram",
-    {
-      serviceConfiguration: {
-        authorizationEndpoint: "https://api.instagram.com/oauth/authorize",
-        tokenEndpoint: "https://api.instagram.com/oauth/access_token",
-      },
-      clientId: "485165855830934",
-      clientSecret: "7ac8b8ceb5e7e08d2cc4095d86b5986e",
-      redirectUrl: "https://www.google.com/",
-      scopes: ["user_profile", "user_media"],
-    },
-  ],
-  [
     "discord",
     {
       redirectUrl:
@@ -147,13 +134,6 @@ const Credentials: FC = () => {
   return (
     <View style={styles.container}>
       <Service
-        name={"Instagram"}
-        icon={<FontAwesome size={50} name={"instagram"} color={primary.main} />}
-        isEpitech={false}
-        isLoggedIn={false}
-        oAuthConfig={oAuthConfigMap.get("instagram")}
-      />
-      <Service
         name={"Office 365"}
         icon={
           <MaterialCommunityIcons
@@ -165,6 +145,7 @@ const Credentials: FC = () => {
         isEpitech={false}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("office365")}
+        serviceName={"microsoft"}
       />
       <Service
         name={"Github"}
@@ -172,6 +153,7 @@ const Credentials: FC = () => {
         isEpitech={false}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("github")}
+        serviceName={"github"}
       />
       <Service
         name={"Discord"}
@@ -188,6 +170,7 @@ const Credentials: FC = () => {
         isEpitech={false}
         isLoggedIn={false}
         oAuthConfig={oAuthConfigMap.get("google")}
+        serviceName={"google"}
       />
       <Service
         name={"Epitech"}

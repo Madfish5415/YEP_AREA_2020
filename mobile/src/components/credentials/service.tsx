@@ -60,6 +60,7 @@ type Props = {
   user?: User;
   isLoggedIn?: boolean;
   oAuthConfig?: AuthConfiguration;
+  serviceName?: string;
 };
 
 type ServiceDescriptionProps = {
@@ -112,7 +113,14 @@ const Service: FC<Props> = (props) => {
         </View>
       ) : (
         <View>
-          <TouchableOpacity onPress={() => oAuthLogin(props.oAuthConfig)}>
+          <TouchableOpacity
+            onPress={() =>
+              oAuthLogin(
+                props.oAuthConfig as AuthConfiguration,
+                props.serviceName as string
+              )
+            }
+          >
             <ServiceDescription icon={props.icon} name={props.name} />
           </TouchableOpacity>
           <View style={styles.border} />
