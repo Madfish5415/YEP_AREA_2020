@@ -8,11 +8,8 @@ import SignInScreen from "./signin";
 import SignUpScreen from "./signup";
 import EpitechCredentialsStack from "./epitech-credentials";
 import OAuthCredentialsStack from "./oauth-credentials";
-import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
-import SignUpScreen from "../components/signup/signup";
-import SignInScreen from "../components/signin/signin";
 import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
