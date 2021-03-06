@@ -8,13 +8,21 @@ import SignInScreen from "./signin";
 import SignUpScreen from "./signup";
 import EpitechCredentialsStack from "./epitech-credentials";
 import OAuthCredentialsStack from "./oauth-credentials";
+import Theme from "../theme";
+import { Workflow } from "@area-common/types";
+import WorkflowStack from "./workflow";
+import SignUpScreen from "../components/signup/signup";
+import SignInScreen from "../components/signin/signin";
+import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
   Home: { userId: string };
   EpitechCredentials: undefined;
   OAuthCredentials: { serviceName: string; serviceId: string };
+  Workflow: {
+    workflow: Workflow;
+    callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -47,6 +55,16 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"OAuthCredentials"}
             component={OAuthCredentialsStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"Workflow"}
+            component={WorkflowStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"WorkflowCreate"}
+            component={WorkflowCreateStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

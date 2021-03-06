@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 type Props = {
   text: string | undefined;
   setText: (text: string) => void;
+  defaultValue?: string;
 };
 
 export const CustomTextInput: FC<Props> = (props) => {

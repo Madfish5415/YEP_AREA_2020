@@ -1,11 +1,13 @@
 import { APIResponse, User } from "@area-common/types";
+import { Router } from "express";
 import passport from "passport";
 
-import { AUTHENTICATION_SERVICE_ROUTE } from "../../../../constants";
-import { authenticationServiceRouter } from "./index";
+import { AUTHENTICATION_SERVICE_PV_ROUTE } from "../../../../constants";
 
-authenticationServiceRouter.post(
-  AUTHENTICATION_SERVICE_ROUTE,
+export const authenticationServicePvRouter = Router();
+
+authenticationServicePvRouter.post(
+  AUTHENTICATION_SERVICE_PV_ROUTE,
   passport.authenticate("authorize", { session: false, failWithError: true }),
   async (req, res, next) => {
     try {
