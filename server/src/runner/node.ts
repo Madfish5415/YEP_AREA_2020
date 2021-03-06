@@ -32,7 +32,7 @@ export class BaseRunnerNode<
   }
 
   async execute(parameters?: I): Promise<O | O[]> {
-    let evaluatedCondition = this.condition;
+    let evaluatedCondition: string = this.condition;
 
     if (parameters) {
       evaluatedCondition = runnerEvaluateExpression(parameters, this.condition);
@@ -40,18 +40,16 @@ export class BaseRunnerNode<
 
     if (!JSON.parse(evaluatedCondition)) return [];
 
-    let outputs: O | O[];
+    let evaluatedParameters: AnyObject = this.parameters;
 
     if (parameters) {
-      const evaluatedParameters = runnerEvaluateExpressions(
+      evaluatedParameters = runnerEvaluateExpressions(
         parameters,
         this.parameters
       );
-
-      outputs = await this.original.execute(evaluatedParameters as P);
-    } else {
-      outputs = await this.original.execute();
     }
+
+    let outputs = await this.original.execute(evaluatedParameters as P);
 
     if (this.original.forward) {
       if (outputs instanceof Array) {
