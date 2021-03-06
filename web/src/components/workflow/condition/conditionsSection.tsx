@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
-import { Workflow, WorkflowExecution } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import WorkflowComponent from "../../workflows/workflow";
 import AddBox from "../../containers/addBox";
@@ -30,6 +30,9 @@ type ContainerProps = {
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
+  const conditionNodes = props.workflow.nodes.filter(
+    (node) => node.label === "condition"
+  );
 
   return (
     <>
@@ -55,6 +58,12 @@ const ConditionsSection: FC<Props> = (props) => {
         />
       </div>
     </>
+    <div className={classes.content}>
+      {conditionNodes.map((node: WorkflowNode) => {
+        return <ComponentBox key={node.id} label={node.name} />;
+      })}
+      <AddBox label={"condition"} />
+    </div>
   );
 };
 

@@ -1,4 +1,6 @@
-import { Execution, Service } from "@area-common/types";
+import { Service } from "@area-common/types";
+import { ConditionsService } from "@area-service/conditions";
+import { TwitterService } from "@area-service/twitter";
 
 import {
   DATABASE_HOSTNAME,
@@ -9,7 +11,7 @@ import {
   HOSTNAME,
   PORT,
 } from "./constants";
-import { Core } from "./core/core";
+import { Core } from "./core";
 import { Database } from "./database";
 
 async function main() {
@@ -20,9 +22,8 @@ async function main() {
     user: DATABASE_USER,
     password: DATABASE_PASSWORD,
   });
-  const executions: Execution[] = [];
-  const services: Service[] = [];
-  const core = new Core(HOSTNAME, PORT, database, executions, services);
+  const services: Service[] = [new ConditionsService(), new TwitterService()];
+  const core = new Core(HOSTNAME, PORT, database, services);
 
   process.on("SIGINT", () => core.stop());
   process.on("SIGTERM", () => core.stop());

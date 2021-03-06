@@ -1,4 +1,4 @@
-import { Action, Reaction, Service } from "@area-common/types";
+import { Service, SingletonNode } from "@area-common/types";
 
 export class ServiceRepository {
   services: Service[];
@@ -11,13 +11,23 @@ export class ServiceRepository {
     return this.services.find((service) => service.id === id);
   }
 
-  readAction(serviceId: string, id: string): Action | undefined {
-    return this.read(serviceId)?.actions.find((action) => action.id === id);
+  readNode(serviceId: string, nodeId: string): SingletonNode | undefined {
+    return this.read(serviceId)?.nodes.find((node) => node.id === nodeId);
   }
 
-  readReaction(serviceId: string, id: string): Reaction | undefined {
-    return this.read(serviceId)?.reactions.find(
-      (reaction) => reaction.id === id
-    );
+  exists(id: string): boolean {
+    return !!this.read(id);
+  }
+
+  existsNode(serviceId: string, nodeId: string): boolean {
+    return !!this.readNode(serviceId, nodeId);
+  }
+
+  list(): Service[] {
+    return this.services;
+  }
+
+  listNode(serviceId: string): SingletonNode[] | undefined {
+    return this.read(serviceId)?.nodes;
   }
 }

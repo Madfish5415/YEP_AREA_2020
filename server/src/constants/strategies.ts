@@ -1,6 +1,9 @@
-import { v4 } from "uuid";
-
-export const AUTHORIZE_SECRET = process.env.AUTHORIZE_SECRET || v4();
+export const GITHUB_AUTHORIZATION_URL =
+  "https://github.com/login/oauth/authorize";
+export const GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token";
+export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "MISSING";
+export const GITHUB_CLIENT_SECRET =
+  process.env.GITHUB_CLIENT_SECRET || "MISSING";
 
 export const GOOGLE_AUTHORIZATION_URL =
   "https://accounts.google.com/o/oauth2/v2/auth";
@@ -16,3 +19,14 @@ export const MICROSOFT_TOKEN_URL =
 export const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID || "MISSING";
 export const MICROSOFT_CLIENT_SECRET =
   process.env.MICROSOFT_CLIENT_SECRET || "MISSING";
+
+export const TWITTER_AUTHORIZATION_URL =
+  "https://api.twitter.com/oauth/authenticate";
+export const TWITTER_ACCESS_TOKEN_URL =
+  "https://api.twitter.com/oauth/access_token";
+export const TWITTER_REQUEST_TOKEN_URL =
+  "https://api.twitter.com/oauth/request_token";
+export const TWITTER_CONSUMER_KEY =
+  process.env.TWITTER_CONSUMER_KEY || "MISSING";
+export const TWITTER_CONSUMER_SECRET =
+  process.env.TWITTER_CONSUMER_SECRET || "MISSING";

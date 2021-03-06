@@ -1,6 +1,9 @@
 # Build
 build/
 
+# Environment
+server/.env
+
 # Node
 node_modules/
 

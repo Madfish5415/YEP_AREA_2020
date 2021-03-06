@@ -1,7 +1,8 @@
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { Strategy } from "passport-custom";
 
 import {
+  AUTHORIZATION_INVALID_ERROR,
   AUTHORIZE_SECRET,
   BAD_REQUEST_ERROR,
   USER_NOT_EXISTS_ERROR,
@@ -10,21 +11,29 @@ import { UserRepository } from "../repositories";
 
 export class AuthorizeStrategy extends Strategy {
   constructor(userRepository: UserRepository) {
-    super((req, done) => {
-      const authorization = req.header("Authorization");
+    super(async (req, done) => {
+      try {
+        const authorization = req.header("Authorization");
 
-      if (!authorization) {
-        return done(BAD_REQUEST_ERROR);
+        if (!authorization) {
+          return done(BAD_REQUEST_ERROR);
+        }
+
+        const id = jwt.verify(authorization, AUTHORIZE_SECRET) as string;
+        const user = await userRepository.read(id);
+
+        if (!user) {
+          return done(USER_NOT_EXISTS_ERROR);
+        }
+
+        return done(null, user);
+      } catch (e) {
+        if (e instanceof JsonWebTokenError) {
+          return done(AUTHORIZATION_INVALID_ERROR);
+        }
+
+        return done(e);
       }
-
-      const id = jwt.verify(authorization, AUTHORIZE_SECRET) as string;
-      const user = userRepository.read(id);
-
-      if (!user) {
-        return done(USER_NOT_EXISTS_ERROR);
-      }
-
-      return done(null, user);
     });
   }
 }

@@ -2,13 +2,11 @@ import React, { FC } from "react";
 import { Workflow } from "@area-common/types";
 import { Action } from "./action";
 import { View, StyleSheet } from "react-native";
+import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
+    height: 150,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -19,9 +17,17 @@ type Props = {
 };
 
 export const ActionSection: FC<Props> = (props) => {
+  const actionsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "action"
+  );
+
   return (
     <View style={styles.container}>
-      <Action item={props.workflow.action} />
+      {actionsNodes.length > 0 ? (
+        <Action item={actionsNodes[0]} />
+      ) : (
+        <NewWidget widget={"action"} />
+      )}
     </View>
   );
 };

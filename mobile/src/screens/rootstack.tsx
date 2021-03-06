@@ -6,6 +6,9 @@ import HomeStack from "./home";
 import Theme from "../theme";
 import { Workflow } from "@area-common/types";
 import WorkflowStack from "./workflow";
+import SignUpScreen from "../components/signup/signup";
+import SignInScreen from "../components/signin/signin";
+import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -23,14 +26,28 @@ const RootStack: FC = () => {
       <NavigationContainer theme={Theme}>
         <Stack.Navigator>
           <Stack.Screen
+            name={"SignIn"}
+            component={SignInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name={"Home"}
             component={HomeStack}
             options={{ headerShown: false }}
-            initialParams={{ userId: "3dcf9a69-e258-4449-a41d-cea7f6ca3fa9" }}
           />
           <Stack.Screen
             name={"Workflow"}
             component={WorkflowStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"WorkflowCreate"}
+            component={WorkflowCreateStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

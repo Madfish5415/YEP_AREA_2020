@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import { gray, primary, white, secondary } from "@area-common/styles";
-import { Workflow, WorkflowAction } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 import ComponentBox from "../../containers/componentBox";
 import AddBox from "../../containers/addBox";
 import UpdateAction from "./updateAction";
@@ -23,14 +23,23 @@ type Props = {
 type ContainerProps = {
   workflow: Workflow;
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  action: WorkflowAction;
+  action: WorkflowNode;
 };
 
 const ActionSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const actionNodes = props.workflow.nodes.filter(
+    (node) => node.label === "action"
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   return (
+    <div className={classes.content}>
+      {actionNodes.map((node: WorkflowNode) => {
+        return <ComponentBox key={node.id} label={node.name} />;
+      })}
+      {actionNodes.length === 0 && <AddBox label={"action"} />}
+    </div>
     <>
       <div className={classes.content}>
         {props.workflow.actions.map((action: WorkflowAction) => {

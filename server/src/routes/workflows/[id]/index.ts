@@ -1,99 +1,111 @@
-import { APIResponse, Workflow } from "@area-common/types";
+import { APIResponse, Workflow, WorkflowNode } from "@area-common/types";
 import { Router } from "express";
 
-import { BAD_REQUEST_ERROR, WORKFLOW_ROUTE } from "../../../constants";
+import {
+  BAD_REQUEST_ERROR,
+  WORKFLOW_NOT_EXISTS,
+  WORKFLOW_ROUTE,
+} from "../../../constants";
+import { hasAKeysOf } from "../../../utilities/type";
 
 export const workflowRouter = Router();
 
-workflowRouter.get(WORKFLOW_ROUTE, async (req, res) => {
-  const id = req.query.id as string;
+workflowRouter.use(WORKFLOW_ROUTE, async (req, res, next) => {
+  try {
+    const id = req.params.id as string;
+    const workflow = await req.workflowRepository.exists(id);
 
-  const workflow = await req.workflowRepository.read(id);
+    if (!workflow) {
+      return next(WORKFLOW_NOT_EXISTS);
+    }
 
-  if (!workflow) {
-    const response: APIResponse = {
-      status: 404,
-      failure: {
-        name: "WORKFLOW_NOT_EXISTS",
-        message: "Workflow doesn't exist",
-      },
-    };
-
-    return res.json(response);
+    return next();
+  } catch (e) {
+    return next(e);
   }
-
-  const response: APIResponse = {
-    status: 200,
-    data: workflow,
-  };
-
-  return res.json(response);
 });
 
-workflowRouter.post(WORKFLOW_ROUTE, async (req, res) => {
-  const id = req.query.id as string;
-  const data = req.body.data;
+workflowRouter.get(WORKFLOW_ROUTE, async (req, res, next) => {
+  try {
+    const id = req.params.id as string;
 
-  if (!data) {
+    const workflow = await req.workflowRepository.read(id);
+
     const response: APIResponse = {
-      status: 400,
-      failure: {
-        ...BAD_REQUEST_ERROR,
-      },
+      status: 200,
+      data: workflow,
     };
 
     return res.json(response);
+  } catch (e) {
+    return next(e);
   }
-
-  const partial: Partial<Workflow> = data.workflow;
-  const workflow = await req.runnerManager.update(id, partial);
-
-  if (!workflow) {
-    const response: APIResponse = {
-      status: 404,
-      failure: {
-        name: "WORKFLOW_NOT_EXISTS",
-        message: "Workflow doesn't exist",
-      },
-    };
-
-    return res.json(response);
-  }
-
-  const response: APIResponse = {
-    status: 200,
-    data: workflow,
-  };
-
-  return res.json(response);
 });
 
-workflowRouter.get(WORKFLOW_ROUTE, async (req, res) => {
-  const id = req.query.id as string;
+workflowRouter.post(WORKFLOW_ROUTE, async (req, res, next) => {
+  try {
+    const id = req.params.id as string;
+    const partial: Partial<Workflow> = req.body;
+    const [hasKeys] = hasAKeysOf<Workflow>(partial, [
+      "name",
+      "description",
+      "active",
+      "nodes",
+      "starters",
+    ]);
 
-  const workflow = await req.workflowRepository.exists(id);
+    if (!hasKeys) {
+      return next(BAD_REQUEST_ERROR);
+    }
 
-  if (!workflow) {
+    if (partial.nodes) {
+      for (const wNode of partial.nodes) {
+        const [hasKeys] = hasAKeysOf<WorkflowNode>(wNode, [
+          "id",
+          "name",
+          "label",
+          "serviceId",
+          "nodeId",
+          "parameters",
+          "condition",
+          "nextNodes",
+        ]);
+
+        if (!hasKeys) {
+          return next(BAD_REQUEST_ERROR);
+        }
+      }
+    }
+
+    const workflow = await req.runnerManager.update(id, partial);
+
     const response: APIResponse = {
-      status: 404,
-      failure: {
-        name: "WORKFLOW_NOT_EXISTS",
-        message: "Workflow doesn't exist",
+      status: 200,
+      data: workflow,
+    };
+
+    return res.json(response);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+workflowRouter.delete(WORKFLOW_ROUTE, async (req, res, next) => {
+  try {
+    const id = req.params.id as string;
+
+    await req.runnerManager.delete(id);
+
+    const response: APIResponse = {
+      status: 200,
+      success: {
+        name: "WORKFLOW_DELETE",
+        message: "Workflow successfully deleted",
       },
     };
 
     return res.json(response);
+  } catch (e) {
+    return next(e);
   }
-
-  await req.runnerManager.delete(id);
-
-  const response: APIResponse = {
-    status: 200,
-    success: {
-      name: "WORKFLOW_DELETE",
-      message: "Workflow successfully deleted",
-    },
-  };
-
-  return res.json(response);
 });

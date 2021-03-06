@@ -1,23 +1,29 @@
 import { Alert } from "react-native";
-import { Workflow, WorkflowReaction } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 
 export const ReactionAlert: (
-  reaction: WorkflowReaction,
+  reaction: WorkflowNode,
   workflow: Workflow,
-  callback: (workflow: Workflow, id: string) => void
+  callback: (workflow: Workflow) => void
 ) => void = (reaction, workflow, callback) => {
   Alert.alert(
-    reaction.reaction.name,
+    reaction.name,
     "Delete this reaction ?",
     [
       {
         text: "Yes",
-        onPress: () => callback(workflow, reaction.reaction.id),
+        onPress: () => {
+          const newWorkflow = {
+            ...workflow,
+            nodes: workflow.nodes.filter((item) => item.id !== reaction.id),
+          };
+          callback(newWorkflow);
+        },
       },
       {
         text: "Cancel",
         onPress: () => null,
-        style: "cancel",
+        style: "destructive",
       },
     ],
     { cancelable: false }

@@ -1,23 +1,29 @@
 import { Alert } from "react-native";
-import { Workflow, WorkflowOperator } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 
 export const OperatorAlert: (
-  operator: WorkflowOperator,
+  operator: WorkflowNode,
   workflow: Workflow,
-  callback: (workflow: Workflow, id: string) => void
+  callback: (workflow: Workflow) => void
 ) => void = (operator, workflow, callback) => {
   Alert.alert(
-    operator.operator.name,
+    operator.name,
     "Delete this operator ?",
     [
       {
         text: "Yes",
-        onPress: () => callback(workflow, operator.operator.id),
+        onPress: () => {
+          const newWorkflow = {
+            ...workflow,
+            nodes: workflow.nodes.filter((item) => item.id !== operator.id),
+          };
+          callback(newWorkflow);
+        },
       },
       {
         text: "Cancel",
         onPress: () => null,
-        style: "cancel",
+        style: "destructive",
       },
     ],
     { cancelable: false }
