@@ -24,7 +24,9 @@ COPY lerna.json package.json tsconfig.json yarn.lock ./
 
 FROM base AS build
 
-COPY ./common ./common
+COPY ./common/blocs ./common/blocs
+COPY ./common/styles ./common/styles
+COPY ./common/types ./common/types
 COPY ./mobile ./mobile
 
 RUN yarn install --pure-lockfile

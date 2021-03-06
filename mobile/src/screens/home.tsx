@@ -12,6 +12,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 const HomeStack: FC = () => {
   const { colors } = useTheme();
+
   return (
     <Tab.Navigator
       activeColor={colors.primary}

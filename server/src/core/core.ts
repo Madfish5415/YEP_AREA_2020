@@ -1,22 +1,49 @@
-import express, { Express, json } from "express";
+import { Service } from "@area-common/types";
 import cors from "cors";
+import express, { Express, json } from "express";
 import { Server } from "http";
-import { indexRouter } from "../routes";
-import { Operator, Service, Workflow } from "@area-common/types";
-import { OperatorRepository } from "../repositories/operator";
-import { ServiceRepository } from "../repositories/service";
-import { WorkflowRepository } from "../repositories/workflow";
-import { operatorRepository } from "../middlewares/operatorRepository";
-import { serviceRepository } from "../middlewares/serviceRepository";
-import { workflowRepository } from "../middlewares/workflowRepository";
+import morgan from "morgan";
+import passport from "passport";
+
+import { Database } from "../database";
+import { RunnerManager } from "../managers";
+import {
+  accountMiddleware,
+  credentialMiddleware,
+  errorMiddleware,
+  runnerMiddleware,
+  serviceMiddleware,
+  userMiddleware,
+  workflowMiddleware,
+} from "../middlewares";
+import {
+  AccountRepository,
+  CredentialRepository,
+  ServiceRepository,
+  UserRepository,
+  WorkflowRepository,
+} from "../repositories";
+import { apiRouter } from "../routes";
+import { aboutRouter } from "../routes/about";
+import {
+  usePartyStrategies,
+  useServiceStrategies,
+  useStrategies,
+} from "../strategies";
 
 export class Core {
   hostname: string;
   port: number;
 
-  operatorRepository: OperatorRepository;
-  serviceRepository: ServiceRepository;
+  database: Database;
+  accountRepository: AccountRepository;
+  credentialRepository: CredentialRepository;
+  userRepository: UserRepository;
   workflowRepository: WorkflowRepository;
+
+  serviceRepository: ServiceRepository;
+
+  runnerManager: RunnerManager;
 
   express: Express;
   server?: Server;
@@ -24,33 +51,55 @@ export class Core {
   constructor(
     hostname: string,
     port: number,
-    operators: Operator[],
+    database: Database,
     services: Service[]
   ) {
     this.hostname = hostname;
     this.port = port;
 
-    this.operatorRepository = new OperatorRepository(operators);
+    this.database = database;
+    this.accountRepository = new AccountRepository();
+    this.credentialRepository = new CredentialRepository();
+    this.userRepository = new UserRepository();
+    this.workflowRepository = new WorkflowRepository();
+
     this.serviceRepository = new ServiceRepository(services);
-    this.workflowRepository = new WorkflowRepository(
-      this.operatorRepository,
-      this.serviceRepository
+
+    this.runnerManager = new RunnerManager(
+      this.credentialRepository,
+      this.serviceRepository,
+      this.workflowRepository
     );
 
     this.express = express();
 
+    useStrategies(this.accountRepository, this.userRepository);
+    usePartyStrategies(this.userRepository);
+    useServiceStrategies(this.serviceRepository, this.credentialRepository);
+
     this.express.use(cors());
     this.express.use(json());
-    this.express.use(operatorRepository(this.operatorRepository));
-    this.express.use(serviceRepository(this.serviceRepository));
-    this.express.use(workflowRepository(this.workflowRepository));
-    this.express.use(indexRouter);
+    this.express.use(morgan("common"));
+    this.express.use(passport.initialize());
+
+    this.express.use(serviceMiddleware(this.serviceRepository));
+
+    this.express.use(accountMiddleware(this.accountRepository));
+    this.express.use(credentialMiddleware(this.credentialRepository));
+    this.express.use(userMiddleware(this.userRepository));
+    this.express.use(workflowMiddleware(this.workflowRepository));
+
+    this.express.use(runnerMiddleware(this.runnerManager));
+
+    this.express.use(aboutRouter);
+    this.express.use(apiRouter);
+
+    this.express.use(errorMiddleware());
   }
 
-  start(): Promise<void> {
-    this.workflowRepository
-      .list()
-      .forEach((workflow: Workflow) => workflow.runner.start());
+  async start(): Promise<void> {
+    await this.database.connect();
+    await this.runnerManager.start();
 
     return new Promise<void>((resolve) => {
       this.server = this.express.listen(this.port, this.hostname, () => {
@@ -59,10 +108,9 @@ export class Core {
     });
   }
 
-  stop(): Promise<void> {
-    this.workflowRepository
-      .list()
-      .forEach((workflow: Workflow) => workflow.runner.stop());
+  async stop(): Promise<void> {
+    await this.database.disconnect();
+    await this.runnerManager.stop();
 
     return new Promise<void>((resolve, reject) => {
       this.server?.close((err) => {
