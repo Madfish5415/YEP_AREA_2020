@@ -103,26 +103,26 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
 
     this.lastDates.set(parameters, Date.now());
 
-    const playlistVideos = playlistItemsJson.items.map((json: Any) => {
+    const playlistVideosJson = playlistItemsJson.items.map((json: Any) => {
       return json.contentDetails;
     });
-    const filteredPlaylistVideos = playlistVideos.filter(
-      (playlistItem: Any) => {
-        const date = Date.parse(playlistItem.videoPublishedAt);
+    const filteredPlaylistVideosJson = playlistVideosJson.filter(
+      (json: Any) => {
+        const date = Date.parse(json.videoPublishedAt);
 
         return date > lastDate;
       }
     );
 
-    if (!filteredPlaylistVideos.length) {
+    if (!filteredPlaylistVideosJson.length) {
       return [];
     }
 
     const parts = ["snippet", "statistics"]
       .map((part) => `part=${part}`)
       .join("&");
-    const ids = filteredPlaylistVideos
-      .map((playlistItem: Any) => `id=${playlistItem.videoId}`)
+    const ids = filteredPlaylistVideosJson
+      .map((json: Any) => `id=${json.videoId}`)
       .join("&");
     const videosUrl = `https://youtube.googleapis.com/youtube/v3/videos?${parts}&${ids}`;
 
