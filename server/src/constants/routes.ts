@@ -23,6 +23,7 @@ export const SERVICE_NODE_ROUTE = "/:id";
 export const USER_ROUTE = "/user";
 export const USER_ACCOUNT_ROUTE = "/account";
 export const USER_CREDENTIALS_ROUTE = "/credentials";
+export const USER_CREDENTIAL_ROUTE = "/:id";
 
 export const WORKFLOWS_ROUTE = "/workflows";
 export const WORKFLOW_ROUTE = "/:id";

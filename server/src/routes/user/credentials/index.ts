@@ -1,7 +1,7 @@
 import { APIResponse, User } from "@area-common/types";
 import { Router } from "express";
 
-import { USER_CREDENTIALS_ROUTE } from "../../constants";
+import { USER_CREDENTIALS_ROUTE } from "../../../constants";
 
 export const userCredentialsRouter = Router();
 
