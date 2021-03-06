@@ -1,55 +1,101 @@
-import { Workflow } from "@area-common/types";
+import { Runner, Workflow } from "@area-common/types";
 
+import { WORKFLOW_NOT_EXISTS } from "../constants";
 import {
-  ExecutionRepository,
+  CredentialRepository,
   ServiceRepository,
   WorkflowRepository,
 } from "../repositories";
-import { BaseRunner } from "../runner/runner";
+import { BaseRunner } from "../runner";
 
 export class RunnerManager {
-  executionWorkflow: ExecutionRepository;
-  serviceWorkflow: ServiceRepository;
+  credentialRepository: CredentialRepository;
+  serviceRepository: ServiceRepository;
   workflowRepository: WorkflowRepository;
 
   constructor(
-    executionWorkflow: ExecutionRepository,
-    serviceWorkflow: ServiceRepository,
+    credentialRepository: CredentialRepository,
+    serviceRepository: ServiceRepository,
     workflowRepository: WorkflowRepository
   ) {
-    this.executionWorkflow = executionWorkflow;
-    this.serviceWorkflow = serviceWorkflow;
+    this.credentialRepository = credentialRepository;
+    this.serviceRepository = serviceRepository;
     this.workflowRepository = workflowRepository;
   }
 
-  async create(workflow: Workflow): Promise<void> {
-    await this.workflowRepository.create(workflow);
+  private runners = new Map<string, Runner>();
 
-    const runner = BaseRunner.fromWorkflow(
-      workflow,
-      this.executionWorkflow,
-      this.serviceWorkflow
-    );
+  async start(): Promise<void> {
+    const allWorkflows = await this.workflowRepository.list();
+    const activeWorkflows = allWorkflows.filter((workflow) => workflow.active);
+
+    for (const workflow of activeWorkflows) {
+      await this.createRunner(workflow);
+    }
   }
 
-  async update(
-    id: string,
-    partial: Partial<Workflow>
-  ): Promise<Workflow | null> {
-    const workflow = await this.workflowRepository.update(id, partial);
+  async stop(): Promise<void> {
+    for (const id of this.runners.keys()) {
+      await this.deleteRunner(id);
+    }
+  }
 
-    if (!workflow) throw Error(); // ! TODO: Better error handling
+  async create(workflow: Workflow): Promise<void> {
+    if (workflow.active) {
+      await this.createRunner(workflow);
+    }
 
-    const runner = BaseRunner.fromWorkflow(
-      workflow,
-      this.executionWorkflow,
-      this.serviceWorkflow
-    );
+    await this.workflowRepository.create(workflow);
+  }
+
+  async update(id: string, partial: Partial<Workflow>): Promise<Workflow> {
+    let workflow = await this.workflowRepository.read(id);
+
+    if (!workflow) throw WORKFLOW_NOT_EXISTS;
+
+    await this.deleteRunner(id);
+
+    workflow = {
+      ...workflow,
+      ...partial,
+    };
+
+    if (workflow.active) {
+      await this.createRunner(workflow);
+    }
+
+    await this.workflowRepository.update(id, partial);
 
     return workflow;
   }
 
   async delete(id: string): Promise<void> {
     await this.workflowRepository.delete(id);
+
+    await this.deleteRunner(id);
+  }
+
+  private async createRunner(workflow: Workflow): Promise<void> {
+    const runner = await BaseRunner.fromWorkflow(
+      workflow,
+      this.credentialRepository,
+      this.serviceRepository
+    );
+
+    runner.start();
+
+    this.runners.set(workflow.id, runner);
+
+    console.info(`Runner created for workflow ${workflow.id}`);
+  }
+
+  private async deleteRunner(id: string): Promise<void> {
+    const runner = this.runners.get(id);
+
+    runner?.stop();
+
+    this.runners.delete(id);
+
+    console.info(`Runner deleted for workflow ${id}`);
   }
 }

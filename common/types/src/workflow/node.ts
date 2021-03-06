@@ -1,8 +1,10 @@
-import { AnyMap } from "../lib";
-
-export type Node = {
+export type WorkflowNode = {
   id: string;
+  serviceId: string;
+  nodeId: string;
   name: string;
-  parameters: AnyMap<string>;
-  nextNodeId?: string;
+  label: string;
+  parameters: Record<string, string>;
+  condition: string;
+  nextNodes: string[];
 };

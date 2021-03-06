@@ -1,53 +1,36 @@
-import { RunnerExecution } from "@area-common/types";
-import {
-  WORKFLOW_CIRCULAR_DEPENDENCY_ERROR,
-  WORKFLOW_EXECUTION_NOT_EXISTS,
-} from "../constants";
-import { flatObject } from "../utilities";
+import { AnyObject } from "@area-common/types";
 
-const expressionRegex = /\${(.+?)}/;
+const expressionRegex = /\${(.+?)}/g;
 
-async function runnerResolve(
-  expression: string,
-  executions: RunnerExecution[],
-  values: Record<string, string> = {},
-  visited: Record<string, boolean> = {}
-): Promise<string> {
+export function runnerEvaluateExpression(
+  parameters: AnyObject,
+  expression: string
+): string {
   const matchesArr = expression.matchAll(expressionRegex);
 
   for (const matches of matchesArr) {
-    if (!values[matches[1]]) {
-      if (matches[1] in visited) {
-        throw WORKFLOW_CIRCULAR_DEPENDENCY_ERROR;
-      }
-
-      visited[matches[1]] = true;
-
-      const [id] = matches[1].split(".");
-
-      const execution = executions.find((execution) => execution.id === id);
-
-      if (!execution) throw WORKFLOW_EXECUTION_NOT_EXISTS;
-
-      for (const key in execution.parameters) {
-        execution.parameters[key] = await runnerResolve(
-          execution.parameters[key],
-          executions,
-          values,
-          visited
-        );
-      }
-
-      const result = await execution.execution.execute(execution.parameters);
-      const flatten = flatObject(result);
-
-      for (const key in flatten) {
-        values[`${id}.${key}`] = flatten[key] as string;
-      }
-    }
-
-    expression.replace(matches[0], values[matches[1]]);
+    expression = expression.replace(
+      matches[0],
+      parameters[matches[1]] as string
+    );
   }
 
   return expression;
+}
+
+export function runnerEvaluateExpressions(
+  parameters: AnyObject,
+  expressions: Record<string, string>
+): AnyObject {
+  return Object.entries(expressions).reduce(
+    (previous: AnyObject, [key, value]) => {
+      const expression = runnerEvaluateExpression(parameters, value);
+
+      return {
+        ...previous,
+        [key]: expression,
+      };
+    },
+    {}
+  );
 }

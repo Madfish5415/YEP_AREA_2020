@@ -1,6 +1,4 @@
-import { WorkflowAction } from "./action";
-import { WorkflowExecution } from "./execution";
-import { WorkflowReaction } from "./reaction";
+import { WorkflowNode } from "./node";
 
 export type Workflow = {
   readonly userId: string;
@@ -8,7 +6,6 @@ export type Workflow = {
   readonly name: string;
   readonly description: string;
   readonly active: boolean;
-  readonly actions: WorkflowAction[];
-  readonly reactions: WorkflowReaction[];
-  readonly executions?: WorkflowExecution[];
+  readonly nodes: WorkflowNode[];
+  readonly starters: string[];
 };

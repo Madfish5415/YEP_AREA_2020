@@ -1,127 +1,124 @@
-import {
-  Any,
-  Runner,
-  RunnerAction,
-  RunnerExecution,
-  RunnerReaction,
-  Workflow,
-} from "@area-common/types";
+import { BaseNode, BaseTriggerNode } from "@area-common/service";
+import { Node, Runner, RunnerNode, Workflow } from "@area-common/types";
 
-import { ExecutionRepository, ServiceRepository } from "../repositories";
 import {
-  WORKFLOW_ACTION_NOT_EXISTS,
-  WORKFLOW_CIRCULAR_DEPENDENCY_ERROR,
-  WORKFLOW_EXECUTION_NOT_EXISTS,
+  CREDENTIAL_NOT_EXISTS_ERROR,
+  SERVICE_NODE_NOT_EXISTS,
 } from "../constants";
-
-const expressionRegex = /\${(.+?)}/;
+import { LinearNode, ParallelNode } from "../node";
+import { CredentialRepository, ServiceRepository } from "../repositories";
+import { BaseRunnerNode } from "./node";
+import { BaseRunnerTriggerNode } from "./trigger";
 
 export class BaseRunner implements Runner {
-  actions: RunnerAction[];
-  reactions: RunnerReaction[];
-  executions: RunnerExecution[];
+  readonly nodes: Node[];
 
-  constructor(
-    actions: RunnerAction[],
-    reactions: RunnerReaction[],
-    executions: RunnerExecution[]
-  ) {
-    this.actions = actions;
-    this.reactions = reactions;
-    this.executions = executions;
+  constructor(nodes: Node[]) {
+    this.nodes = nodes;
   }
 
-  async resolve(
-    expression: string,
-    values: Record<string, string> = {},
-    visited: Record<string, boolean> = {}
-  ): Promise<string> {
-    const matchesArr = expression.matchAll(expressionRegex);
-
-    for (const matches of matchesArr) {
-      if (!values[matches[1]]) {
-        if (matches[1] in visited) {
-          throw WORKFLOW_CIRCULAR_DEPENDENCY_ERROR;
-        }
-
-        visited[matches[1]] = true;
+  start(): void {
+    for (const node of this.nodes) {
+      if (node instanceof BaseRunnerTriggerNode) {
+        node.subscribeAll(node.parameters);
+      } else {
+        node.execute();
       }
     }
   }
 
-  async run(inputs: Any): Promise<void> {
-    const values = await this.actions[0].action.converter(inputs);
+  stop(): void {
+    for (const node of this.nodes) {
+      if (node instanceof BaseRunnerTriggerNode) {
+        node.unsubscribeAll(node.parameters);
+      }
+    }
+  }
 
-    for (const reaction of this.reactions) {
-      if (reaction.condition) {
-        reaction.condition = await this.resolve(reaction.condition, values);
+  static async fromWorkflow(
+    workflow: Workflow,
+    credentialRepository: CredentialRepository,
+    serviceRepository: ServiceRepository
+  ): Promise<BaseRunner> {
+    const rNodes: RunnerNode[] = [];
+
+    for (const wNode of workflow.nodes) {
+      const node = serviceRepository.readNode(wNode.serviceId, wNode.nodeId);
+
+      if (!node) throw SERVICE_NODE_NOT_EXISTS;
+
+      let parameters = wNode.parameters;
+
+      if (node.credentials) {
+        const filter = {
+          userId: workflow.userId,
+          serviceId: wNode.serviceId,
+        };
+
+        const credential = await credentialRepository.read(filter);
+
+        if (!credential) {
+          throw CREDENTIAL_NOT_EXISTS_ERROR;
+        }
+
+        parameters = {
+          ...parameters,
+          ...JSON.parse(credential.value),
+        };
       }
 
-      for (const key in reaction.parameters) {
-        reaction.parameters[key] = await this.resolve(
-          reaction.parameters[key],
-          values
+      let rNode: RunnerNode | undefined;
+
+      if (node instanceof BaseTriggerNode) {
+        rNode = new BaseRunnerTriggerNode(
+          wNode.id,
+          node,
+          parameters,
+          wNode.condition,
+          wNode.nextNodes
+        );
+      } else {
+        rNode = new BaseRunnerNode(
+          wNode.id,
+          node as BaseNode,
+          parameters,
+          wNode.condition,
+          wNode.nextNodes
         );
       }
 
-      if (reaction.condition && JSON.parse(reaction.condition)) {
-        await reaction.reaction.execute(reaction.parameters);
-      }
+      rNodes.push(rNode);
     }
+
+    const rStartersNodes = rNodes.filter((rNode) => {
+      return workflow.starters.includes(rNode.id);
+    });
+    const rStartersTrees = rStartersNodes.map((rNode) => {
+      return BaseRunner.createNodeTree(rNode, rNodes);
+    });
+
+    return new BaseRunner(rStartersTrees);
   }
 
-  static fromWorkflow(
-    workflow: Workflow,
-    executionRepository: ExecutionRepository,
-    serviceRepository: ServiceRepository
-  ): BaseRunner {
-    const rActions: RunnerAction[] = [];
-    const rReactions: RunnerReaction[] = [];
-    const rExecutions: RunnerExecution[] = [];
-
-    for (const wAction of workflow.actions) {
-      const action = serviceRepository.readAction(
-        wAction.serviceId,
-        wAction.actionId
-      );
-
-      if (!action) throw WORKFLOW_ACTION_NOT_EXISTS;
-
-      rActions.push({
-        id: wAction.id,
-        parameters: wAction.parameters,
-        action,
-      });
+  static createNodeTree(node: RunnerNode, allNodes: RunnerNode[]): Node {
+    if (!node.nextNodes.length) {
+      return node;
     }
 
-    for (const wReaction of workflow.reactions) {
-      const reaction = serviceRepository.readReaction(
-        wReaction.serviceId,
-        wReaction.reactionId
-      );
+    const subNodes = allNodes.filter((item) => {
+      return node.nextNodes.includes(item.id);
+    });
+    const subTree = subNodes.map((item) => {
+      return BaseRunner.createNodeTree(item, allNodes);
+    });
+    const parallelNode = new ParallelNode(subTree);
 
-      if (!reaction) throw WORKFLOW_EXECUTION_NOT_EXISTS;
+    if (node instanceof BaseRunnerTriggerNode) {
+      node.subscribers.push(parallelNode);
 
-      rReactions.push({
-        id: wReaction.id,
-        parameters: wReaction.parameters,
-        condition: wReaction.condition,
-        reaction,
-      });
+      return node;
     }
 
-    for (const wExecution of workflow.executions || []) {
-      const execution = executionRepository.read(wExecution.executionId);
-
-      if (!execution) throw WORKFLOW_EXECUTION_NOT_EXISTS;
-
-      rExecutions.push({
-        id: wExecution.id,
-        parameters: wExecution.parameters,
-        execution,
-      });
-    }
-
-    return new BaseRunner(rActions, rReactions, rExecutions);
+    return new LinearNode([node, parallelNode]);
   }
 }

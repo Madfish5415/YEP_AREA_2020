@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from "express";
 import { APIResponse, StatusError } from "@area-common/types";
+import { ErrorRequestHandler } from "express";
 
 export function errorMiddleware(): ErrorRequestHandler {
   return (err, req, res, next) => {

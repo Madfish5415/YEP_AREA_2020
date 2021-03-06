@@ -7,14 +7,14 @@ export const DeleteAlert: (
 ) => void = (workflow, callback) => {
   Alert.alert(
     workflow.name,
-    "Voulez vous supprimer ce workflow ?",
+    "Delete this workflow ?",
     [
       {
-        text: "Oui",
+        text: "Yes",
         onPress: () => callback(workflow),
       },
       {
-        text: "Annuler",
+        text: "Cancel",
         onPress: () => null,
         style: "cancel",
       },

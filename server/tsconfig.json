@@ -4,5 +4,5 @@
     "target": "es2020",
     "outDir": "./build",
     "rootDir": "./src"
-  },
+  }
 }

@@ -14,7 +14,7 @@ type Email = {
   email: string;
 };
 
-type Filter = UserId | Id | Email;
+export type AccountFilter = UserId | Id | Email;
 
 export class AccountRepository {
   model = AccountModel;
@@ -23,22 +23,22 @@ export class AccountRepository {
     await this.model.create(account);
   }
 
-  async read(filter: Filter): Promise<Account | null> {
+  async read(filter: AccountFilter): Promise<Account | null> {
     return this.model.findOne(filter);
   }
 
   async update(
-    filter: Filter,
+    filter: AccountFilter,
     partial: Partial<Account>
   ): Promise<Account | null> {
-    return this.model.findOneAndUpdate(filter, partial);
+    return this.model.findOneAndUpdate(filter, partial, { new: true });
   }
 
-  async delete(filter: Filter): Promise<void> {
+  async delete(filter: AccountFilter): Promise<void> {
     await this.model.deleteOne(filter);
   }
 
-  async exists(filter: Filter): Promise<boolean> {
+  async exists(filter: AccountFilter): Promise<boolean> {
     return this.model.exists(filter);
   }
 
@@ -46,14 +46,21 @@ export class AccountRepository {
     return this.model.find();
   }
 
-  async comparePassword(filter: Filter, password: string): Promise<boolean> {
+  async deleteAll(): Promise<void> {
+    await this.model.deleteMany();
+  }
+
+  async comparePassword(
+    filter: AccountFilter,
+    password: string
+  ): Promise<boolean> {
     const account = await this.model.findOne(filter).select("+password");
 
     return account?.comparePassword(password) ?? false;
   }
 
   async compareVerification(
-    filter: Filter,
+    filter: AccountFilter,
     verification: string
   ): Promise<boolean> {
     const account = await this.model.findOne(filter).select("+verification");
