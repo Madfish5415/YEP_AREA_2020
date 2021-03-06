@@ -162,7 +162,9 @@ const SignIn: FC<Props> = (props) => {
           oAuthSignIn(
             oAuthConfigMap.get("github") as AuthConfiguration,
             "github"
-          ).then(() => navigate("Home"));
+          )
+            .then(() => navigate("Home"))
+            .catch();
         }}
       />
       <ExternalSignInButton
@@ -180,7 +182,9 @@ const SignIn: FC<Props> = (props) => {
           await oAuthSignIn(
             oAuthConfigMap.get("office365") as AuthConfiguration,
             "microsoft"
-          ).then(() => navigate("Home"));
+          )
+            .then(() => navigate("Home"))
+            .catch();
         }}
       />
       <ExternalSignInButton
@@ -194,7 +198,9 @@ const SignIn: FC<Props> = (props) => {
           oAuthSignIn(
             oAuthConfigMap.get("google") as AuthConfiguration,
             "google"
-          ).then(() => navigate("Home"));
+          )
+            .then(() => navigate("Home"))
+            .catch();
         }}
       />
     </ScrollView>
