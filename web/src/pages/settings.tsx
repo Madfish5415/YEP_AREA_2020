@@ -118,7 +118,6 @@ type Props = {
 const Settings: FC<Props> = (props) => {
   const router = useRouter();
   const classes = useStyles();
-  const router = useRouter();
 
   const handleLogOut = () => {
     localStorage.removeItem("jwt");

@@ -36,7 +36,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AdminPage: FC = () => {
-  const userBloc = new UserBloc(new UserRepository(""));
+  const router = useRouter();
+  let token = "";
+  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      userBloc.add(new UserReadEvent(token));
+    }
+  });
+
   userBloc.add(new UserReadEvent("3dcf9a69-e258-4449-a41d-cea7f6ca3fa9"));
 
   return (
