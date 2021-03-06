@@ -1,18 +1,12 @@
 import React, { FC } from "react";
-import {
-  Workflow as WorkflowType,
-  Workflow,
-  WorkflowAction,
-} from "@area-common/types";
+import { Workflow } from "@area-common/types";
 import { Action } from "./action";
 import { View, StyleSheet } from "react-native";
+import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
+    height: 150,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -20,19 +14,20 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
-  updateActionCallback: (
-    workflow: WorkflowType,
-    action: WorkflowAction
-  ) => void;
 };
 
 export const ActionSection: FC<Props> = (props) => {
+  const actionsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "action"
+  );
+
   return (
     <View style={styles.container}>
-      <Action
-        workflow={props.workflow}
-        updateActionCallback={props.updateActionCallback}
-      />
+      {actionsNodes.length > 0 ? (
+        <Action item={actionsNodes[0]} />
+      ) : (
+        <NewWidget widget={"action"} />
+      )}
     </View>
   );
 };

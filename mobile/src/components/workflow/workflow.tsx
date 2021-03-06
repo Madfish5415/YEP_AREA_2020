@@ -1,28 +1,21 @@
-import React, { FC } from "react";
-import { StyleSheet } from "react-native";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
-import { WorkflowStackParamsList } from "../../screens/workflow";
+import React, { FC, useState } from "react";
 import {
-  WorkflowBloc,
-  WorkflowErrorState,
-  WorkflowReadEvent,
-  WorkflowReadState,
-  WorkflowRepository,
-  WorkflowState,
-  WorkflowUpdateEvent,
-  WorkflowUpdateState,
-} from "@area-common/blocs";
-import { ErrorState } from "../blocbuilder/error-state";
-import { DefaultState } from "../blocbuilder/default-state";
-import { Workflow as WorkflowType, WorkflowAction } from "@area-common/types";
-import { View } from "react-native";
+  LogBox,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import { RouteProp } from "@react-navigation/native";
+import { WorkflowStackParamsList } from "../../screens/workflow";
 import { SectionTitle } from "../common/section-title";
 import { Action } from "./action/action";
 import { ReactionSection } from "./reaction/reaction-section";
 import { OperatorSection } from "./operator/operator-section";
 import { ActionSection } from "./action/action-section";
-import { LogBox } from "react-native";
+import { Text, useTheme } from "react-native-paper";
+import { primary } from "@area-common/styles";
+import { SaveAlert } from "../common/save-alert";
+import { ErrorAlert } from "../common/error-alert";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -30,7 +23,16 @@ LogBox.ignoreLogs([
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignItems: "center",
+  },
+  saveButton: {
+    marginTop: 40,
+    width: 250,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: primary.main,
+    borderRadius: 20,
   },
 });
 
@@ -41,92 +43,33 @@ type WorkflowScreenProps = {
 };
 
 const WorkflowScreen: FC<WorkflowScreenProps> = (props) => {
-  const workflowBloc = new WorkflowBloc(new WorkflowRepository(""));
-  workflowBloc.add(new WorkflowReadEvent(props.route.params.workflow.id));
-  useIsFocused();
+  const { fonts } = useTheme();
+  const [workflow, setWorkflow] = useState(props.route.params.workflow);
 
-  const updateAction = (workflow: WorkflowType, action: WorkflowAction) => {
-    workflowBloc.add(
-      new WorkflowUpdateEvent(workflow.id, { ...workflow, action: action })
+  const submitWorkflow = () => {
+    const validWorkflow = workflow.nodes.filter(
+      (node) => node.label === "action" || node.label === "reaction"
     );
-  };
-
-  const deleteOperator = (workflow: WorkflowType, id: string) => {
-    const index = workflow.operators.findIndex((operator) => operator.id == id);
-
-    workflow.operators.splice(index, 1);
-    workflowBloc.add(new WorkflowUpdateEvent(workflow.id, workflow));
-  };
-
-  const deleteReaction = (workflow: WorkflowType, id: string) => {
-    const index = workflow.reactions.findIndex(
-      (reaction) => reaction.reaction.id == id
-    );
-
-    workflow.reactions.splice(index, 1);
-    workflowBloc.add(new WorkflowUpdateEvent(workflow.id, workflow));
+    if (validWorkflow.length > 0) {
+      props.route.params.callback(props.route.params.workflow, workflow);
+      SaveAlert("edit");
+    } else {
+      ErrorAlert();
+    }
   };
 
   return (
-    <BlocBuilder
-      bloc={workflowBloc}
-      condition={(previous: WorkflowState, current: WorkflowState) => {
-        if (current instanceof WorkflowUpdateState) {
-          workflowBloc.add(
-            new WorkflowReadEvent(props.route.params.workflow.id)
-          );
-        }
-        return true;
-      }}
-      builder={(state: WorkflowState) => {
-        if (state instanceof WorkflowErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
-        }
-        if (state instanceof WorkflowReadState) {
-          return (
-            <Workflow
-              workflow={state.workflow}
-              operatorCallback={deleteOperator}
-              reactionCallback={deleteReaction}
-              updateActionCallback={updateAction}
-            />
-          );
-        }
-        return <DefaultState />;
-      }}
-    />
-  );
-};
-
-type Props = {
-  workflow: WorkflowType;
-  operatorCallback: (workflow: WorkflowType, id: string) => void;
-  reactionCallback: (workflow: WorkflowType, id: string) => void;
-  updateActionCallback: (
-    workflow: WorkflowType,
-    action: WorkflowAction
-  ) => void;
-};
-
-const Workflow: FC<Props> = (props) => {
-  return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <SectionTitle label={"Action"} style={{ marginTop: 10 }} />
-      <ActionSection
-        workflow={props.workflow}
-        updateActionCallback={props.updateActionCallback}
-      />
+      <ActionSection workflow={workflow} />
       <SectionTitle label={"Operators"} />
-      <OperatorSection
-        workflow={props.workflow}
-        callback={props.operatorCallback}
-      />
+      <OperatorSection workflow={workflow} callback={setWorkflow} />
       <SectionTitle label={"Reactions"} />
-      <ReactionSection
-        workflow={props.workflow}
-        callback={props.reactionCallback}
-      />
-    </View>
+      <ReactionSection workflow={workflow} callback={setWorkflow} />
+      <TouchableOpacity style={styles.saveButton} onPress={submitWorkflow}>
+        <Text style={fonts.main}>Save</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 

@@ -1,58 +1,89 @@
-import { Workflow } from "@area-common/types";
-import { Repository } from "../types";
-import workflows from "../data/workflows";
+import { StatusError, Workflow } from "@area-common/types";
 
-function toJSON(workflow: Workflow) {
-  return {
-    ...workflow,
-  };
-}
+import { Repository } from "../types";
 
 export class WorkflowRepository extends Repository {
-  async create(workflow: Workflow): Promise<void> {
-    workflows.push(workflow);
+  async create(authorization: string, workflow: Workflow): Promise<void> {
+    const response = await fetch(`${this.remoteURL}/api/workflows`, {
+      method: "POST",
+      headers: {
+        Authorization: authorization,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(workflow),
+    });
+    const json = await response.json();
+
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
+    }
   }
 
-  async read(id: string): Promise<Workflow> {
-    const workflow = workflows.find((workflow) => workflow.id === id);
-
-    if (workflow === undefined) {
-      throw Error("Workflow not found");
-    }
-    return workflow;
-
-    const response = await fetch(`${this.remoteURL}/workflows/${id}`);
+  async read(authorization: string, id: string): Promise<Workflow> {
+    const response = await fetch(`${this.remoteURL}/api/workflows/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: authorization,
+      },
+    });
     const json = await response.json();
+
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
+    }
 
     return json["data"];
   }
 
-  async update(id: string, workflow: Workflow): Promise<void> {
-    const index = workflows.findIndex((workflow) => workflow.id === id);
-    const workflowJson = toJSON(workflow);
+  async update(
+    authorization: string,
+    id: string,
+    partial: Partial<Workflow>
+  ): Promise<Workflow> {
+    const response = await fetch(`${this.remoteURL}/api/workflows/${id}`, {
+      method: "POST",
+      headers: {
+        Authorization: authorization,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(partial),
+    });
+    const json = await response.json();
 
-    if (index !== -1) {
-      workflows[index] = workflowJson;
-    } else {
-      throw Error("Workflow not found");
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
+    }
+
+    return json["data"];
+  }
+
+  async delete(authorization: string, id: string): Promise<void> {
+    const response = await fetch(`${this.remoteURL}/api/workflows/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: authorization,
+      },
+    });
+    const json = await response.json();
+
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
     }
   }
 
-  async delete(id: string): Promise<void> {
-    const index = workflows.findIndex((workflow) => workflow.id === id);
+  async list(authorization: string): Promise<Workflow[]> {
+    const response = await fetch(`${this.remoteURL}/api/workflows`, {
+      method: "GET",
+      headers: {
+        Authorization: authorization,
+      },
+    });
+    const json = await response.json();
 
-    if (index !== -1) {
-      workflows.splice(index, 1);
-    } else {
-      throw Error("Workflow not found");
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
     }
-  }
 
-  async list(): Promise<Workflow[]> {
-    return Promise.all(
-      workflows.map((workflow) => {
-        return workflow;
-      })
-    );
+    return json["data"];
   }
 }

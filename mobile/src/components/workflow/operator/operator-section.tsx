@@ -1,27 +1,26 @@
 import { Workflow as WorkflowType, Workflow } from "@area-common/types";
 import React, { FC } from "react";
-import { Reaction } from "./reaction";
-import { NewReaction } from "./new-reaction";
 import { ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
-import { NewOperator } from "./new-operator";
 import { Operator } from "./operator";
+import { NewWidget } from "../../common/new-widget";
 
 const styles = StyleSheet.create({
   container: {
-    height: "25%",
-    minHeight: 130,
-    maxHeight: 200,
-    width: "100%",
+    height: 150,
   },
 });
 
 type Props = {
   workflow: Workflow;
-  callback: (workflow: WorkflowType, id: string) => void;
+  callback: (workflow: WorkflowType) => void;
 };
 
 export const OperatorSection: FC<Props> = (props) => {
+  const operatorsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "condition"
+  );
+
   return (
     <ScrollView
       horizontal={true}
@@ -34,15 +33,17 @@ export const OperatorSection: FC<Props> = (props) => {
       }}
       pagingEnabled
     >
-      {props.workflow.operators.map((operator) => (
-        <Operator
-          key={operator.id}
-          item={operator}
-          workflow={props.workflow}
-          callback={props.callback}
-        />
-      ))}
-      <NewOperator />
+      {props.workflow && props.workflow.nodes
+        ? operatorsNodes.map((operator) => (
+            <Operator
+              key={operator.id}
+              item={operator}
+              workflow={props.workflow}
+              callback={props.callback}
+            />
+          ))
+        : null}
+      <NewWidget widget={"operator"} />
     </ScrollView>
   );
 };

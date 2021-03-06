@@ -1,0 +1,21 @@
+{
+  "name": "@area-common/patterns",
+  "version": "1.0.0",
+  "description": "Design patterns for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "typings": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "fclean": "rm -rf build node_modules/"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@types/uuid": "^8.3.0"
+  }
+}
