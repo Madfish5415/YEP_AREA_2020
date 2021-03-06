@@ -2,6 +2,11 @@ import { StatusError, User } from "@area-common/types";
 
 import { Repository } from "../types";
 
+function toJSON(user: User) {
+  return {
+    ...user,
+  };
+}
 export class UserRepository extends Repository {
   async read(authorization: string): Promise<User> {
     const response = await fetch(`${this.remoteURL}/api/user`, {

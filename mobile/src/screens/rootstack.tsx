@@ -9,6 +9,7 @@ import WorkflowStack from "./workflow";
 import SignUpScreen from "../components/signup/signup";
 import SignInScreen from "../components/signin/signin";
 import WorkflowCreateStack from "./workflow-create";
+import AccountSecurityStack from "./account-security";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -48,6 +49,11 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"WorkflowCreate"}
             component={WorkflowCreateStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AccountSecurity"}
+            component={AccountSecurityStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
