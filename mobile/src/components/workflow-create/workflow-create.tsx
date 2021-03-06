@@ -160,7 +160,7 @@ const WorkflowCreate: FC<Props> = (props) => {
     starters: [],
   });
 
-  const onContentSizeChange = (contentWidth, contentHeight) => {
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
     setScreenHeight(contentHeight);
   };
 
@@ -178,7 +178,6 @@ const WorkflowCreate: FC<Props> = (props) => {
       (node) => node.label === "reaction"
     );
     if (actionsWorkflow.length > 0 && reactionsWorkflow.length > 0) {
-      console.log(workflow.id);
       props.callback(workflow);
       SaveAlert("create");
       navigate("Home", { screen: "Workflows" });

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { EditWorkflowItem } from "./edit-workflow-item";
 import {
   WorkflowBloc,
@@ -23,7 +23,7 @@ import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingBottom: 20,
   },
 });
 
@@ -106,9 +106,22 @@ type Props = {
   update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
+const { height } = Dimensions.get("window");
+
 const WorkflowsEdit: FC<Props> = (props) => {
+  const [screenHeight, setScreenHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setScreenHeight(contentHeight);
+  };
+
+  const scrollEnabled = screenHeight > height - 180;
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      onContentSizeChange={onContentSizeChange}
+      scrollEnabled={scrollEnabled}
+    >
       {props.workflows.map((workflow) => (
         <EditWorkflowItem
           key={workflow.id}
@@ -117,7 +130,7 @@ const WorkflowsEdit: FC<Props> = (props) => {
           update={props.update}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
