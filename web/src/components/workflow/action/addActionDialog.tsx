@@ -1,23 +1,22 @@
-import React, { FC, useState } from "react";
+import {gray, primary} from "@area-common/styles";
+import {Workflow, WorkflowNode} from "@area-common/types";
 import {
-  createStyles,
-  makeStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-  Typography,
   Button,
-  TextField,
-  IconButton,
+  createStyles,
   Dialog,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  IconButton,
+  makeStyles,
+  TextField,
+  Theme,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { gray, primary, white } from "@area-common/styles";
-import { Workflow } from "@area-common/types";
-import { v4 as uuidv4 } from "uuid";
+import React, {FC, useState} from "react";
+import {v4 as uuidv4} from "uuid";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,9 +74,9 @@ type Props = {
 };
 
 export interface DialogTitleProps extends WithStyles<typeof styles> {
-  id: string;
+  id: string | undefined;
   children: React.ReactNode;
-  label: string;
+  label: string | undefined;
   handleActionNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
 }
@@ -99,7 +98,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
         margin="normal"
         label=""
         placeholder="Action name"
-        InputProps={{ className: classes.dialogTitle }}
+        InputProps={{className: classes.dialogTitle}}
         defaultValue={label}
         onChange={handleActionNameChange}
       />
@@ -109,7 +108,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
           className={classes.closeButton}
           onClick={onClose}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -118,11 +117,15 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
 
 const AddActionDialog: FC<Props> = (props) => {
   const classes = useStyles();
-  const [action, setAction] = useState({
+  const [action, setAction] = useState<Partial<WorkflowNode>>({
     id: uuidv4(),
+    serviceId: "",
+    nodeId: "",
     name: "",
-    serviceId: uuidv4(),
-    actionId: uuidv4(),
+    label: "action",
+    parameters: {},
+    condition: "",
+    nextNodes: []
   });
 
   const handleClose = () => {
@@ -132,19 +135,31 @@ const AddActionDialog: FC<Props> = (props) => {
   const handleActionNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setAction({ ...action, name: event.target.value });
+    setAction({...action, name: event.target.value});
   };
 
   const handleAdd = () => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.actions.push(action);
+    if (!action.id || !action.serviceId || !action.nodeId || !action.name || !action.label || !action.parameters ||
+      !action.condition || !action.nextNodes) {
+      return
+    }
+    if (action.nextNodes.length === 0) {
+      return
+    }
+
+    newWorkflow.nodes.push(action as WorkflowNode);
     props.setWorkflow(newWorkflow);
     setAction({
       id: uuidv4(),
+      serviceId: "",
+      nodeId: "",
       name: "",
-      serviceId: uuidv4(),
-      actionId: uuidv4(),
+      label: "action",
+      parameters: {},
+      condition: "",
+      nextNodes: []
     });
     props.setIsOpen(false);
   };
@@ -159,7 +174,7 @@ const AddActionDialog: FC<Props> = (props) => {
         open={props.isOpen}
         onClose={handleClose}
         PaperProps={{
-          style: { backgroundColor: gray.light1, boxShadow: "1" },
+          style: {backgroundColor: gray.light1, boxShadow: "1"},
         }}
       >
         <DialogTitle

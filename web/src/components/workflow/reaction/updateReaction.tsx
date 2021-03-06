@@ -1,20 +1,18 @@
-import React, { FC, useState } from "react";
+import { gray, primary } from "@area-common/styles";
+import { Workflow, WorkflowNode } from "@area-common/types";
 import {
   createStyles,
-  makeStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-  Typography,
-  TextField,
-  IconButton,
   Dialog,
   DialogContent,
+  IconButton,
+  TextField,
+  Theme,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { gray, primary, white, secondary } from "@area-common/styles";
-import { Workflow, WorkflowReaction } from "@area-common/types";
+import React, { FC } from "react";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -47,7 +45,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 type Props = {
-  reaction: WorkflowReaction;
+  reaction: WorkflowNode;
   workflow: Workflow;
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
   isOpen: boolean;
@@ -107,9 +105,9 @@ const UpdateReaction: FC<Props> = (props) => {
   ) => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.reactions.forEach((reaction, index) => {
+    newWorkflow.nodes.forEach((reaction, index) => {
       if (reaction.id === props.reaction.id) {
-        newWorkflow.reactions[index].name = event.target.value;
+        newWorkflow.nodes[index].name = event.target.value;
       }
     });
     props.setWorkflow(newWorkflow);

@@ -1,12 +1,11 @@
-import React, { FC, useState } from "react";
-import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
-import { gray, primary, white } from "@area-common/styles";
 import { Workflow, WorkflowNode } from "@area-common/types";
-import ComponentBox from "../../containers/componentBox";
-import WorkflowComponent from "../../workflows/workflow";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
+import React, { FC, useState } from "react";
+
 import AddBox from "../../containers/addBox";
-import UpdateReaction from "./updateReaction";
+import ComponentBox from "../../containers/componentBox";
 import AddReactionDialog from "./addReactionDialog";
+import UpdateReaction from "./updateReaction";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,32 +23,26 @@ type Props = {
 type ContainerProps = {
   workflow: Workflow;
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  reaction: WorkflowReaction;
+  reaction: WorkflowNode;
 };
 
 const ReactionsSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
   const reactionNodes = props.workflow.nodes.filter(
     (node) => node.label === "reaction"
   );
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={classes.content}>
-      {reactionNodes.map((node: WorkflowNode) => {
-        return <ComponentBox key={node.id} label={node.name} />;
-      })}
-      <AddReaction label={"reaction"} />
-    </div>
     <>
       <div className={classes.content}>
-        {props.workflow.reactions.map((reaction: WorkflowReaction) => {
+        {reactionNodes.map((node: WorkflowNode) => {
           return (
             <ReactionContainer
-              key={reaction.id}
+              key={node.id}
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
-              reaction={reaction}
+              reaction={node}
             />
           );
         })}

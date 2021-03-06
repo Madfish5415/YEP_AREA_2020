@@ -1,22 +1,21 @@
-import React, { FC, useState } from "react";
+import { gray, primary } from "@area-common/styles";
+import {Workflow, WorkflowNode} from "@area-common/types";
 import {
-  createStyles,
-  makeStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-  Typography,
   Button,
-  TextField,
-  IconButton,
+  createStyles,
   Dialog,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  IconButton,
+  makeStyles,
+  TextField,
+  Theme,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { gray, primary, white } from "@area-common/styles";
-import { Workflow } from "@area-common/types";
+import React, { FC, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,9 +74,9 @@ type Props = {
 };
 
 export interface DialogTitleProps extends WithStyles<typeof styles> {
-  id: string;
+  id: string | undefined;
   children: React.ReactNode;
-  label: string;
+  label: string | undefined;
   handleConditionNameChange: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -120,10 +119,15 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
 
 const AddConditionDialog: FC<Props> = (props) => {
   const classes = useStyles();
-  const [condition, setCondition] = useState({
+  const [condition, setCondition] = useState<Partial<WorkflowNode>>({
     id: uuidv4(),
+    serviceId: "",
+    nodeId: "",
     name: "",
-    executionId: uuidv4(),
+    label: "condition",
+    parameters: {},
+    condition: "",
+    nextNodes: []
   });
 
   const handleClose = () => {
@@ -139,12 +143,25 @@ const AddConditionDialog: FC<Props> = (props) => {
   const handleAdd = () => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.executions.push(condition);
+    if (!condition.id || !condition.serviceId || !condition.nodeId || !condition.name || !condition.label ||
+      !condition.parameters || !condition.condition || !condition.nextNodes) {
+      return
+    }
+    if (condition.nextNodes.length === 0) {
+      return
+    }
+
+    newWorkflow.nodes.push(condition as WorkflowNode);
     props.setWorkflow(newWorkflow);
     setCondition({
       id: uuidv4(),
+      serviceId: "",
+      nodeId: "",
       name: "",
-      executionId: uuidv4(),
+      label: "condition",
+      parameters: {},
+      condition: "",
+      nextNodes: []
     });
     props.setIsOpen(false);
   };

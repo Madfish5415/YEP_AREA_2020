@@ -1,12 +1,11 @@
-import React, { FC, useState } from "react";
-import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
-import { gray, primary, white } from "@area-common/styles";
 import { Workflow, WorkflowNode } from "@area-common/types";
-import ComponentBox from "../../containers/componentBox";
-import WorkflowComponent from "../../workflows/workflow";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
+import React, { FC, useState } from "react";
+
 import AddBox from "../../containers/addBox";
-import UpdateCondition from "./updateCondition";
+import ComponentBox from "../../containers/componentBox";
 import AddConditionDialog from "./addConditionDialog";
+import UpdateCondition from "./updateCondition";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,26 +23,26 @@ type Props = {
 type ContainerProps = {
   workflow: Workflow;
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  execution: WorkflowExecution;
+  execution: WorkflowNode;
 };
 
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
   const conditionNodes = props.workflow.nodes.filter(
-    (node) => node.label === "condition"
+    (node) => node.label !== "action" && node.label !== "reaction"
   );
 
   return (
     <>
       <div className={classes.content}>
-        {props.workflow.executions.map((execution: WorkflowExecution) => {
+        {conditionNodes.map((node: WorkflowNode) => {
           return (
             <ConditionContainer
-              key={execution.id}
+              key={node.id}
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
-              execution={execution}
+              execution={node}
             />
           );
         })}
@@ -58,12 +57,6 @@ const ConditionsSection: FC<Props> = (props) => {
         />
       </div>
     </>
-    <div className={classes.content}>
-      {conditionNodes.map((node: WorkflowNode) => {
-        return <ComponentBox key={node.id} label={node.name} />;
-      })}
-      <AddBox label={"condition"} />
-    </div>
   );
 };
 

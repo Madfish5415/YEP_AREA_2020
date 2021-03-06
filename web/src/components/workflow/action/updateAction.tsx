@@ -1,20 +1,18 @@
-import React, { FC, useState } from "react";
+import {gray, primary} from "@area-common/styles";
+import {Workflow, WorkflowNode} from "@area-common/types";
 import {
   createStyles,
-  makeStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-  Typography,
-  TextField,
-  IconButton,
   Dialog,
   DialogContent,
+  IconButton,
+  TextField,
+  Theme,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { gray, primary, white, secondary } from "@area-common/styles";
-import { Workflow, WorkflowAction } from "@area-common/types";
+import React, {FC} from "react";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -47,7 +45,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 type Props = {
-  action: WorkflowAction;
+  action: WorkflowNode;
   workflow: Workflow;
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
   isOpen: boolean;
@@ -78,7 +76,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
         name="name"
         margin="normal"
         label=""
-        InputProps={{ className: classes.dialogTitle }}
+        InputProps={{className: classes.dialogTitle}}
         defaultValue={label}
         onChange={handleActionNameChange}
       />
@@ -88,7 +86,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
           className={classes.closeButton}
           onClick={onClose}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
       ) : null}
     </MuiDialogTitle>
@@ -105,9 +103,9 @@ const UpdateAction: FC<Props> = (props) => {
   ) => {
     const newWorkflow = props.workflow;
 
-    newWorkflow.actions.forEach((action, index) => {
+    newWorkflow.nodes.forEach((action, index) => {
       if (action.id === props.action.id) {
-        newWorkflow.actions[index].name = event.target.value;
+        newWorkflow.nodes[index].name = event.target.value;
       }
     });
     props.setWorkflow(newWorkflow);
@@ -123,7 +121,7 @@ const UpdateAction: FC<Props> = (props) => {
         open={props.isOpen}
         onClose={handleClose}
         PaperProps={{
-          style: { backgroundColor: gray.light1, boxShadow: "1" },
+          style: {backgroundColor: gray.light1, boxShadow: "1"},
         }}
       >
         <DialogTitle
