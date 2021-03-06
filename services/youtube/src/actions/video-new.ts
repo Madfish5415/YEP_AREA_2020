@@ -114,13 +114,17 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
       }
     );
 
+    if (!filteredPlaylistVideos.length) {
+      return [];
+    }
+
+    const parts = ["snippet", "statistics"]
+      .map((part) => `part=${part}`)
+      .join("&");
     const ids = filteredPlaylistVideos
       .map((playlistItem: Any) => `id=${playlistItem.videoId}`)
       .join("&");
-    const videosQuery = toQuery({
-      part: "snippet",
-    });
-    const videosUrl = `https://youtube.googleapis.com/youtube/v3/videos?${videosQuery}&${ids}`;
+    const videosUrl = `https://youtube.googleapis.com/youtube/v3/videos?${parts}&${ids}`;
 
     const videosResponse = await fetch(videosUrl, {
       method: "GET",

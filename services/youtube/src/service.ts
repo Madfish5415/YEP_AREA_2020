@@ -20,5 +20,6 @@ export class YouTubeService extends OAuth2Service {
     tokenURL: TOKEN_URL,
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
+    scope: ["https://www.googleapis.com/auth/youtube"],
   };
 }
