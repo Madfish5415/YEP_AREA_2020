@@ -17,6 +17,10 @@ type Props = {
 };
 
 export const OperatorSection: FC<Props> = (props) => {
+  const operatorsNodes = props.workflow.nodes.filter(
+    (node) => node.label === "condition"
+  );
+
   return (
     <ScrollView
       horizontal={true}
@@ -29,8 +33,8 @@ export const OperatorSection: FC<Props> = (props) => {
       }}
       pagingEnabled
     >
-      {props.workflow && props.workflow.operators
-        ? props.workflow.operators.map((operator) => (
+      {props.workflow && props.workflow.nodes
+        ? operatorsNodes.map((operator) => (
             <Operator
               key={operator.id}
               item={operator}

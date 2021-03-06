@@ -1,6 +1,12 @@
 import React, { FC, useState } from "react";
 import { WorkflowItem } from "./workflow-item";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
@@ -24,8 +30,8 @@ import { primary } from "@area-common/styles";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
+    paddingBottom: 20,
   },
   createWorkflowButton: {
     marginTop: 20,
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
 
 const WorkflowsActiveScreen: FC = () => {
   const { navigate } = useNavigation();
-  const [token, setToken] = useState<string>("");
+  let token = "";
   const workflowsBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
@@ -48,7 +54,7 @@ const WorkflowsActiveScreen: FC = () => {
   getLocalStorage("@userToken")
     .then((data) => {
       if (data) {
-        setToken(data);
+        token = data;
         workflowsBloc.add(new WorkflowListEvent(data));
       } else {
         navigate("SignIn");
@@ -61,7 +67,6 @@ const WorkflowsActiveScreen: FC = () => {
       bloc={workflowsBloc}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowUpdateState) {
-          console.log("Token: ", token);
           workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
@@ -72,7 +77,11 @@ const WorkflowsActiveScreen: FC = () => {
         }
         if (state instanceof WorkflowListState) {
           return (
-            <WorkflowsActive workflows={state.workflows} bloc={workflowsBloc} />
+            <WorkflowsActive
+              workflows={state.workflows}
+              bloc={workflowsBloc}
+              token={token}
+            />
           );
         }
         return <DefaultState />;
@@ -84,58 +93,62 @@ const WorkflowsActiveScreen: FC = () => {
 type Props = {
   workflows: Workflow[];
   bloc: WorkflowBloc;
+  token: string;
 };
+
+const { height } = Dimensions.get("window");
 
 const WorkflowsActive: FC<Props> = (props) => {
   const { navigate } = useNavigation();
   const { fonts } = useTheme();
+  const [screenHeight, setScreenHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setScreenHeight(contentHeight);
+  };
+
+  const scrollEnabled = screenHeight > height - 180;
 
   const updateWorkflow = (
     workflow: Workflow,
     updatedWorkflow: Partial<Workflow>
   ) => {
-    getLocalStorage("@userToken")
-      .then((data) => {
-        if (data) {
-          props.bloc.add(
-            new WorkflowUpdateEvent(data, workflow.id, updatedWorkflow)
-          );
-        }
-      })
-      .catch((e) => console.log(e));
+    props.bloc.add(
+      new WorkflowUpdateEvent(props.token, workflow.id, updatedWorkflow)
+    );
   };
 
   const createWorkflow = (workflow: Workflow) => {
-    getLocalStorage("@userToken")
-      .then((data) => {
-        if (data) {
-          props.bloc.add(new WorkflowCreateEvent(data, workflow));
-        }
-      })
-      .catch((e) => console.log(e));
+    props.bloc.add(new WorkflowCreateEvent(props.token, workflow));
   };
 
   return (
-    <View style={styles.container}>
-      {props.workflows.map((workflow) => (
-        <WorkflowItem
-          key={workflow.id}
-          workflow={workflow}
-          update={updateWorkflow}
-        />
-      ))}
-      <TouchableOpacity
-        style={styles.createWorkflowButton}
-        onPress={() =>
-          navigate("WorkflowCreate", {
-            screen: "WorkflowCreate",
-            params: { callback: createWorkflow },
-          })
-        }
+    <SafeAreaView>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        scrollEnabled={scrollEnabled}
+        onContentSizeChange={onContentSizeChange}
       >
-        <Text style={fonts.main}>Add workflow</Text>
-      </TouchableOpacity>
-    </View>
+        {props.workflows.map((workflow) => (
+          <WorkflowItem
+            key={workflow.id}
+            workflow={workflow}
+            update={updateWorkflow}
+          />
+        ))}
+        <TouchableOpacity
+          style={styles.createWorkflowButton}
+          onPress={() =>
+            navigate("WorkflowCreate", {
+              screen: "WorkflowCreate",
+              params: { callback: createWorkflow },
+            })
+          }
+        >
+          <Text style={fonts.main}>Add workflow</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

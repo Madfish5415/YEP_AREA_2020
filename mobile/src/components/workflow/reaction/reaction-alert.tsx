@@ -1,13 +1,13 @@
 import { Alert } from "react-native";
-import { Workflow, WorkflowReaction } from "@area-common/types";
+import { Workflow, WorkflowNode } from "@area-common/types";
 
 export const ReactionAlert: (
-  reaction: WorkflowReaction,
+  reaction: WorkflowNode,
   workflow: Workflow,
   callback: (workflow: Workflow) => void
 ) => void = (reaction, workflow, callback) => {
   Alert.alert(
-    reaction.reaction.name,
+    reaction.name,
     "Delete this reaction ?",
     [
       {
@@ -15,9 +15,7 @@ export const ReactionAlert: (
         onPress: () => {
           const newWorkflow = {
             ...workflow,
-            reactions: workflow.reactions.filter(
-              (item) => item.reaction.id !== reaction.reaction.id
-            ),
+            nodes: workflow.nodes.filter((item) => item.id !== reaction.id),
           };
           callback(newWorkflow);
         },
