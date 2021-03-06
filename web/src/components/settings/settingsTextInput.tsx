@@ -56,6 +56,7 @@ const CssTextField = withStyles({
 type Props = {
   value: string;
   onSubmit?: (newValue: string) => void;
+  onChange?: (newValue: string) => void;
   disabled?: boolean;
   password?: boolean;
 };
@@ -71,6 +72,15 @@ const SettingsTextInput: FC<Props> = (props) => {
     }
   };
 
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.onSubmit) {
+      setInput(event.target.value);
+    }
+    if (props.onChange) {
+      props.onChange(event.target.value);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleOnSubmit}>
@@ -81,7 +91,7 @@ const SettingsTextInput: FC<Props> = (props) => {
           variant={"outlined"}
           defaultValue={props.value}
           InputProps={{ className: classes.input }}
-          onChange={(event) => setInput(event.target.value)}
+          onChange={handleOnChange}
         />
       </form>
     </>
