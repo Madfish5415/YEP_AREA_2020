@@ -14,7 +14,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   Home: { userId: string };
   EpitechCredentials: undefined;
-  OAuthCredentials: { serviceName: string };
+  OAuthCredentials: { serviceName: string; serviceId: string };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -30,9 +30,9 @@ const RootStack: FC = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-              name={"SignUp"}
-              component={SignUpScreen}
-              options={{ headerShown: false }}
+            name={"SignUp"}
+            component={SignUpScreen}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name={"Home"}

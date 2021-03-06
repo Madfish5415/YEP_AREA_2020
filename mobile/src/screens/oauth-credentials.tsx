@@ -4,11 +4,15 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Appbar, useTheme } from "react-native-paper";
-import OauthCredentialsScreen from "../components/credentials/oauth-credentials";
+import OAuthCredentialsScreen from "../components/credentials/oauth-credentials";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "./rootstack";
 
-const Stack = createStackNavigator();
+export type OAuthCredentialsStackParamList = {
+  OAuthCredentials: { serviceId: string };
+};
+
+const Stack = createStackNavigator<OAuthCredentialsStackParamList>();
 
 type CredentialsStackRouteProps = RouteProp<
   RootStackParamList,
@@ -44,8 +48,8 @@ const OauthCredentialsStack: FC<CredentialsProps> = (props) => {
       screenOptions={{ header: () => <AppBar serviceName={serviceName} /> }}
     >
       <Stack.Screen
-        name={"OauthCredentials"}
-        component={OauthCredentialsScreen}
+        name={"OAuthCredentials"}
+        component={OAuthCredentialsScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

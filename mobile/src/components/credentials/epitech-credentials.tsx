@@ -6,6 +6,7 @@ import { CustomTextInput } from "../common/text-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { white, primary } from "@area-common/styles";
 import { useNavigation } from "@react-navigation/core";
+import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -34,9 +35,12 @@ const styles = StyleSheet.create({
 const EpitechCredentialsScreen: FC = () => {
   const [autoLoginLink, setAutoLoginLink] = React.useState("");
   const saveAutoLoginLink = async (): Promise<void> => {
-    await fetch(
-      `http://localhost:8080/api/authentication/services/provide?autlogin=${autoLoginLink}`
-    );
+    const data = await getLocalStorage("@userToken");
+    if (data) {
+      const response = await fetch(
+        `http://localhost:8080/api/authentication/services/provide?autologin=${autoLoginLink}`
+      );
+    }
   };
   const { navigate } = useNavigation();
   return (

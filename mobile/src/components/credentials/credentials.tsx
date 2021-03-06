@@ -102,7 +102,13 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
 
 const tmp = {
   status: "200",
-  data: ["discord-service", "youtube-service"],
+  data: [
+    "discord-service",
+    "google-service",
+    "microsoft-service",
+    "github-service",
+    "epitech-service",
+  ],
 };
 
 const Credentials: FC = () => {
@@ -133,7 +139,7 @@ const Credentials: FC = () => {
             setGithubLoggedIn(true);
           } else if (service.startsWith("discord")) {
             setDiscordLoggedIn(true);
-          } else if (service.startsWith("youtube")) {
+          } else if (service.startsWith("google")) {
             setYoutubeLoggedIn(true);
           } else if (service.startsWith("epitech")) {
             setEpitechLoggedIn(true);
@@ -149,6 +155,7 @@ const Credentials: FC = () => {
     <View style={styles.container}>
       <Service
         name={"Office 365"}
+        serviceId={"microsoft"}
         icon={
           <MaterialCommunityIcons
             size={50}
@@ -163,6 +170,7 @@ const Credentials: FC = () => {
       />
       <Service
         name={"Github"}
+        serviceId={"github"}
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
         isLoggedIn={githubLoggedIn}
@@ -171,6 +179,7 @@ const Credentials: FC = () => {
       />
       <Service
         name={"Discord"}
+        serviceId={"discord"}
         icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
         isEpitech={false}
         isLoggedIn={discordLoggedIn}
@@ -178,6 +187,7 @@ const Credentials: FC = () => {
       />
       <Service
         name={"Youtube"}
+        serviceId={"google"}
         icon={
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }
@@ -187,6 +197,7 @@ const Credentials: FC = () => {
         serviceName={"google"}
       />
       <Service
+        serviceId={"epitech"}
         name={"Epitech"}
         icon={<Text style={styles.text}>E</Text>}
         isEpitech={true}

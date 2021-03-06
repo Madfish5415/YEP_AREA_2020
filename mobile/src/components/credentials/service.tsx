@@ -57,10 +57,10 @@ type Props = {
   isEpitech: boolean;
   epitechAutoLoginLink?: string;
   setEpitechAutoLoginLink?: (link: string) => void;
-  user?: User;
   isLoggedIn?: boolean;
   oAuthConfig?: AuthConfiguration;
   serviceName?: string;
+  serviceId?: string;
 };
 
 type ServiceDescriptionProps = {
@@ -104,6 +104,7 @@ const Service: FC<Props> = (props) => {
               navigate("OAuthCredentials", {
                 screen: "OAuthCredentials",
                 serviceName: props.name,
+                params: { serviceId: props.serviceId },
               })
             }
           >
