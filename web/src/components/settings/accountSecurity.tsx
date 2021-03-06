@@ -96,6 +96,15 @@ const AccountSecurity: FC<Props> = (props) => {
       }}
       builder={(state: AccountState) => {
         if (state instanceof AccountErrorState) {
+          if (
+            (state as AccountErrorState).error.name === "ACCOUNT_NOT_EXISTS"
+          ) {
+            return (
+              <ErrorState
+                errorLabel={"This user is connected with an external service"}
+              />
+            );
+          }
           return <ErrorState errorLabel={"An error has occured"} />;
         }
         if (state instanceof AccountReadState) {
