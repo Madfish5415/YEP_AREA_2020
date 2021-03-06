@@ -53,20 +53,24 @@ const AccountSecurityBloc: FC<AccountSecurityProps> = (props) => {
   const { user, updateCallback } = props.route.params;
   const [token, setToken] = useState("");
 
-  getLocalStorage("@userToken").then((userToken) => {
-    if (userToken) {
-      accountBloc.add(new AccountReadEvent(userToken));
-      setToken(userToken);
-    } else {
-      navigate("SignIn");
-    }
-  });
+  getLocalStorage("@userToken")
+    .then((userToken) => {
+      if (userToken) {
+        accountBloc.add(new AccountReadEvent(userToken));
+        setToken(userToken);
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((error) => console.log(error));
 
   const updateAccountInfos = (account: Partial<Account>) => {
-    getLocalStorage("@userToken").then((data) => {
-      accountBloc.add(new AccountUpdateEvent(data as string, account));
-      accountBloc.add(new AccountReadEvent(data as string));
-    });
+    getLocalStorage("@userToken")
+      .then((data) => {
+        accountBloc.add(new AccountUpdateEvent(data as string, account));
+        accountBloc.add(new AccountReadEvent(data as string));
+      })
+      .catch((error) => console.log(error));
   };
   return (
     <BlocBuilder
