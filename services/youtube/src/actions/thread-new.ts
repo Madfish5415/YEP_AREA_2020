@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { Thread } from "../models";
 
 type Parameters = {
-  id: string;
+  channelId: string;
 };
 
 type Credentials = {
@@ -18,7 +18,7 @@ export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
   readonly description: string = "No description";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
-    id: {
+    channelId: {
       name: "Channel ID",
       description: "No description",
       type: Type.STRING,
@@ -30,13 +30,18 @@ export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
       description: "No description",
       type: Type.STRING,
     },
+    channelId: {
+      name: "Thread Channel ID",
+      description: "No description",
+      type: Type.STRING,
+    },
     author: {
-      name: "Thread author",
+      name: "Thread Author",
       description: "No description",
       type: Type.STRING,
     },
     text: {
-      name: "Thread text",
+      name: "Thread Text",
       description: "No description",
       type: Type.STRING,
     },
@@ -49,10 +54,10 @@ export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
   async execute(
     parameters: Parameters & Credentials
   ): Promise<Thread | Thread[]> {
-    const { id, accessToken } = parameters;
+    const { channelId, accessToken } = parameters;
 
     const query = toQuery({
-      channelId: id,
+      channelId: channelId,
       part: "snippet",
     });
     const url = `https://youtube.googleapis.com/youtube/v3/commentThreads?${query}`;
@@ -85,7 +90,8 @@ export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
     const threads: Thread[] = filteredThreadsJson.map(
       (json: Any): Thread => {
         return {
-          id: id,
+          id: channelId,
+          channelId: "",
           author: json.snippet.authorDisplayName,
           text: json.snippet.textDisplay,
         };

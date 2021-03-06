@@ -8,13 +8,19 @@ import {
   CLIENT_SECRET,
   TOKEN_URL,
 } from "./constants";
+import { VideoCommentNode, VideoRateNode } from "./reactions";
 
 export class YouTubeService extends OAuth2Service {
   readonly id: string = "youtube";
   readonly name: string = "YouTube";
   readonly version: string = "1.0.0";
   readonly description: string = "YouTube service for AREA";
-  readonly nodes = [new ThreadNewNode(), new VideoNewNode()];
+  readonly nodes = [
+    new ThreadNewNode(),
+    new VideoNewNode(),
+    new VideoCommentNode(),
+    new VideoRateNode(),
+  ];
   readonly options: StrategyOptions = {
     authorizationURL: AUTHORIZATION_URL,
     tokenURL: TOKEN_URL,

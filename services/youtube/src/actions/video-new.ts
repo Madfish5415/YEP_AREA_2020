@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { Video } from "../models";
 
 type Parameters = {
-  id: string;
+  channelId: string;
 };
 
 type Credentials = {
@@ -18,7 +18,7 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
   readonly description: string = "No description";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
-    id: {
+    channelId: {
       name: "Channel ID",
       description: "No description",
       type: Type.STRING,
@@ -27,6 +27,11 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
   readonly outputsDef: Record<keyof Video, Variable> = {
     id: {
       name: "Video ID",
+      description: "No description",
+      type: Type.STRING,
+    },
+    channelId: {
+      name: "Channel ID",
       description: "No description",
       type: Type.STRING,
     },
@@ -69,10 +74,10 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
   async execute(
     parameters: Parameters & Credentials
   ): Promise<Video | Video[]> {
-    const { id, accessToken } = parameters;
+    const { channelId, accessToken } = parameters;
 
     const channelQuery = toQuery({
-      id: id,
+      id: channelId,
       part: "contentDetails",
     });
     const channelUrl = `https://youtube.googleapis.com/youtube/v3/channels?${channelQuery}`;
@@ -137,7 +142,8 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
     const videos: Video[] = videosJson.items.map(
       (json: Any): Video => {
         return {
-          id: id,
+          id: channelId,
+          channelId: "",
           title: json.snippet.title,
           description: json.snippet.description,
           views: json.statistics.viewCount,
