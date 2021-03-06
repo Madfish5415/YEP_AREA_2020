@@ -1,24 +1,14 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Service from "./service";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { primary, gray } from "@area-common/styles";
-import {
-  UserBloc,
-  UserErrorState,
-  UserGetEvent,
-  UserGetState,
-  UserRepository,
-} from "@area-common/blocs";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { DefaultState } from "../blocbuilder/default-state";
-import { ErrorState } from "../blocbuilder/error-state";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { CredentialsStackParamsList } from "../../pages/credentials";
-import { User } from "@area-common/types";
 import { AuthConfiguration } from "react-native-app-auth";
+import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -44,27 +34,7 @@ type CredentialsProps = {
 };
 
 const CredentialsScreen: FC<CredentialsProps> = (props) => {
-  //const userBloc = new UserBloc(new UserRepository(""));
-  //userBloc.add(new UserGetEvent());
   return <Credentials />;
-  return (
-    <BlocBuilder
-      bloc={userBloc}
-      builder={(state) => {
-        if (state instanceof UserErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
-        }
-        if (state instanceof UserGetState) {
-          return <Credentials />;
-        }
-        return <DefaultState />;
-      }}
-    />
-  );
-};
-
-type Props = {
-  user: User;
 };
 
 export type ConfigProps = {
@@ -130,7 +100,51 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
   ],
 ]);
 
+const tmp = {
+  status: "200",
+  data: ["discord-service", "youtube-service"],
+};
+
 const Credentials: FC = () => {
+  const [officeLoggedIn, setOfficeLoggedIn] = React.useState(false);
+  const [githubLoggedIn, setGithubLoggedIn] = React.useState(false);
+  const [discordLoggedIn, setDiscordLoggedIn] = React.useState(false);
+  const [youtubeLoggedIn, setYoutubeLoggedIn] = React.useState(false);
+  const [epitechLoggedIn, setEpitechLoggedIn] = React.useState(false);
+
+  const { navigate } = useNavigation();
+  useEffect(() => {
+    async function getLoggedIn() {
+      const data = await getLocalStorage("@userToken");
+      if (data) {
+        const response = await fetch(
+          "http://localhost:8080/api/user/credentials",
+          {
+            headers: {
+              authorization: data,
+            },
+          }
+        );
+        const json = await response.json();
+        tmp.data.forEach((service) => {
+          if (service.startsWith("microsoft")) {
+            setOfficeLoggedIn(true);
+          } else if (service.startsWith("github")) {
+            setGithubLoggedIn(true);
+          } else if (service.startsWith("discord")) {
+            setDiscordLoggedIn(true);
+          } else if (service.startsWith("youtube")) {
+            setYoutubeLoggedIn(true);
+          } else if (service.startsWith("epitech")) {
+            setEpitechLoggedIn(true);
+          }
+        });
+      } else {
+        navigate("Home");
+      }
+    }
+    getLoggedIn();
+  }, []);
   return (
     <View style={styles.container}>
       <Service
@@ -143,7 +157,7 @@ const Credentials: FC = () => {
           />
         }
         isEpitech={false}
-        isLoggedIn={false}
+        isLoggedIn={officeLoggedIn}
         oAuthConfig={oAuthConfigMap.get("office365")}
         serviceName={"microsoft"}
       />
@@ -151,7 +165,7 @@ const Credentials: FC = () => {
         name={"Github"}
         icon={<FontAwesome size={50} name={"github"} color={primary.main} />}
         isEpitech={false}
-        isLoggedIn={false}
+        isLoggedIn={githubLoggedIn}
         oAuthConfig={oAuthConfigMap.get("github")}
         serviceName={"github"}
       />
@@ -159,7 +173,7 @@ const Credentials: FC = () => {
         name={"Discord"}
         icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
         isEpitech={false}
-        isLoggedIn={false}
+        isLoggedIn={discordLoggedIn}
         oAuthConfig={oAuthConfigMap.get("discord")}
       />
       <Service
@@ -168,7 +182,7 @@ const Credentials: FC = () => {
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }
         isEpitech={false}
-        isLoggedIn={false}
+        isLoggedIn={youtubeLoggedIn}
         oAuthConfig={oAuthConfigMap.get("google")}
         serviceName={"google"}
       />
