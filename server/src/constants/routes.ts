@@ -15,6 +15,7 @@ export const AUTHENTICATION_PARTY_ROUTE = "/parties/:id";
 export const AUTHENTICATION_PARTY_CB_ROUTE = "/callback";
 export const AUTHENTICATION_SERVICE_ROUTE = "/services/:id";
 export const AUTHENTICATION_SERVICE_CB_ROUTE = "/callback";
+export const AUTHENTICATION_SERVICE_PV_ROUTE = "/provide";
 
 export const SERVICES_ROUTE = "/services";
 export const SERVICE_ROUTE = "/:id";
@@ -23,6 +24,7 @@ export const SERVICE_NODE_ROUTE = "/:id";
 export const USER_ROUTE = "/user";
 export const USER_ACCOUNT_ROUTE = "/account";
 export const USER_CREDENTIALS_ROUTE = "/credentials";
+export const USER_CREDENTIAL_ROUTE = "/:id";
 
 export const WORKFLOWS_ROUTE = "/workflows";
 export const WORKFLOW_ROUTE = "/:id";
