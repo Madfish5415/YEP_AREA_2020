@@ -15,7 +15,7 @@ declare global {
 }
 
 authenticationPartyRouter.use(AUTHENTICATION_PARTY_ROUTE, (req, res, next) => {
-  req.partyId = `${req.params.id}-party`;
+  req.partyId = req.params.id;
 
   return next();
 });
@@ -26,7 +26,7 @@ authenticationPartyRouter.use(
 );
 
 authenticationPartyRouter.use(AUTHENTICATION_PARTY_ROUTE, (req, res, next) => {
-  passport.authenticate(req.partyId, {
+  passport.authenticate(`${req.partyId}-party`, {
     callbackURL: req.query.callbackURL,
     state: req.query.callbackURL,
     session: false,
