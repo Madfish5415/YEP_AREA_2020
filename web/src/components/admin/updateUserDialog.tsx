@@ -159,12 +159,11 @@ const UpdateUserDialog: FC<Props> = (props) => {
 
   const updateEmail = () => {
     props.updateAccount(props.user.id, { email: email });
-    console.log("email updated");
   };
 
   const switchEmailVerification = () => {
-    props.updateAccount(props.user.id, { verified: !props.account.verified });
-    console.log("email verification switch");
+    // props.updateAccount(props.user.id, { verified: !props.account.verified });
+    console.log("email verification modified");
   };
 
   const handleDeleteConfirmation = () => {
