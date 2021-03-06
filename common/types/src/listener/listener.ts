@@ -1,8 +1,4 @@
-import { Any } from "../lib";
-
-export interface Listener<T = Any> {
-  subscribers: CallableFunction[];
-
+export interface Listener<T> {
   notify(value: T): void;
 
   subscribe(callback: CallableFunction): void;

@@ -8,12 +8,11 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 
-export type TabParamsList = {};
-
-const Tab = createMaterialBottomTabNavigator<TabParamsList>();
+const Tab = createMaterialBottomTabNavigator();
 
 const HomeStack: FC = () => {
   const { colors } = useTheme();
+
   return (
     <Tab.Navigator
       activeColor={colors.primary}

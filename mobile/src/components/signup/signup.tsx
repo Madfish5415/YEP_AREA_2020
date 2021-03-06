@@ -9,6 +9,7 @@ import {
   Keyboard,
   View,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { Title } from "../../common/title";
 import { ItemForm } from "../../common/item-form";
@@ -17,14 +18,24 @@ import { gray, primary, utils, white } from "@area-common/styles";
 import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { useSignUp } from "../../hooks/authentication/signup";
 import { emailRegex } from "../../constants/regexs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SignUp as SignUpType, StatusError } from "@area-common/types";
+import {
+  AuthenticationBloc,
+  AuthenticationErrorState,
+  AuthenticationInitialState,
+  AuthenticationLoadingState,
+  AuthenticationSignUpEvent,
+  AuthenticationSignUpState,
+} from "@area-common/blocs/build/blocs/authentication";
+import { AuthenticationRepository } from "@area-common/blocs";
+import { setLocalStorage } from "../../common/localStorage";
+import { BlocBuilder } from "@felangel/react-bloc";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 60,
+    paddingTop: 60,
   },
   inner: {
     width: "100%",
@@ -33,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   createAccountContainer: {
-    marginTop: 15,
+    paddingTop: 15,
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
@@ -62,10 +73,48 @@ type FormValues = {
   confirmPassword: string;
 };
 
-const Signup: FC = () => {
+const SignUpScreen: FC = () => {
+  const authBloc = new AuthenticationBloc(
+    new AuthenticationRepository("http://localhost:8080")
+  );
+  const { navigate } = useNavigation();
+
+  const SignUpUser = (signup: SignUpType) => {
+    authBloc.add(new AuthenticationSignUpEvent(signup));
+  };
+
+  return (
+    <BlocBuilder
+      bloc={authBloc}
+      builder={(state) => {
+        if (state instanceof AuthenticationErrorState) {
+          return <SignUp callback={SignUpUser} error={state.error} />;
+        }
+        if (state instanceof AuthenticationInitialState) {
+          return <SignUp callback={SignUpUser} />;
+        }
+        if (state instanceof AuthenticationLoadingState) {
+          return <Text>Loading</Text>;
+        }
+        if (state instanceof AuthenticationSignUpState) {
+          setLocalStorage("@userToken", state.authentication)
+            .then((_) => navigate("Home"))
+            .catch((e) => console.log(e));
+        }
+        return <Text>Loading</Text>;
+      }}
+    />
+  );
+};
+
+type Props = {
+  callback: (signup: SignUpType) => void;
+  error?: StatusError;
+};
+
+const SignUp: FC<Props> = (props) => {
   const { fonts } = useTheme();
   const { navigate } = useNavigation();
-  const { signUp, error } = useSignUp();
   const [onError, setError] = useState(false);
   const [onErrorEmail, setErrorEmail] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -91,22 +140,14 @@ const Signup: FC = () => {
     } else {
       setError(false);
       setErrorEmail(false);
-      await signUp(
-        data.username,
-        data.password,
-        data.confirmPassword,
-        data.email,
-        data.firstName,
-        data.lastName
-      );
-      try {
-        const tokenTmp = await AsyncStorage.getItem("@userToken");
-        if (token !== undefined) {
-          setToken(tokenTmp);
-        }
-      } catch (e) {
-        alert("Error trying to get token");
-      }
+      props.callback({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      });
     }
   };
 
@@ -128,15 +169,15 @@ const Signup: FC = () => {
     >
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
+          <ScrollView contentContainerStyle={styles.inner}>
             <Title style={{ marginBottom: 20 }} />
             <Text style={styles.onErrorText}>
               {onError
                 ? "One or more fields are empty"
                 : onErrorEmail
                 ? "Invalid email"
-                : error
-                ? error.message
+                : props.error
+                ? props.error.message
                 : null}
             </Text>
             <ItemForm
@@ -216,11 +257,11 @@ const Signup: FC = () => {
               </Text>
             </TouchableOpacity>
             <View style={{ flex: 1 }} />
-          </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
 
-export default Signup;
+export default SignUpScreen;

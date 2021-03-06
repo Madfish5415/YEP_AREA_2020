@@ -9,7 +9,10 @@ services:
       - "DEST=http://localhost:8080"
     ports:
       - "5000:5000"
-    network_mode: "host"
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
   server:
     depends_on:
       - ultrahook
@@ -19,6 +22,8 @@ services:
     environment:
       - "HOSTNAME=0.0.0.0"
       - "PORT=8080"
+      - "DATABASE_HOSTNAME=mongo"
+      - "DATABASE_PORT=27017"
     ports:
       - "8080:8080"
   client_mobile:

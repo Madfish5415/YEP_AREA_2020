@@ -1,17 +1,10 @@
-import {
-  APIResponse,
-  User,
-  Workflow,
-  WorkflowAction,
-  WorkflowExecution,
-  WorkflowReaction,
-} from "@area-common/types";
+import { APIResponse, User, Workflow, WorkflowNode } from "@area-common/types";
 import { Router } from "express";
 import passport from "passport";
 import { v4 } from "uuid";
 
 import { BAD_REQUEST_ERROR, WORKFLOWS_ROUTE } from "../../constants";
-import { hasMissingKeys } from "../../utilities/type";
+import { hasAllKeysOf } from "../../utilities/type";
 import { workflowRouter } from "./[id]";
 
 export const workflowsRouter = Router();
@@ -23,103 +16,52 @@ workflowsRouter.use(
 
 workflowsRouter.use(WORKFLOWS_ROUTE, workflowRouter);
 
-workflowsRouter.get(WORKFLOWS_ROUTE, async (req, res) => {
-  const user = req.user as User;
-  const workflows = await req.workflowRepository.list(user.id);
+workflowsRouter.get(WORKFLOWS_ROUTE, async (req, res, next) => {
+  try {
+    const user = req.user as User;
+    const workflows = await req.workflowRepository.list(user.id);
 
-  const response: APIResponse = {
-    status: 200,
-    data: workflows,
-  };
+    const response: APIResponse = {
+      status: 200,
+      data: workflows,
+    };
 
-  return res.json(response);
+    return res.json(response);
+  } catch (e) {
+    return next(e);
+  }
 });
 
 workflowsRouter.post(WORKFLOWS_ROUTE, async (req, res, next) => {
   try {
     const user = req.user as User;
     const workflow: Workflow = req.body;
-    const missingKeys = hasMissingKeys<Workflow>(workflow, [
+    const [hasKeys] = hasAllKeysOf<Workflow>(workflow, [
       "name",
       "description",
       "active",
-      "actions",
-      "reactions",
+      "nodes",
+      "starters",
     ]);
 
-    if (missingKeys.length) {
-      const response: APIResponse = {
-        status: 400,
-        failure: {
-          ...BAD_REQUEST_ERROR,
-        },
-      };
-
-      return res.json(response);
+    if (!hasKeys) {
+      return next(BAD_REQUEST_ERROR);
     }
 
-    for (const wAction of workflow.actions) {
-      const missingKeys = hasMissingKeys<WorkflowAction>(wAction, [
+    for (const wNode of workflow.nodes) {
+      const [hasKeys] = hasAllKeysOf<WorkflowNode>(wNode, [
         "id",
         "name",
+        "label",
         "serviceId",
-        "actionId",
-        "parameters",
-      ]);
-
-      if (missingKeys.length) {
-        const response: APIResponse = {
-          status: 400,
-          failure: {
-            ...BAD_REQUEST_ERROR,
-          },
-        };
-
-        return res.json(response);
-      }
-    }
-
-    for (const wReaction of workflow.reactions) {
-      const missingKeys = hasMissingKeys<WorkflowReaction>(wReaction, [
-        "id",
-        "name",
-        "serviceId",
-        "reactionId",
+        "nodeId",
         "parameters",
         "condition",
+        "nextNodes",
       ]);
 
-      if (missingKeys.length) {
-        const response: APIResponse = {
-          status: 400,
-          failure: {
-            ...BAD_REQUEST_ERROR,
-          },
-        };
-
-        return res.json(response);
-      }
-    }
-
-    if (workflow.executions) {
-      for (const wExecution of workflow.executions) {
-        const missingKeys = hasMissingKeys<WorkflowExecution>(wExecution, [
-          "id",
-          "name",
-          "executionId",
-          "parameters",
-        ]);
-
-        if (missingKeys.length) {
-          const response: APIResponse = {
-            status: 400,
-            failure: {
-              ...BAD_REQUEST_ERROR,
-            },
-          };
-
-          return res.json(response);
-        }
+      if (!hasKeys) {
+        return next(BAD_REQUEST_ERROR);
       }
     }
 

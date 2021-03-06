@@ -3,45 +3,61 @@ import { Workflow } from "@area-common/types";
 export abstract class WorkflowEvent {}
 
 export class WorkflowCreateEvent extends WorkflowEvent {
-  workflow: Workflow;
+  authorization: string;
+  partial: Workflow;
 
-  constructor(workflow: Workflow) {
+  constructor(authorization: string, workflow: Workflow) {
     super();
 
-    this.workflow = workflow;
+    this.authorization = authorization;
+    this.partial = workflow;
   }
 }
 
 export class WorkflowReadEvent extends WorkflowEvent {
+  authorization: string;
   id: string;
 
-  constructor(id: string) {
+  constructor(authorization: string, id: string) {
     super();
 
+    this.authorization = authorization;
     this.id = id;
   }
 }
 
 export class WorkflowUpdateEvent extends WorkflowEvent {
+  authorization: string;
   id: string;
-  workflow: Partial<Workflow>;
+  partial: Partial<Workflow>;
 
-  constructor(id: string, workflow: Partial<Workflow>) {
+  constructor(authorization: string, id: string, workflow: Partial<Workflow>) {
     super();
 
+    this.authorization = authorization;
     this.id = id;
-    this.workflow = workflow;
+    this.partial = workflow;
   }
 }
 
 export class WorkflowDeleteEvent extends WorkflowEvent {
+  authorization: string;
   id: string;
 
-  constructor(id: string) {
+  constructor(authorization: string, id: string) {
     super();
 
+    this.authorization = authorization;
     this.id = id;
   }
 }
 
-export class WorkflowListEvent extends WorkflowEvent {}
+export class WorkflowListEvent extends WorkflowEvent {
+  authorization: string;
+
+  constructor(authorization: string) {
+    super();
+
+    this.authorization = authorization;
+  }
+}

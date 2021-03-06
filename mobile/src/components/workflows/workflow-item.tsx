@@ -4,7 +4,6 @@ import { View, StyleSheet, Switch } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { gray } from "@area-common/styles";
 import { Workflow } from "@area-common/types";
-import workflows from "@area-common/blocs/build/data/workflows";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +27,7 @@ type Props = {
 };
 
 export const WorkflowItem: FC<Props> = (props) => {
+  const [toggle, setToggle] = useState(props.workflow.active);
   const { colors } = useTheme();
 
   return (
@@ -36,10 +36,11 @@ export const WorkflowItem: FC<Props> = (props) => {
       <Switch
         trackColor={{ true: colors.primary }}
         style={styles.switch}
-        onValueChange={() =>
-          props.update(props.workflow, { isActive: !props.workflow.isActive })
-        }
-        value={props.workflow.isActive}
+        onValueChange={() => {
+          setToggle(!toggle);
+          props.update(props.workflow, { active: !props.workflow.active });
+        }}
+        value={toggle}
       />
     </View>
   );

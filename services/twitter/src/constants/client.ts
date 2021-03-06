@@ -1,4 +1,5 @@
 import { OAuth } from "oauth";
+
 import {
   ACCESS_TOKEN_URL,
   CONSUMER_KEY,
@@ -11,7 +12,7 @@ export const CLIENT = new OAuth(
   ACCESS_TOKEN_URL,
   CONSUMER_KEY,
   CONSUMER_SECRET,
-  "1.0A",
+  "1.0",
   null,
   "HMAC-SHA1"
 );

@@ -1,9 +1,9 @@
-import { RunnerAction } from "./action";
-import { RunnerExecution } from "./execution";
-import { RunnerReaction } from "./reaction";
+import { Node } from "../node";
 
 export interface Runner {
-  actions: RunnerAction[];
-  reactions: RunnerReaction[];
-  executions: RunnerExecution[];
+  readonly nodes: Node[];
+
+  start(): void;
+
+  stop(): void;
 }
