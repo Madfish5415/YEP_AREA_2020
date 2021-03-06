@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 import WorkflowComponent from "../components/workflows/workflow";
-import { makeStyles, Theme, Typography, Grid } from "@material-ui/core";
-import { gray } from "@area-common/styles";
+import { makeStyles, Theme, Typography, Grid, Fab } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import { gray, primary } from "@area-common/styles";
 import {
   WorkflowBloc,
   WorkflowDeleteEvent,
@@ -37,6 +38,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   workflows: {
     marginTop: 25,
     justifyContent: "center",
+  },
+  floatingButton: {
+    backgroundColor: primary.main,
+    color: gray.main,
+    margin: "0px",
+    top: "auto",
+    right: "20px",
+    bottom: "20px",
+    left: "auto",
+    position: "fixed",
   },
 }));
 
@@ -86,9 +97,6 @@ const WorkflowsPage: FC = () => {
       }}
       builder={(state: WorkflowState) => {
         if (state instanceof WorkflowErrorState) {
-          {
-            console.log("je vais cabler");
-          }
           return <ErrorState errorLabel={"An error has occured"} />;
         }
         if (state instanceof WorkflowListState) {
@@ -114,6 +122,13 @@ type Props = {
 
 const Workflows: FC<Props> = (props) => {
   const classes = useStyles();
+  const router = useRouter();
+
+  const handleNewWorkflow = () => {
+    router.push({
+      pathname: "new/workflow",
+    }).then().catch((e) => console.log(e));
+  };
 
   return (
     <>
@@ -132,6 +147,13 @@ const Workflows: FC<Props> = (props) => {
           ))}
         </Grid>
       </div>
+      <Fab
+        color="inherit"
+        className={classes.floatingButton}
+        onClick={handleNewWorkflow}
+      >
+        <AddIcon />
+      </Fab>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { EditWorkflowItem } from "./edit-workflow-item";
 import {
   WorkflowBloc,
@@ -10,6 +10,8 @@ import {
   WorkflowListState,
   WorkflowRepository,
   WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { ErrorState } from "../blocbuilder/error-state";
@@ -21,7 +23,7 @@ import { getLocalStorage } from "../../common/localStorage";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingBottom: 20,
   },
 });
 
@@ -43,6 +45,25 @@ const WorkflowsEditScreen: FC = () => {
     })
     .catch((e) => console.log(e));
 
+  const updateWorkflowName = (
+    workflow: Workflow,
+    updatedWorkflow: Partial<Workflow>
+  ) => {
+    getLocalStorage("@userToken")
+      .then((data) => {
+        if (data) {
+          workflowsBloc.add(
+            new WorkflowUpdateEvent(
+              data,
+              workflow.id,
+              updatedWorkflow.name ? updatedWorkflow : { name: workflow.name }
+            )
+          );
+        }
+      })
+      .catch((e) => console.log(e));
+  };
+
   const deleteWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(new WorkflowDeleteEvent(token, workflow.id));
   };
@@ -53,6 +74,9 @@ const WorkflowsEditScreen: FC = () => {
       key={uuidv4()}
       condition={(previous: WorkflowState, current: WorkflowState) => {
         if (current instanceof WorkflowDeleteState) {
+          workflowsBloc.add(new WorkflowListEvent(token));
+        }
+        if (current instanceof WorkflowUpdateState) {
           workflowsBloc.add(new WorkflowListEvent(token));
         }
         return true;
@@ -66,6 +90,7 @@ const WorkflowsEditScreen: FC = () => {
             <WorkflowsEdit
               workflows={state.workflows}
               delete={deleteWorkflow}
+              update={updateWorkflowName}
             />
           );
         }
@@ -78,19 +103,34 @@ const WorkflowsEditScreen: FC = () => {
 type Props = {
   workflows: Workflow[];
   delete: (workflow: Workflow) => void;
+  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
 };
 
+const { height } = Dimensions.get("window");
+
 const WorkflowsEdit: FC<Props> = (props) => {
+  const [screenHeight, setScreenHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setScreenHeight(contentHeight);
+  };
+
+  const scrollEnabled = screenHeight > height - 180;
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      onContentSizeChange={onContentSizeChange}
+      scrollEnabled={scrollEnabled}
+    >
       {props.workflows.map((workflow) => (
         <EditWorkflowItem
           key={workflow.id}
           workflow={workflow}
           delete={props.delete}
+          update={props.update}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
