@@ -104,17 +104,6 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
   ],
 ]);
 
-const tmp = {
-  status: "200",
-  data: [
-    "discord-service",
-    "google-service",
-    "microsoft-service",
-    "github-service",
-    "epitech-service",
-  ],
-};
-
 const Credentials: FC = () => {
   const [officeLoggedIn, setOfficeLoggedIn] = useState(false);
   const [githubLoggedIn, setGithubLoggedIn] = useState(false);
@@ -141,7 +130,6 @@ const Credentials: FC = () => {
           }
         );
         const json = await response.json();
-        console.log(json);
         if (json && json.data) {
           json.data.forEach((service: string) => {
             if (service.startsWith("microsoft")) {

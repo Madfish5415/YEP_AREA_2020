@@ -40,6 +40,5 @@ export const oAuthSignIn = async (
     );
     const json = await response.json();
     await setLocalStorage("@userToken", json["data"]["token"]);
-    console.log(json["data"]["token"]);
   }
 };
