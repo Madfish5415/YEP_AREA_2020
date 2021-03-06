@@ -1,12 +1,20 @@
 import React, { FC } from "react";
 import { Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, RouteProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Appbar, useTheme } from "react-native-paper";
 import EpitechCredentialsScreen from "../components/credentials/epitech-credentials";
+import { RootStackParamList } from "./rootstack";
 
-const Stack = createStackNavigator();
+export type EpitechStackParamList = {
+  EpitechCredentials: {
+    isConnected: boolean;
+    setConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+};
+
+const Stack = createStackNavigator<EpitechStackParamList>();
 
 const AppBar = () => {
   const { colors, fonts } = useTheme();

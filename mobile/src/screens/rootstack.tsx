@@ -14,7 +14,10 @@ import WorkflowCreateStack from "./workflow-create";
 
 export type RootStackParamList = {
   Home: { userId: string };
-  EpitechCredentials: undefined;
+  EpitechCredentials: {
+    isConnected: boolean;
+    setConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   OAuthCredentials: { serviceName: string; serviceId: string };
   Workflow: {
     workflow: Workflow;

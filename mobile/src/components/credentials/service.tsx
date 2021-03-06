@@ -91,6 +91,10 @@ const Service: FC<Props> = (props) => {
             onPress={() =>
               navigate("EpitechCredentials", {
                 screen: "EpitechCredentials",
+                params: {
+                  isConnected: props.isLoggedIn,
+                  setConnected: props.setConnected,
+                },
               })
             }
           >

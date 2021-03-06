@@ -7,7 +7,6 @@ export const oAuthLogin = async (
 ): Promise<void> => {
   const data = await getLocalStorage("@userToken");
   if (data) {
-    console.log("data", data);
     try {
       const result = await authorize(oAuthConfig);
       await fetch(

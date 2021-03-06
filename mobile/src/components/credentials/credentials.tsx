@@ -216,6 +216,7 @@ const Credentials: FC = () => {
         serviceId={"epitech"}
         name={"Epitech"}
         icon={<Text style={styles.text}>E</Text>}
+        isLoggedIn={epitechLoggedIn}
         isEpitech={true}
         setConnected={setEpitechLoggedIn}
       />
