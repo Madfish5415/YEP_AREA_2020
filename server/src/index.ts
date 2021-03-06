@@ -1,23 +1,29 @@
-import { Core } from "./core/core";
-import { HOSTNAME, PORT } from "./constants/environment";
-import { DummyService } from "@area-service/dummy";
-import { Operator, Service } from "@area-common/types";
-import { EqualOperator } from "./operators/equal";
-import { NotOperator } from "./operators/not";
-import { ContainsOperator } from "./operators/contains";
-import { AndOperator } from "./operators/and";
-import { OrOperator } from "./operators/or";
+import { Service } from "@area-common/types";
+import { ConditionsService } from "@area-service/conditions";
+import { TwitterService } from "@area-service/twitter";
+
+import {
+  DATABASE_HOSTNAME,
+  DATABASE_NAME,
+  DATABASE_PASSWORD,
+  DATABASE_PORT,
+  DATABASE_USER,
+  HOSTNAME,
+  PORT,
+} from "./constants";
+import { Core } from "./core";
+import { Database } from "./database";
 
 async function main() {
-  const operators: Operator[] = [
-    new AndOperator(),
-    new ContainsOperator(),
-    new EqualOperator(),
-    new NotOperator(),
-    new OrOperator(),
-  ];
-  const services: Service[] = [new DummyService()];
-  const core = new Core(HOSTNAME, PORT, operators, services);
+  const database = new Database({
+    hostname: DATABASE_HOSTNAME,
+    port: DATABASE_PORT,
+    name: DATABASE_NAME,
+    user: DATABASE_USER,
+    password: DATABASE_PASSWORD,
+  });
+  const services: Service[] = [new ConditionsService(), new TwitterService()];
+  const core = new Core(HOSTNAME, PORT, database, services);
 
   process.on("SIGINT", () => core.stop());
   process.on("SIGTERM", () => core.stop());

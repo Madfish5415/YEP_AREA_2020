@@ -23,6 +23,7 @@ declare global {
       headerBarLabel: Partial<ThemeFont>;
       description: Partial<ThemeFont>;
       headerBarTitle: Partial<ThemeFont>;
+      buttonLabel: Partial<ThemeFont>;
     }
   }
 }
@@ -66,6 +67,11 @@ const Theme: ReactNativePaper.Theme = {
       fontSize: 20,
       fontWeight: "bold",
       color: primary.main,
+    },
+    buttonLabel: {
+      fontSize: 14,
+      fontWeight: "bold",
+      color: white,
     },
   },
 };

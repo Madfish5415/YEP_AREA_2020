@@ -1,11 +1,9 @@
-import {Action} from "./action";
-import {Reaction} from "./reaction";
+import { SingletonNode } from "../node";
 
 export interface Service {
   readonly id: string;
   readonly name: string;
   readonly description: string;
   readonly version: string;
-  readonly actions: Action[];
-  readonly reactions: Reaction[];
+  readonly nodes: SingletonNode[];
 }
