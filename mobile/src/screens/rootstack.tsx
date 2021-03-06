@@ -9,7 +9,6 @@ import WorkflowStack from "./workflow";
 import SignUpScreen from "../components/signup/signup";
 import SignInScreen from "../components/signin/signin";
 import WorkflowCreateStack from "./workflow-create";
-import SignUpScreen from "./signup";
 import AccountSecurityStack from "./account-security";
 
 export type RootStackParamList = {
