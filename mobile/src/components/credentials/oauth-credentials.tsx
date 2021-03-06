@@ -56,7 +56,7 @@ const OAuthCredentialsScreen: FC<OauthProps> = (props) => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.connectedText}>Connected as </Text>
+      <Text style={styles.connectedText}>Connected</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => deleteCredential()}
