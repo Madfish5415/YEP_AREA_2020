@@ -18,7 +18,7 @@ import {
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import { gray, primary, white } from "@area-common/styles";
-import { User } from "@area-common/types";
+import { User, Account } from "@area-common/types";
 import UpdateUserField from "./updateUserField";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IOSSwitch from "../switch/switch";
@@ -94,6 +94,8 @@ type Props = {
   user: User;
   updateUser: (id: string, updatedUser: Partial<User>) => void;
   deleteUser: (id: string) => void;
+  account: Account;
+  updateAccount: (id: string, account: Partial<Account>) => void;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -132,8 +134,7 @@ const UpdateUserDialog: FC<Props> = (props) => {
   const [lastName, setLastName] = useState(
     props.user.lastName ? props.user.lastName : ""
   );
-  const [email, setEmail] = useState("frappeLaMatt@gmail.com");
-  const [password, setPassword] = useState("azerty");
+  const [email, setEmail] = useState(props.account.email);
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -157,14 +158,12 @@ const UpdateUserDialog: FC<Props> = (props) => {
   };
 
   const updateEmail = () => {
+    props.updateAccount(props.user.id, { email: email });
     console.log("email updated");
   };
 
-  const updatePassword = () => {
-    console.log("password updated");
-  };
-
   const switchEmailVerification = () => {
+    props.updateAccount(props.user.id, { verified: !props.account.verified });
     console.log("email verification switch");
   };
 
@@ -224,29 +223,27 @@ const UpdateUserDialog: FC<Props> = (props) => {
                 Delete user
               </Button>
             </div>
-            <div className={classes.secondColumn}>
-              <UpdateUserField
-                label={"Email"}
-                value={email}
-                setValue={setEmail}
-                onSubmit={updateEmail}
-              />
-              <UpdateUserField
-                label={"Password"}
-                value={password}
-                setValue={setPassword}
-                onSubmit={updatePassword}
-                password
-              />
-              <div className={classes.emailVerification}>
-                <Typography className={classes.switchTitle}>
-                  Email verification
-                </Typography>
-                <div className={classes.switch}>
-                  <IOSSwitch onChange={switchEmailVerification} />
+            {props.account.email && (
+              <div className={classes.secondColumn}>
+                <UpdateUserField
+                  label={"Email"}
+                  value={email}
+                  setValue={setEmail}
+                  onSubmit={updateEmail}
+                />
+                <div className={classes.emailVerification}>
+                  <Typography className={classes.switchTitle}>
+                    Email verification
+                  </Typography>
+                  <div className={classes.switch}>
+                    <IOSSwitch
+                      checked={props.account.verified}
+                      onChange={switchEmailVerification}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

@@ -7,8 +7,6 @@ import {
   UserState,
   UserReadEvent,
   UserReadState,
-  UserUpdateState,
-  UserUpdateEvent,
   UserErrorState,
 } from "@area-common/blocs";
 import { gray, white } from "@area-common/styles";
