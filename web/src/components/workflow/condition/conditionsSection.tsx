@@ -21,20 +21,17 @@ type Props = {
 
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const conditionNodes = props.workflow.nodes.filter(
+    (node) => node.label === "condition"
+  );
 
   return (
-    <>
-      <div className={classes.content}>
-        {props.workflow.nodes.map((node: WorkflowNode) => {
-          {
-            node.label === "condition" && (
-              <ComponentBox key={node.id} label={node.name} />
-            );
-          }
-        })}
-        <AddBox label={"condition"} />
-      </div>
-    </>
+    <div className={classes.content}>
+      {conditionNodes.map((node: WorkflowNode) => {
+        return <ComponentBox key={node.id} label={node.name} />;
+      })}
+      <AddBox label={"condition"} />
+    </div>
   );
 };
 

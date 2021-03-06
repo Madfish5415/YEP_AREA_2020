@@ -20,31 +20,17 @@ type Props = {
 
 const ActionSection: FC<Props> = (props) => {
   const classes = useStyles();
-
-  const findActionNumber = () => {
-    let nbAction = 0;
-
-    props.workflow.nodes.forEach((node, index) => {
-      if (node.label === "action") {
-        nbAction += 1;
-      }
-    });
-    return nbAction;
-  };
+  const actionNodes = props.workflow.nodes.filter(
+    (node) => node.label === "action"
+  );
 
   return (
-    <>
-      <div className={classes.content}>
-        {props.workflow.nodes.map((node: WorkflowNode) => {
-          {
-            node.label === "action" && (
-              <ComponentBox key={node.id} label={node.name} />
-            );
-          }
-        })}
-        {findActionNumber() === 0 && <AddBox label={"action"} />}
-      </div>
-    </>
+    <div className={classes.content}>
+      {actionNodes.map((node: WorkflowNode) => {
+        return <ComponentBox key={node.id} label={node.name} />;
+      })}
+      {actionNodes.length === 0 && <AddBox label={"action"} />}
+    </div>
   );
 };
 

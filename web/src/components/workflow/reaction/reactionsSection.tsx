@@ -21,20 +21,17 @@ type Props = {
 
 const ReactionsSection: FC<Props> = (props) => {
   const classes = useStyles();
+  const reactionNodes = props.workflow.nodes.filter(
+    (node) => node.label === "reaction"
+  );
 
   return (
-    <>
-      <div className={classes.content}>
-        {props.workflow.nodes.map((node: WorkflowNode) => {
-          {
-            node.label === "reaction" && (
-              <ComponentBox key={node.id} label={node.name} />
-            );
-          }
-        })}
-        <AddReaction label={"reaction"} />
-      </div>
-    </>
+    <div className={classes.content}>
+      {reactionNodes.map((node: WorkflowNode) => {
+        return <ComponentBox key={node.id} label={node.name} />;
+      })}
+      <AddReaction label={"reaction"} />
+    </div>
   );
 };
 
