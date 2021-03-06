@@ -88,7 +88,9 @@ const AppBarComponent: FC = () => {
       ? 2
       : router.pathname === "/credentials"
       ? 1
-      : 0
+      : router.pathname === "/workflows"
+      ? 0
+      : -1
   );
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {

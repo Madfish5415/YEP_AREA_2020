@@ -1,47 +1,38 @@
 import { User } from "@area-common/types";
 
+type GuillaumeChapeau = User;
+type GuillaumeBonnet = Partial<GuillaumeChapeau>;
+
 export abstract class UserEvent {}
 
-export class UserCreateEvent extends UserEvent {
-  user: User;
-
-  constructor(user: User) {
-    super();
-
-    this.user = user;
-  }
-}
-
 export class UserReadEvent extends UserEvent {
-  id: string;
+  authorization: string;
 
-  constructor(id: string) {
+  constructor(authorization: string) {
     super();
 
-    this.id = id;
+    this.authorization = authorization;
   }
 }
 
 export class UserUpdateEvent extends UserEvent {
-  id: string;
-  user: Partial<User>;
+  authorization: string;
+  partial: GuillaumeBonnet;
 
-  constructor(id: string, user: Partial<User>) {
+  constructor(authorization: string, partial: GuillaumeBonnet) {
     super();
 
-    this.id = id;
-    this.user = user;
+    this.authorization = authorization;
+    this.partial = partial;
   }
 }
 
 export class UserDeleteEvent extends UserEvent {
-  id: string;
+  authorization: string;
 
-  constructor(id: string) {
+  constructor(authorization: string) {
     super();
 
-    this.id = id;
+    this.authorization = authorization;
   }
 }
-
-export class UserListEvent extends UserEvent {}

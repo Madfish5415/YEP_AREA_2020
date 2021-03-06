@@ -1,8 +1,23 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { makeStyles, Theme, Typography, Button } from "@material-ui/core";
 import { gray, primary, white } from "@area-common/styles";
-import { User } from "@area-common/types";
+import { User, Account } from "@area-common/types";
 import SettingsTextInput from "./settingsTextInput";
+import {
+  AccountBloc,
+  AccountRepository,
+  AccountState,
+  AccountReadEvent,
+  AccountReadState,
+  AccountUpdateState,
+  AccountUpdateEvent,
+  AccountErrorState,
+} from "@area-common/blocs";
+import { DefaultState } from "../blocbuilder/default-state";
+import { ErrorState } from "../blocbuilder/error-state";
+import { BlocBuilder } from "@felangel/react-bloc";
+import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -43,17 +58,91 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   user: User;
-  updateUser: (id: string, user: Partial<User>) => void;
+  updateUser: (user: Partial<User>) => void;
 };
 
 const AccountSecurity: FC<Props> = (props) => {
+  const router = useRouter();
+  let token = "";
+  const accountBloc = new AccountBloc(
+    new AccountRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      accountBloc.add(new AccountReadEvent(token));
+    }
+  });
+
+  const updateAccount = (account: Partial<Account>) => {
+    accountBloc.add(new AccountUpdateEvent(token, account));
+  };
+
+  return (
+    <BlocBuilder
+      bloc={accountBloc}
+      key={uuidv4()}
+      condition={(_, current: AccountState) => {
+        if (current instanceof AccountUpdateState) {
+          accountBloc.add(new AccountReadEvent(token));
+        }
+        return true;
+      }}
+      builder={(state: AccountState) => {
+        if (state instanceof AccountErrorState) {
+          if (
+            (state as AccountErrorState).error.name === "ACCOUNT_NOT_EXISTS"
+          ) {
+            return (
+              <ErrorState
+                errorLabel={"This user is connected with an external service"}
+              />
+            );
+          }
+          return <ErrorState errorLabel={"An error has occured"} />;
+        }
+        if (state instanceof AccountReadState) {
+          return (
+            <AccountSecurityComponent
+              user={props.user}
+              updateUser={props.updateUser}
+              account={(state as AccountReadState).account}
+              updateAccount={updateAccount}
+            />
+          );
+        }
+        return <DefaultState />;
+      }}
+    />
+  );
+};
+
+type ComponentProps = {
+  user: User;
+  updateUser: (user: Partial<User>) => void;
+  account: Account;
+  updateAccount: (account: Partial<Account>) => void;
+};
+
+const AccountSecurityComponent: FC<ComponentProps> = (props) => {
   const classes = useStyles();
-  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handlePasswordChange = () => {
-    console.log("password changed");
+    if (newPassword !== "" && newPassword === confirmPassword) {
+      console.log("new password ", newPassword);
+      // props.updateAccount({
+      //   email: props.account.email,
+      //   password: newPassword,
+      // });
+    }
   };
 
   return (
@@ -62,21 +151,13 @@ const AccountSecurity: FC<Props> = (props) => {
         <Typography className={classes.partTitle}>Account security</Typography>
         <div className={classes.accountInfo}>
           <Typography className={classes.inputTitle}>Email</Typography>
-          <SettingsTextInput value={"frappeLaMatt@gmail.com"} disabled />
-        </div>
-        <div className={classes.accountInfo}>
-          <Typography className={classes.inputTitle}>Old password</Typography>
-          <SettingsTextInput
-            value={oldPassword}
-            onSubmit={setOldPassword}
-            password
-          />
+          <SettingsTextInput value={props.account.email} disabled />
         </div>
         <div className={classes.accountInfo}>
           <Typography className={classes.inputTitle}>New password</Typography>
           <SettingsTextInput
             value={newPassword}
-            onSubmit={setNewPassword}
+            onChange={setNewPassword}
             password
           />
         </div>
@@ -86,13 +167,13 @@ const AccountSecurity: FC<Props> = (props) => {
           </Typography>
           <SettingsTextInput
             value={confirmPassword}
-            onSubmit={setConfirmPassword}
+            onChange={setConfirmPassword}
             password
           />
         </div>
         <Typography
           className={classes.conditionText}
-        >{`Make sure it's at least 15 QR at least 8 characters including a number and a lowerwase letter.`}</Typography>
+        >{`Make sure it's at least 15 characters OR at least 8 characters including a number and a lowerwase letter.`}</Typography>
         <Button
           className={classes.passwordButton}
           onClick={handlePasswordChange}
