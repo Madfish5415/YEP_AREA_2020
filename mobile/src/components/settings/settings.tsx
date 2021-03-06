@@ -45,13 +45,15 @@ const SettingsScreen: FC = () => {
   const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
   const { navigate } = useNavigation();
 
-  getLocalStorage("@userToken").then((userToken) => {
-    if (userToken) {
-      userBloc.add(new UserReadEvent(userToken));
-    } else {
-      navigate("SignIn");
-    }
-  });
+  getLocalStorage("@userToken")
+    .then((userToken) => {
+      if (userToken) {
+        userBloc.add(new UserReadEvent(userToken));
+      } else {
+        navigate("SignIn");
+      }
+    })
+    .catch((error) => console.log(error));
 
   const updateUserInfos = (user: User, updatedUser: Partial<User>) => {
     getLocalStorage("@userToken")
