@@ -3,6 +3,7 @@ import passport, { AuthenticateOptions } from "passport";
 
 import { AUTHENTICATION_SERVICE_ROUTE } from "../../../../constants";
 import { authenticationServiceCbRouter } from "./callback";
+import { authenticationServicePvRouter } from "./provide";
 
 export const authenticationServiceRouter = Router();
 
@@ -26,6 +27,11 @@ authenticationServiceRouter.use(
 authenticationServiceRouter.use(
   AUTHENTICATION_SERVICE_ROUTE,
   authenticationServiceCbRouter
+);
+
+authenticationServiceRouter.use(
+  AUTHENTICATION_SERVICE_ROUTE,
+  authenticationServicePvRouter
 );
 
 authenticationServiceRouter.use(
