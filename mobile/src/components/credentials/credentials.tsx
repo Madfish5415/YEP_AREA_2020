@@ -1,11 +1,15 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Service from "./service";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { primary, gray } from "@area-common/styles";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { CredentialsStackParamsList } from "../../pages/credentials";
 import { AuthConfiguration } from "react-native-app-auth";
 import { getLocalStorage } from "../../common/localStorage";
@@ -112,15 +116,20 @@ const tmp = {
 };
 
 const Credentials: FC = () => {
-  const [officeLoggedIn, setOfficeLoggedIn] = React.useState(false);
-  const [githubLoggedIn, setGithubLoggedIn] = React.useState(false);
-  const [discordLoggedIn, setDiscordLoggedIn] = React.useState(false);
-  const [youtubeLoggedIn, setYoutubeLoggedIn] = React.useState(false);
-  const [epitechLoggedIn, setEpitechLoggedIn] = React.useState(false);
+  const [officeLoggedIn, setOfficeLoggedIn] = useState(false);
+  const [githubLoggedIn, setGithubLoggedIn] = useState(false);
+  const [discordLoggedIn, setDiscordLoggedIn] = useState(false);
+  const [youtubeLoggedIn, setYoutubeLoggedIn] = useState(false);
+  const [epitechLoggedIn, setEpitechLoggedIn] = useState(false);
 
   const { navigate } = useNavigation();
+  const focused = useIsFocused();
   useEffect(() => {
     async function getLoggedIn() {
+      setOfficeLoggedIn(false);
+      setGithubLoggedIn(false);
+      setDiscordLoggedIn(false);
+      setYoutubeLoggedIn(false);
       const data = await getLocalStorage("@userToken");
       if (data) {
         const response = await fetch(
@@ -132,25 +141,28 @@ const Credentials: FC = () => {
           }
         );
         const json = await response.json();
-        tmp.data.forEach((service) => {
-          if (service.startsWith("microsoft")) {
-            setOfficeLoggedIn(true);
-          } else if (service.startsWith("github")) {
-            setGithubLoggedIn(true);
-          } else if (service.startsWith("discord")) {
-            setDiscordLoggedIn(true);
-          } else if (service.startsWith("google")) {
-            setYoutubeLoggedIn(true);
-          } else if (service.startsWith("epitech")) {
-            setEpitechLoggedIn(true);
-          }
-        });
+        console.log(json);
+        if (json && json.data) {
+          json.data.forEach((service: string) => {
+            if (service.startsWith("microsoft")) {
+              setOfficeLoggedIn(true);
+            } else if (service.startsWith("github")) {
+              setGithubLoggedIn(true);
+            } else if (service.startsWith("discord")) {
+              setDiscordLoggedIn(true);
+            } else if (service.startsWith("google")) {
+              setYoutubeLoggedIn(true);
+            } else if (service.startsWith("epitech")) {
+              setEpitechLoggedIn(true);
+            }
+          });
+        }
       } else {
         navigate("Home");
       }
     }
     getLoggedIn();
-  }, []);
+  }, [focused]);
   return (
     <View style={styles.container}>
       <Service
@@ -167,6 +179,7 @@ const Credentials: FC = () => {
         isLoggedIn={officeLoggedIn}
         oAuthConfig={oAuthConfigMap.get("office365")}
         serviceName={"microsoft"}
+        setConnected={setOfficeLoggedIn}
       />
       <Service
         name={"Github"}
@@ -176,6 +189,7 @@ const Credentials: FC = () => {
         isLoggedIn={githubLoggedIn}
         oAuthConfig={oAuthConfigMap.get("github")}
         serviceName={"github"}
+        setConnected={setGithubLoggedIn}
       />
       <Service
         name={"Discord"}
@@ -184,6 +198,7 @@ const Credentials: FC = () => {
         isEpitech={false}
         isLoggedIn={discordLoggedIn}
         oAuthConfig={oAuthConfigMap.get("discord")}
+        setConnected={setDiscordLoggedIn}
       />
       <Service
         name={"Youtube"}
@@ -195,12 +210,14 @@ const Credentials: FC = () => {
         isLoggedIn={youtubeLoggedIn}
         oAuthConfig={oAuthConfigMap.get("google")}
         serviceName={"google"}
+        setConnected={setYoutubeLoggedIn}
       />
       <Service
         serviceId={"epitech"}
         name={"Epitech"}
         icon={<Text style={styles.text}>E</Text>}
         isEpitech={true}
+        setConnected={setEpitechLoggedIn}
       />
     </View>
   );

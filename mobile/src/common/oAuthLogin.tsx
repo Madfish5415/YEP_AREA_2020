@@ -11,11 +11,17 @@ export const oAuthLogin = async (
     try {
       const result = await authorize(oAuthConfig);
       await fetch(
-        `http://localhost:8080/api/authentication/services/${serviceName}/provide?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`,
+        `http://localhost:8080/api/authentication/services/${serviceName}/provide`,
         {
           headers: {
             authorization: data,
+            "content-type": "application/json",
           },
+          method: "POST",
+          body: JSON.stringify({
+            accessToken: result["accessToken"],
+            refreshToken: result["refreshToken"],
+          }),
         }
       );
     } catch (error) {

@@ -7,6 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { white, primary } from "@area-common/styles";
 import { useNavigation } from "@react-navigation/core";
 import { getLocalStorage } from "../../common/localStorage";
+import { jsonSchema } from "uuidv4";
 
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +39,17 @@ const EpitechCredentialsScreen: FC = () => {
     const data = await getLocalStorage("@userToken");
     if (data) {
       const response = await fetch(
-        `http://localhost:8080/api/authentication/services/provide?autologin=${autoLoginLink}`
+        `http://localhost:8080/api/authentication/services/epitech/provide`,
+        {
+          headers: {
+            authorization: data,
+            "content-type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            autologin: autoLoginLink,
+          }),
+        }
       );
     }
   };

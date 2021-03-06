@@ -61,6 +61,7 @@ type Props = {
   oAuthConfig?: AuthConfiguration;
   serviceName?: string;
   serviceId?: string;
+  setConnected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type ServiceDescriptionProps = {
@@ -119,7 +120,7 @@ const Service: FC<Props> = (props) => {
               oAuthLogin(
                 props.oAuthConfig as AuthConfiguration,
                 props.serviceName as string
-              )
+              ).then(() => props.setConnected(true))
             }
           >
             <ServiceDescription icon={props.icon} name={props.name} />

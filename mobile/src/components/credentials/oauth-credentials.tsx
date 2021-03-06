@@ -5,6 +5,7 @@ import { gray, primary, white } from "@area-common/styles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { OAuthCredentialsStackParamList } from "../../screens/oauth-credentials";
 import { getLocalStorage } from "../../common/localStorage";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -43,14 +44,15 @@ type OauthProps = {
 
 const OAuthCredentialsScreen: FC<OauthProps> = (props) => {
   const { serviceId } = props.route.params;
+  const { navigate } = useNavigation();
   const deleteCredential = async () => {
     const data = await getLocalStorage("@userToken");
     if (data) {
       await fetch(`http://localhost:8080/api/user/credentials/${serviceId}`, {
         headers: {
           authorization: data,
-          method: "DELETE",
         },
+        method: "DELETE",
       });
     }
   };
@@ -59,7 +61,7 @@ const OAuthCredentialsScreen: FC<OauthProps> = (props) => {
       <Text style={styles.connectedText}>Connected</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => deleteCredential()}
+        onPress={() => deleteCredential().then(() => navigate("Credentials"))}
       >
         <Text style={styles.textButton}>Log out</Text>
       </TouchableOpacity>
