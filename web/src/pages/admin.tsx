@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
@@ -51,8 +51,6 @@ const AdminPage: FC = () => {
       userBloc.add(new UserReadEvent(token));
     }
   });
-
-  userBloc.add(new UserReadEvent("3dcf9a69-e258-4449-a41d-cea7f6ca3fa9"));
 
   return (
     <BlocBuilder
