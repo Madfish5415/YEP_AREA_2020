@@ -1,6 +1,6 @@
-import { User } from "@area-common/types";
+import { StatusError, User } from "@area-common/types";
+
 import { Repository } from "../types";
-import users from "../data/users";
 
 function toJSON(user: User) {
   return {
@@ -8,67 +8,52 @@ function toJSON(user: User) {
   };
 }
 export class UserRepository extends Repository {
-  async create(user: User): Promise<void> {
-    const newUser = {
-      id: user.id,
-      username: user.id,
-      firstName: user.firstName!,
-      lastName: user.lastName!,
-      administrator: user.administrator,
-    };
-
-    users.push(newUser);
-  }
-
-  async read(id: string): Promise<User> {
-    const userJson = users.find((user) => user.id === id);
-
-    if (userJson === undefined) {
-      throw Error("User not found");
-    }
-
-    return userJson;
-    const response = await fetch(`${this.remoteURL}/users/${id}`);
+  async read(authorization: string): Promise<User> {
+    const response = await fetch(`${this.remoteURL}/api/user`, {
+      method: "GET",
+      headers: {
+        Authorization: authorization,
+      },
+    });
     const json = await response.json();
 
     if (json.status !== 200) {
-      throw Error(json.error.code);
+      throw new StatusError(json.status, json.failure);
     }
+
     return json["data"];
   }
 
-  async update(id: string, user: User): Promise<void> {
-    const index = users.findIndex((user) => user.id === id);
-    const userJson = {
-      id: user.id,
-      username: user.username,
-      firstName: user.firstName!,
-      lastName: user.lastName!,
-      administrator: user.administrator,
-    };
+  async update(authorization: string, partial: Partial<User>): Promise<User> {
+    const jsonPartial = JSON.stringify(partial);
+    const response = await fetch(`${this.remoteURL}/api/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authorization,
+      },
+      body: jsonPartial,
+    });
+    const json = await response.json();
 
-    if (index !== -1) {
-      users[index] = userJson;
-    } else {
-      throw Error("User not found");
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
     }
+
+    return json["data"];
   }
 
-  async delete(id: string): Promise<void> {
-    const index = users.findIndex((user) => user.id === id);
+  async delete(authorization: string): Promise<void> {
+    const response = await fetch(`${this.remoteURL}/api/user`, {
+      method: "DELETE",
+      headers: {
+        Authorization: authorization,
+      },
+    });
+    const json = await response.json();
 
-    if (index !== -1) {
-      users.splice(index, 1);
-    } else {
-      throw Error("User not found");
+    if (json.status !== 200) {
+      throw new StatusError(json.status, json.failure);
     }
-  }
-
-  async list(): Promise<User[]> {
-    return Promise.all(
-      users.map((user) => {
-        return user;
-      })
-    );
   }
 }
