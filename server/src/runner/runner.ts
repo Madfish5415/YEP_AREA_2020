@@ -1,7 +1,10 @@
 import { BaseNode, BaseTriggerNode } from "@area-common/service";
 import { Node, Runner, RunnerNode, Workflow } from "@area-common/types";
 
-import { SERVICE_NODE_NOT_EXISTS } from "../constants";
+import {
+  CREDENTIAL_NOT_EXISTS_ERROR,
+  SERVICE_NODE_NOT_EXISTS,
+} from "../constants";
 import { LinearNode, ParallelNode } from "../node";
 import { CredentialRepository, ServiceRepository } from "../repositories";
 import { BaseRunnerNode } from "./node";
@@ -18,6 +21,8 @@ export class BaseRunner implements Runner {
     for (const node of this.nodes) {
       if (node instanceof BaseRunnerTriggerNode) {
         node.subscribeAll(node.parameters);
+      } else {
+        node.execute();
       }
     }
   }
@@ -47,17 +52,19 @@ export class BaseRunner implements Runner {
       if (node.credentials) {
         const filter = {
           userId: workflow.userId,
-          serviceId: wNode.serviceId + "-service",
+          serviceId: wNode.serviceId,
         };
 
         const credential = await credentialRepository.read(filter);
 
-        if (credential) {
-          parameters = {
-            ...parameters,
-            ...JSON.parse(credential.value),
-          };
+        if (!credential) {
+          throw CREDENTIAL_NOT_EXISTS_ERROR;
         }
+
+        parameters = {
+          ...parameters,
+          ...JSON.parse(credential.value),
+        };
       }
 
       let rNode: RunnerNode | undefined;

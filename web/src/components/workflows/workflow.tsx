@@ -13,6 +13,7 @@ import {
 import { gray, white } from "@area-common/styles";
 import IOSSwitch from "../switch/switch";
 import { Workflow } from "@area-common/types";
+import Router from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,7 +81,9 @@ const WorkflowComponent: FC<Props> = (props) => {
   };
 
   const handleWorkflowEdit = () => {
-    console.log("edit my workflow");
+    Router.push({
+      pathname: "/workflow/" + props.workflow.id,
+    });
   };
 
   const handleSwitchWorkflow = (event: React.ChangeEvent<{}>) => {

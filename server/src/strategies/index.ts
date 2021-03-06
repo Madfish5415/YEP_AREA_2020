@@ -9,7 +9,12 @@ import {
 } from "../repositories";
 import { AuthorizeStrategy } from "./authorize";
 import { AuthorizeAdminStrategy } from "./authorize-admin";
-import { GoogleStrategy, MicrosoftStrategy, TwitterStrategy } from "./parties";
+import {
+  GitHubStrategy,
+  GoogleStrategy,
+  MicrosoftStrategy,
+  TwitterStrategy,
+} from "./parties";
 import { OAuth1ServiceStrategy, OAuth2ServiceStrategy } from "./services";
 import { SignInStrategy } from "./signin";
 import { SignUpStrategy } from "./signup";
@@ -20,12 +25,14 @@ export const useStrategies = (
   userRepository: UserRepository
 ): void => {
   passport.use("authorize", new AuthorizeStrategy(userRepository));
+  passport.use("authorizeAdmin", new AuthorizeAdminStrategy(userRepository));
   passport.use("signin", new SignInStrategy(accountRepository, userRepository));
   passport.use("signup", new SignUpStrategy(accountRepository, userRepository));
   passport.use("verify", new VerifyStrategy(accountRepository, userRepository));
 };
 
 export const usePartyStrategies = (userRepository: UserRepository): void => {
+  passport.use("github-party", new GitHubStrategy(userRepository));
   passport.use("google-party", new GoogleStrategy(userRepository));
   passport.use("microsoft-party", new MicrosoftStrategy(userRepository));
   passport.use("twitter-party", new TwitterStrategy(userRepository));

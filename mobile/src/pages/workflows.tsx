@@ -24,11 +24,6 @@ const WorkflowsActiveAppBar = () => {
         color={colors.primary}
       />
       <Appbar.Content title="Workflows" titleStyle={fonts.headerBarTitle} />
-      <Appbar.Action
-        icon={add}
-        onPress={() => alert("Todo!")}
-        color={colors.primary}
-      />
     </Appbar.Header>
   );
 };

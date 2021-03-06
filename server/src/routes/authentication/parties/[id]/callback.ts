@@ -13,7 +13,7 @@ export const authenticationPartyCbRouter = Router();
 authenticationPartyCbRouter.use(
   AUTHENTICATION_PARTY_CB_ROUTE,
   (req, res, next) => {
-    passport.authenticate(req.partyId, {
+    passport.authenticate(`${req.partyId}-party`, {
       callbackURL: req.query.state,
       session: false,
       failWithError: true,

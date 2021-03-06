@@ -10,7 +10,7 @@ authenticationServiceCbRouter.use(
   AUTHENTICATION_SERVICE_CB_ROUTE,
   passport.authenticate("authorize", { session: false, failWithError: true }),
   (req, res, next) => {
-    passport.authenticate(req.serviceId, {
+    passport.authenticate(`${req.serviceId}-service`, {
       callbackURL: req.query.state,
       session: false,
       failWithError: true,

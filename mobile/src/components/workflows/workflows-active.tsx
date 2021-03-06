@@ -1,11 +1,17 @@
 import React, { FC, useState } from "react";
 import { WorkflowItem } from "./workflow-item";
-import { View, StyleSheet } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import {
   WorkflowBloc,
+  WorkflowCreateEvent,
   WorkflowErrorState,
-  WorkflowInitialState,
   WorkflowListEvent,
   WorkflowListState,
   WorkflowRepository,
@@ -18,41 +24,43 @@ import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
 import { Workflow } from "@area-common/types";
 import { getLocalStorage } from "../../common/localStorage";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { primary } from "@area-common/styles";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignItems: "center",
+    paddingBottom: 20,
+  },
+  createWorkflowButton: {
+    marginTop: 20,
+    width: 250,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: primary.main,
+    borderRadius: 20,
   },
 });
 
 const WorkflowsActiveScreen: FC = () => {
   const { navigate } = useNavigation();
-  const [token, setToken] = useState<string>("");
+  let token = "";
   const workflowsBloc = new WorkflowBloc(
-    new WorkflowRepository("http://localhost:8080")
+      new WorkflowRepository("http://localhost:8080")
   );
   useIsFocused();
   getLocalStorage("@userToken")
     .then((data) => {
       if (data) {
-        setToken(data);
+        token = data;
         workflowsBloc.add(new WorkflowListEvent(data));
       } else {
         navigate("SignIn");
       }
     })
     .catch((e) => console.log(e));
-
-  const updateWorkflow = (
-    workflow: Workflow,
-    updatedWorkflow: Partial<Workflow>
-  ) => {
-    workflowsBloc.add(
-      new WorkflowUpdateEvent(token, workflow.id, updatedWorkflow)
-    );
-  };
 
   return (
     <BlocBuilder
@@ -71,12 +79,10 @@ const WorkflowsActiveScreen: FC = () => {
           return (
             <WorkflowsActive
               workflows={state.workflows}
-              update={updateWorkflow}
+              bloc={workflowsBloc}
+              token={token}
             />
           );
-        }
-        if (state instanceof WorkflowInitialState) {
-          return <Text>Hello</Text>;
         }
         return <DefaultState />;
       }}
@@ -86,20 +92,63 @@ const WorkflowsActiveScreen: FC = () => {
 
 type Props = {
   workflows: Workflow[];
-  update: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  bloc: WorkflowBloc;
+  token: string;
 };
 
+const { height } = Dimensions.get("window");
+
 const WorkflowsActive: FC<Props> = (props) => {
+  const { navigate } = useNavigation();
+  const { fonts } = useTheme();
+  const [screenHeight, setScreenHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setScreenHeight(contentHeight);
+  };
+
+  const scrollEnabled = screenHeight > height - 180;
+
+  const updateWorkflow = (
+    workflow: Workflow,
+    updatedWorkflow: Partial<Workflow>
+  ) => {
+    props.bloc.add(
+      new WorkflowUpdateEvent(props.token, workflow.id, updatedWorkflow)
+    );
+  };
+
+  const createWorkflow = (workflow: Workflow) => {
+    props.bloc.add(new WorkflowCreateEvent(props.token, workflow));
+  };
+
   return (
-    <View style={styles.container}>
-      {props.workflows.map((workflow) => (
-        <WorkflowItem
-          key={workflow.id}
-          workflow={workflow}
-          update={props.update}
-        />
-      ))}
-    </View>
+    <SafeAreaView>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        scrollEnabled={scrollEnabled}
+        onContentSizeChange={onContentSizeChange}
+      >
+        {props.workflows.map((workflow) => (
+          <WorkflowItem
+            key={workflow.id}
+            workflow={workflow}
+            update={updateWorkflow}
+          />
+        ))}
+        <TouchableOpacity
+          style={styles.createWorkflowButton}
+          onPress={() =>
+            navigate("WorkflowCreate", {
+              screen: "WorkflowCreate",
+              params: { callback: createWorkflow },
+            })
+          }
+        >
+          <Text style={fonts.main}>Add workflow</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
