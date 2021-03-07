@@ -28,6 +28,9 @@ import { AuthenticationRepository } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { SignIn as SignInType, StatusError } from "@area-common/types";
 import { setLocalStorage } from "../../common/localStorage";
+import { oAuthConfigMap } from "../credentials/credentials";
+import { AuthConfiguration } from "react-native-app-auth";
+import { oAuthSignIn } from "../../common/oAuthLogin";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -163,7 +166,14 @@ const SignIn: FC<Props> = (props) => {
             externalServiceIcon={
               <AntDesign name="github" size={18} color={white} />
             }
-            submitFunction={() => alert("Todo !")}
+            submitFunction={() => {
+              oAuthSignIn(
+                oAuthConfigMap.get("github") as AuthConfiguration,
+                "github"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
           />
           <ExternalSignInButton
             style={{ marginTop: 15 }}
@@ -176,7 +186,30 @@ const SignIn: FC<Props> = (props) => {
                 color={"#D53A00"}
               />
             }
-            submitFunction={() => alert("Todo !")}
+            submitFunction={async () => {
+              await oAuthSignIn(
+                oAuthConfigMap.get("office365") as AuthConfiguration,
+                "microsoft"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
+          />
+          <ExternalSignInButton
+            style={{ marginTop: 15 }}
+            externalServiceName={"Google"}
+            externalServiceColor={white}
+            externalServiceIcon={
+              <AntDesign name="google" size={18} color={white} />
+            }
+            submitFunction={() => {
+              oAuthSignIn(
+                oAuthConfigMap.get("google") as AuthConfiguration,
+                "google"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
           />
         </View>
       </ScrollView>

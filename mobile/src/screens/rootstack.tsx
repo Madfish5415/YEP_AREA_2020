@@ -2,14 +2,16 @@ import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
-import HomeStack from "./home";
 import Theme from "../theme";
+import HomeStack from "./home";
+import SignInScreen from "./signin";
+import SignUpScreen from "./signup";
+import EpitechCredentialsStack from "./epitech-credentials";
+import OAuthCredentialsStack from "./oauth-credentials";
 import AccountSecurityStack from "./account-security";
 import AdminBoardStack from "./admin-board";
 import { Workflow, User } from "@area-common/types";
 import WorkflowStack from "./workflow";
-import SignUpScreen from "../components/signup/signup";
-import SignInScreen from "../components/signin/signin";
 import WorkflowCreateStack from "./workflow-create";
 import ActionNodeStack from "./action-node";
 import OperatorNodeStack from "./operator-node";
@@ -19,6 +21,11 @@ import AdminUserUpdateStack from "./admin-update-field";
 
 export type RootStackParamList = {
   Home: { userId: string };
+  EpitechCredentials: {
+    isConnected: boolean;
+    setConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  OAuthCredentials: { serviceName: string; serviceId: string };
   Workflow: {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
@@ -58,6 +65,16 @@ const RootStack: FC = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name={"EpitechCredentials"}
+            component={EpitechCredentialsStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"OAuthCredentials"}
+            component={OAuthCredentialsStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name={"Workflow"}
             component={WorkflowStack}
             options={{ headerShown: false }}
@@ -80,7 +97,9 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"ReactionNode"}
             component={ReactionNodeStack}
-
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name={"AccountSecurity"}
             component={AccountSecurityStack}
             options={{ headerShown: false }}

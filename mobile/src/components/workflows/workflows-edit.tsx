@@ -17,6 +17,7 @@ import { BlocBuilder } from "@felangel/react-bloc";
 import { ErrorState } from "../blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
 import { Workflow } from "@area-common/types";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { getLocalStorage } from "../../common/localStorage";

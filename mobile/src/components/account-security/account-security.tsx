@@ -22,6 +22,7 @@ import { ErrorState } from "../blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
 import { useNavigation } from "@react-navigation/native";
 import { Account } from "@area-common/types";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 const styles = StyleSheet.create({

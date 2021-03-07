@@ -1,6 +1,9 @@
-import {AuthenticationBloc, AuthenticationSignInEvent} from "@area-common/blocs";
-import {gray, primary, secondary, white} from "@area-common/styles";
-import {SignIn} from "@area-common/types";
+import {
+  AuthenticationBloc,
+  AuthenticationSignInEvent,
+} from "@area-common/blocs";
+import { gray, primary, secondary, white } from "@area-common/styles";
+import { SignIn } from "@area-common/types";
 import {
   Box,
   Button,
@@ -9,12 +12,13 @@ import {
   makeStyles,
   TextField,
   ThemeProvider,
+  Typography,
 } from "@material-ui/core";
 import React from "react";
-import {useForm} from "react-hook-form";
-
-import {emailRegex} from "../../../constants/regexs";
-import {SignInSignUp} from "./buttons/signup";
+import { useForm } from "react-hook-form";
+import { emailRegex } from "../../../constants/regexs";
+import { SignInSignUp } from "./buttons/signup";
+import { useRouter } from "next/router";
 
 const useStyle = makeStyles({
   container: {
@@ -31,7 +35,7 @@ const theme = createMuiTheme({
     type: "dark",
     primary: {
       main: primary.main,
-      contrastText: white
+      contrastText: white,
     },
     secondary: {
       main: secondary.main,
@@ -48,21 +52,45 @@ const theme = createMuiTheme({
 });
 
 type Props = {
-  bloc: AuthenticationBloc
-}
+  bloc: AuthenticationBloc;
+};
 
 export const SignInForm: React.FC<Props> = (props) => {
   const classes = useStyle();
+  const router = useRouter();
 
-  const {register, errors, handleSubmit} = useForm();
+  const { register, errors, handleSubmit } = useForm();
 
   const afterSubmit = (data: any) => {
     const signin: SignIn = {
       email: data.email,
-      password: data.password
-    }
+      password: data.password,
+    };
 
     props.bloc.add(new AuthenticationSignInEvent(signin));
+  };
+
+  const handlePartySignIn = async (partyId: string) => {
+    return new Promise<void>((resolve, reject) => {
+      const cbUrl = `http://localhost:8081/authentication/parties/${partyId}`;
+      const url = `http://localhost:8080/api/authentication/parties/${partyId}`;
+      const popUp = window.open(`${url}?callbackURL=${cbUrl}`);
+
+      if (popUp) {
+        console.log("Succes!");
+        window.success = function () {
+          console.log("Success!!!");
+          router
+            .push("/workflows")
+            .then()
+            .catch((e) => console.log(e));
+          return resolve();
+        };
+      } else {
+        console.log("Failure!");
+        reject();
+      }
+    });
   };
 
   return (
@@ -89,9 +117,7 @@ export const SignInForm: React.FC<Props> = (props) => {
                   pattern: emailRegex,
                 })}
                 error={!!errors.email}
-                helperText={
-                  errors.email && "A valid email is required"
-                }
+                helperText={errors.email && "A valid email is required"}
                 color={"primary"}
                 margin={"dense"}
               />
@@ -106,12 +132,9 @@ export const SignInForm: React.FC<Props> = (props) => {
                 autoComplete="password"
                 variant="outlined"
                 fullWidth
-                inputRef={register({required: true})}
+                inputRef={register({ required: true })}
                 error={!!errors.password}
-                helperText={
-                  errors.password &&
-                  "A valid password is required"
-                }
+                helperText={errors.password && "A valid password is required"}
                 color={"primary"}
                 margin={"dense"}
               />
@@ -127,7 +150,23 @@ export const SignInForm: React.FC<Props> = (props) => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <SignInSignUp/>
+              <SignInSignUp />
+            </Grid>
+            <Grid item xs={12}>
+              <Button onClick={() => handlePartySignIn("github")}>
+                Connect with GitHub
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button onClick={() => handlePartySignIn("microsoft")}>
+                {"Connect with "}
+                <Typography>Office 365</Typography>
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button onClick={() => handlePartySignIn("google")}>
+                Connect with Google
+              </Button>
             </Grid>
           </Grid>
         </form>
