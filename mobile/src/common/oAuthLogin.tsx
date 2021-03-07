@@ -10,7 +10,7 @@ export const oAuthLogin = async (
     try {
       const result = await authorize(oAuthConfig);
       await fetch(
-        `http://localhost:8080/api/authentication/services/${serviceName}/provide`,
+        `${serverURL}/api/authentication/services/${serviceName}/provide`,
         {
           headers: {
             authorization: data,
@@ -36,7 +36,7 @@ export const oAuthSignIn = async (
   const result = await authorize(oAuthConfig);
   if (result) {
     const response = await fetch(
-      `http://localhost:8080/api/authentication/parties/${serviceName}/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`
+      `${serverURL}/api/authentication/parties/${serviceName}/callback?accessToken=${result["accessToken"]}&refreshToken=${result["refreshToken"]}`
     );
     const json = await response.json();
     await setLocalStorage("@userToken", json["data"]["token"]);

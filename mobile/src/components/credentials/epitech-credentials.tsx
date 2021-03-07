@@ -57,7 +57,7 @@ const EpitechCredentialsScreen: FC<EpitechProps> = (props) => {
     const data = await getLocalStorage("@userToken");
     if (data) {
       const response = await fetch(
-        `http://localhost:8080/api/authentication/services/epitech/provide`,
+        `${serverURL}/api/authentication/services/epitech/provide`,
         {
           headers: {
             authorization: data,
@@ -76,7 +76,7 @@ const EpitechCredentialsScreen: FC<EpitechProps> = (props) => {
   const deleteCredential = async () => {
     const data = await getLocalStorage("@userToken");
     if (data) {
-      await fetch(`http://localhost:8080/api/user/credentials/epitech`, {
+      await fetch(`${serverURL}/api/user/credentials/epitech`, {
         headers: {
           authorization: data,
         },

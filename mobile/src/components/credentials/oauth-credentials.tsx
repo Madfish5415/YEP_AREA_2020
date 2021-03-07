@@ -48,7 +48,7 @@ const OAuthCredentialsScreen: FC<OauthProps> = (props) => {
   const deleteCredential = async () => {
     const data = await getLocalStorage("@userToken");
     if (data) {
-      await fetch(`http://localhost:8080/api/user/credentials/${serviceId}`, {
+      await fetch(`${serverURL}/api/user/credentials/${serviceId}`, {
         headers: {
           authorization: data,
         },

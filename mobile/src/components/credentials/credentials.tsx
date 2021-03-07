@@ -150,14 +150,11 @@ const Credentials: FC = () => {
       setGmailLoggedIn(false);
       const data = await getLocalStorage("@userToken");
       if (data) {
-        const response = await fetch(
-          "http://localhost:8080/api/user/credentials",
-          {
-            headers: {
-              authorization: data,
-            },
-          }
-        );
+        const response = await fetch(`${serverURL}/api/user/credentials`, {
+          headers: {
+            authorization: data,
+          },
+        });
         const json = await response.json();
         if (json && json.data) {
           console.log(json.data);
