@@ -13,7 +13,7 @@ type Credentials = {
 };
 
 export class ThreadMessageNewNode extends IntervalNode<Parameters, Message> {
-  readonly id: string = "thread-message-new";
+  readonly id: string = "yammer-thread-message-new";
   readonly name: string = "Thread Message New";
   readonly description: string = "No description";
   readonly label: string = "action";

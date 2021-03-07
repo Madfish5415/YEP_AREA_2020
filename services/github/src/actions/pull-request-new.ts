@@ -14,7 +14,7 @@ type Credentials = {
 };
 
 export class PullRequestNewNode extends IntervalNode<Parameters, PullRequest> {
-  readonly id: string = "pull-request-new";
+  readonly id: string = "github-pull-request-new";
   readonly name: string = "Pull Request New";
   readonly description: string = "No description";
   readonly label: string = "action";

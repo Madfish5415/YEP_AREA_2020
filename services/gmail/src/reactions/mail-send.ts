@@ -13,11 +13,7 @@ type Credentials = {
   accessToken: string;
 };
 
-const mailCreateRaw = (
-  to: string,
-  subject: string,
-  body: string
-) => {
+const mailCreateRaw = (to: string, subject: string, body: string) => {
   const str = [
     'Content-Type: text/plain; charset="UTF-8"\n',
     "MIME-Version: 1.0\n",
@@ -34,7 +30,7 @@ const mailCreateRaw = (
 };
 
 export class MailSendNode extends BaseNode<Parameters, void> {
-  readonly id: string = "mail-send";
+  readonly id: string = "gmail-mail-send";
   readonly name: string = "Mail Send";
   readonly description: string = "No description";
   readonly label: string = "reaction";

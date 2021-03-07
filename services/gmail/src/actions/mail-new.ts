@@ -9,7 +9,7 @@ type Credentials = {
 };
 
 export class MailNewNode extends IntervalNode<AnyObject, Mail> {
-  readonly id: string = "mail-new";
+  readonly id: string = "gmail-mail-new";
   readonly name: string = "Mail New";
   readonly description: string = "No description";
   readonly label: string = "action";

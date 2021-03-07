@@ -14,7 +14,7 @@ type Credentials = {
 };
 
 export class ModuleEndNode extends IntervalNode<Parameters, Module> {
-  readonly id: string = "module-end";
+  readonly id: string = "epitech-module-end";
   readonly name: string = "Module End";
   readonly description: string = "No description";
   readonly label: string = "action";

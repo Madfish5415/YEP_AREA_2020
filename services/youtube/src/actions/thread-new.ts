@@ -13,7 +13,7 @@ type Credentials = {
 };
 
 export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
-  readonly id: string = "thread-new";
+  readonly id: string = "youtube-thread-new";
   readonly name: string = "Thread New";
   readonly description: string = "No description";
   readonly label: string = "action";

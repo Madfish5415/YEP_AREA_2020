@@ -16,7 +16,7 @@ type Credentials = {
 };
 
 export class ActivityRegisterNode extends BaseNode<Parameters, void> {
-  readonly id: string = "activity-register";
+  readonly id: string = "epitech-activity-register";
   readonly name: string = "Activity Register";
   readonly description: string = "No description";
   readonly label: string = "reaction";

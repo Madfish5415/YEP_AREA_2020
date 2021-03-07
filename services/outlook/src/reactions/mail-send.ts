@@ -13,7 +13,7 @@ type Credentials = {
 };
 
 export class MailSendNode extends BaseNode<Parameters, void> {
-  readonly id: string = "mail-send";
+  readonly id: string = "outlook-mail-send";
   readonly name: string = "Mail Send";
   readonly description: string = "No description";
   readonly label: string = "reaction";

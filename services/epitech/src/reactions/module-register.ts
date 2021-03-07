@@ -15,7 +15,7 @@ type Credentials = {
 };
 
 export class ModuleRegisterNode extends BaseNode<Parameters, void> {
-  readonly id: string = "module-register";
+  readonly id: string = "epitech-module-register";
   readonly name: string = "Module Register";
   readonly description: string = "No description";
   readonly label: string = "reaction";

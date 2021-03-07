@@ -13,7 +13,7 @@ type Credentials = {
 };
 
 export class VideoNewNode extends IntervalNode<Parameters, Video> {
-  readonly id: string = "video-new";
+  readonly id: string = "youtube-video-new";
   readonly name: string = "Video New";
   readonly description: string = "No description";
   readonly label: string = "action";
