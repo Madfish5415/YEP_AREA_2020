@@ -1,9 +1,6 @@
 name: Server Pull Request
 
-on:
-  pull_request:
-    paths:
-      - "server/**"
+on: pull_request
 
 jobs:
 

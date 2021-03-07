@@ -94,6 +94,10 @@ yarn build:android
 
 **iOS**:
 
+>:warning: **First time ?**  
+> Before executing the command, you'll need to launch the AREA project (mobile/ios/AREA.xcodeproj) in Xcode and do the request changes:
+> - Set a development team in the AREA project.
+> - Change the Bundle Identifier to a unique one.  
 ```shell
 yarn build:ios
 ```

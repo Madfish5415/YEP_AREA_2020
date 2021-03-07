@@ -3,6 +3,8 @@
 
 # Except
 !common/
+!services/
+!packages/
 !server/
 !mobile/
 !web/

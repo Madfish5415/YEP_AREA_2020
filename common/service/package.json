@@ -1,0 +1,23 @@
+{
+  "name": "@area-common/service",
+  "version": "1.0.0",
+  "description": "Service development kit for AREA",
+  "license": "MIT",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "typings": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "fclean": "rm -rf build node_modules/"
+  },
+  "dependencies": {
+    "@area-common/patterns": "*"
+  },
+  "devDependencies": {
+    "@area-common/types": "*",
+    "@types/node": "^14.14.28",
+    "@types/passport-oauth1": "*",
+    "@types/passport-oauth2": "^1.4.10"
+  }
+}

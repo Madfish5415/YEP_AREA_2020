@@ -1,0 +1,19 @@
+{
+  "name": "@area-service/conditions",
+  "version": "1.0.0",
+  "description": "Conditions service for AREA",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "typings": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build/",
+    "fclean": "yarn clean && rm -rf node_modules/"
+  },
+  "dependencies": {
+    "@area-common/service": "*"
+  },
+  "devDependencies": {
+    "@area-common/types": "*"
+  }
+}
