@@ -12,11 +12,7 @@ import {
 } from "@area-common/blocs";
 import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
-import {
-  List,
-  makeStyles,
-  Theme,
-} from "@material-ui/core";
+import { List, makeStyles, Theme } from "@material-ui/core";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
