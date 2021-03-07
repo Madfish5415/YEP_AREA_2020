@@ -12,7 +12,8 @@ import {
   Typography,
   withStyles,
 } from "@material-ui/core";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
@@ -101,7 +102,20 @@ type Props = {
 };
 
 const ServiceLine: FC<Props> = (props) => {
+  const router = useRouter();
+  let token = "";
   const classes = useStyles();
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+    }
+  });
 
   const serviceLogIn = async () => {
     console.log("Try to log in user");
@@ -124,8 +138,16 @@ const ServiceLine: FC<Props> = (props) => {
     });
   };
 
-  const serviceLogOut = () => {
-    console.log("Try to log out user");
+  const serviceLogOut = async () => {
+    await fetch(
+      `http://localhost:8080/api/user/credentials/${props.serviceId}`,
+      {
+        headers: {
+          authorization: token,
+        },
+        method: "DELETE",
+      }
+    );
   };
 
   return (
