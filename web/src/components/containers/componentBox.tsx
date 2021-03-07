@@ -1,13 +1,12 @@
-import React, { FC, useState } from "react";
+import { gray, primary } from "@area-common/styles";
 import {
+  Box,
   createStyles,
   makeStyles,
   Theme,
   Typography,
-  Box,
 } from "@material-ui/core";
-import { gray, primary, secondary } from "@area-common/styles";
-import { BorderStyle } from "@material-ui/icons";
+import React, { FC } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     boxTitle: {
       textAlign: "center",
       fontSize: 20,
+      color: gray.main,
     },
   })
 );

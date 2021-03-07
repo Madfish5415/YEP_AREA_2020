@@ -43,7 +43,11 @@ export const OperatorSection: FC<Props> = (props) => {
             />
           ))
         : null}
-      <NewWidget widget={"operator"} />
+      <NewWidget
+        widget={"operator"}
+        updateWorkflow={props.callback}
+        workflow={props.workflow}
+      />
     </ScrollView>
   );
 };
