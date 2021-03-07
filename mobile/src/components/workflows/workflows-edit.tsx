@@ -32,7 +32,7 @@ const WorkflowsEditScreen: FC = () => {
   const { navigate } = useNavigation();
   const [token, setToken] = useState<string>("");
   const workflowsBloc = new WorkflowBloc(
-    new WorkflowRepository("http://localhost:8080")
+    new WorkflowRepository(globalThis.serverURL)
   );
   useIsFocused();
   getLocalStorage("@userToken")

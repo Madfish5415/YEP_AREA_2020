@@ -69,7 +69,7 @@ const ReactionNodeScreen: FC<ActionNodeProps> = (props) => {
   const { workflow, updateWorkflow, node } = props.route.params;
   let token = "";
   const credentialBloc = new CredentialBloc(
-    new CredentialRepository("http://localhost:8080")
+    new CredentialRepository(globalThis.serverURL)
   );
   getLocalStorage("@userToken")
     .then((data) => {
@@ -82,7 +82,7 @@ const ReactionNodeScreen: FC<ActionNodeProps> = (props) => {
   credentialBloc.add(new CredentialListEvent(token));
 
   const serviceBloc = new ServiceBloc(
-    new ServiceRepository("http://localhost:8080")
+    new ServiceRepository(globalThis.serverURL)
   );
   serviceBloc.add(new ServiceListEvent());
 

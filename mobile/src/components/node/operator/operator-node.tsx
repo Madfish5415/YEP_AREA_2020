@@ -65,7 +65,7 @@ const OperatorNodeScreen: FC<OperatorNodeProps> = (props) => {
   const { workflow, updateWorkflow, node } = props.route.params;
 
   const serviceBloc = new ServiceBloc(
-    new ServiceRepository("http://localhost:8080")
+    new ServiceRepository(globalThis.serverURL)
   );
   serviceBloc.add(new ServiceListEvent());
 

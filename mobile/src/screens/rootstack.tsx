@@ -97,7 +97,9 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"ReactionNode"}
             component={ReactionNodeStack}
-
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name={"AccountSecurity"}
             component={AccountSecurityStack}
             options={{ headerShown: false }}

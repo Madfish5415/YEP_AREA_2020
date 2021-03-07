@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 const AdminBoardBloc: FC = () => {
   const { navigate } = useNavigation();
   const adminUserBloc = new AdminUserBloc(
-    new AdminUserRepository("http://localhost:8080")
+    new AdminUserRepository(globalThis.serverURL)
   );
 
   getLocalStorage("@userToken")
