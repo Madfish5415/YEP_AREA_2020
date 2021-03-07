@@ -33,9 +33,9 @@ import { v4 as uuidv4 } from "uuid";
 import { SaveButton } from "../../common/save-button";
 import { ParametersItem } from "../../common/parameters-item";
 import { NodeServiceAlert } from "../../common/node-service-alert";
-import DropDownPicker from "react-native-dropdown-picker";
 import { gray, white } from "@area-common/styles";
 
+// file deepcode ignore CollectionUpdatedButNeverQueried: no explicit call to reactionsTypes
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -206,7 +206,7 @@ const ReactionNode: FC<Props> = (props) => {
           <NodeItem
             key={reactionsType.id}
             node={reactionsType}
-            isConnected={true /*props.credentials.includes(serviceId)*/}
+            isConnected={props.credentials.includes(serviceId)}
             selected={reactionNode.nodeId === reactionsType.id}
             serviceId={serviceId}
             setNode={setReactionNode}

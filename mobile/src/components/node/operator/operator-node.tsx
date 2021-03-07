@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { RouteProp } from "@react-navigation/native";
-import { ActionNodeStackParamsList } from "../../../screens/action-node";
 import {
   StyleSheet,
   ScrollView,
@@ -12,12 +11,6 @@ import {
 import { SectionTitle } from "../../common/section-title";
 import { CustomTextInput } from "../../common/text-input";
 import {
-  CredentialBloc,
-  CredentialErrorState,
-  CredentialListEvent,
-  CredentialListState,
-  CredentialRepository,
-  CredentialState,
   ServiceBloc,
   ServiceErrorState,
   ServiceListEvent,
@@ -37,6 +30,8 @@ import { NodeServiceAlert } from "../../common/node-service-alert";
 import { gray, white } from "@area-common/styles";
 import { OperatorNodeStackParamsList } from "../../../screens/operator-node";
 import { CustomDropDownPicker } from "../../common/dropdown-picker";
+
+// file deepcode ignore CollectionUpdatedButNeverQueried: no explicit call to operatorsTypes
 
 const styles = StyleSheet.create({
   container: {

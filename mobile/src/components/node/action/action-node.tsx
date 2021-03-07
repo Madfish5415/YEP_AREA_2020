@@ -37,6 +37,7 @@ import { ParametersItem } from "../../common/parameters-item";
 import { NodeServiceAlert } from "../../common/node-service-alert";
 import { CustomDropDownPicker } from "../../common/dropdown-picker";
 
+// file deepcode ignore CollectionUpdatedButNeverQueried: no explicit call to actionsTypes
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
@@ -209,7 +210,7 @@ const ActionNode: FC<Props> = (props) => {
             <NodeItem
               key={actionsType.id}
               node={actionsType}
-              isConnected={true /*props.credentials.includes(serviceId)*/}
+              isConnected={props.credentials.includes(serviceId)}
               selected={actionNode.nodeId === actionsType.id}
               serviceId={serviceId}
               setNode={setActionNode}
