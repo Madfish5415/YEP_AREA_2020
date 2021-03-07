@@ -9,11 +9,11 @@ import {
   AccountUpdateState,
 } from "@area-common/blocs";
 import {gray, primary, white} from "@area-common/styles";
-import {Account, StatusError,User} from "@area-common/types";
+import {Account, StatusError, User} from "@area-common/types";
 import {BlocBuilder} from "@felangel/react-bloc";
-import {Button,makeStyles, Theme, Typography} from "@material-ui/core";
+import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useRouter} from "next/router";
-import React, {FC, useEffect,useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {v4 as uuidv4} from "uuid";
 
 import {DefaultState} from "../blocbuilder/default-state";
@@ -109,49 +109,47 @@ const AccountSecurity: FC<Props> = (props) => {
               />
             );
           }
-        return <ErrorState error={state.error}/>;
+          return <ErrorState error={state.error}/>;
         }
         if (state instanceof AccountReadState) {
-        return (
+          return (
             <
-          AccountSecurityComponent
-          user = {props.user}
-          updateUser = {props.updateUser}
-          account = {(state as AccountReadState).account
+              AccountSecurityComponent
+              user={props.user}
+              updateUser={props.updateUser}
+              account={(state as AccountReadState).account
+              }
+              updateAccount={updateAccount}
+            />
+          );
         }
-          updateAccount = {updateAccount}
-          />
-        );
+        return <DefaultState/>;
       }
-return <DefaultState/>;
-}
-}
-/>
-)
-;
+      }
+    />
+  )
+    ;
 };
 
 type ComponentProps =
-{
-  user: User;
-  updateUser: (user: Partial<User>) => void;
-  account: Account;
-  updateAccount: (account: Partial<Account>) => void;
-};
+  {
+    user: User;
+    updateUser: (user: Partial<User>) => void;
+    account: Account;
+    updateAccount: (account: Partial<Account>) => void;
+  };
 
 const AccountSecurityComponent: FC<ComponentProps> = (props) => {
-const classes = useStyles();
-const [newPassword, setNewPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
+  const classes = useStyles();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState(props.account.email);
 
-const handlePasswordChange = () => {
-if (newPassword !== "" && newPassword === confirmPassword) {
-console.log("new password ", newPassword);
-      // props.updateAccount({
-      //   email: props.account.email,
-      //   password: newPassword,
-      // });
-    }
+  const handlePasswordChange = () => {
+    console.log("new password ", newPassword);
+    props.updateAccount({
+      email: email,
+    });
   };
 
   return (
@@ -160,7 +158,10 @@ console.log("new password ", newPassword);
         <Typography className={classes.partTitle}>Account security</Typography>
         <div className={classes.accountInfo}>
           <Typography className={classes.inputTitle}>Email</Typography>
-          <SettingsTextInput value={props.account.email} disabled />
+          <SettingsTextInput
+            value={email}
+            onChange={setEmail}
+          />
         </div>
         <div className={classes.accountInfo}>
           <Typography className={classes.inputTitle}>New password</Typography>
@@ -168,6 +169,7 @@ console.log("new password ", newPassword);
             value={newPassword}
             onChange={setNewPassword}
             password
+            disabled
           />
         </div>
         <div className={classes.accountInfo}>
@@ -178,6 +180,7 @@ console.log("new password ", newPassword);
             value={confirmPassword}
             onChange={setConfirmPassword}
             password
+            disabled
           />
         </div>
         <Typography
@@ -187,7 +190,7 @@ console.log("new password ", newPassword);
           className={classes.passwordButton}
           onClick={handlePasswordChange}
         >
-          Update password
+          Update Account
         </Button>
       </div>
     </>
