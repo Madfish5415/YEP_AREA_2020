@@ -124,8 +124,6 @@ const ServiceLine: FC<Props> = (props) => {
   });
 
   const serviceLogIn = async () => {
-    console.log("Try to log in user");
-
     return new Promise<void>((resolve, reject) => {
       const cbUrl = `http://localhost:8081/authentication/services/${props.serviceId}`;
       const url = `http://localhost:8080/api/authentication/services/${props.serviceId}`;
