@@ -138,7 +138,7 @@ const ServiceLine: FC<Props> = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          autologin: props.autologin,
+          autologin: props.autologinLink,
         }),
       }
     );

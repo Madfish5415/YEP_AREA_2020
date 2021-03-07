@@ -6,7 +6,7 @@ export function runnerEvaluateExpression(
   parameters: AnyObject,
   expression: string
 ): string {
-  const matchesArr = expression.matchAll(expressionRegex);
+  const matchesArr = `${expression}`.matchAll(expressionRegex);
 
   for (const matches of matchesArr) {
     expression = expression.replace(
