@@ -94,7 +94,7 @@ type Props = {
   serviceId: string;
   label: string;
   children: React.ReactNode;
-  registered?: boolean;
+  registered: boolean;
   autologin?: boolean;
   autologinLink?: string;
   setAutologinLink?: React.Dispatch<React.SetStateAction<string>>;

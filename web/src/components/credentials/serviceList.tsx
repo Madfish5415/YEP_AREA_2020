@@ -145,15 +145,14 @@ const ServiceListComponent: FC<Props> = (props) => {
   ]);
 
   const findIfRegistered = (serviceId: string) => {
+    let registered = false;
     props.credentials.forEach((credential) => {
-      if (credential === serviceId + "-service") {
-        return true;
+      if (credential === serviceId) {
+        registered = true;
       }
     });
-    return false;
+    return registered;
   };
-
-  console.log("this is credentials :", props.credentials);
 
   return (
     <>
