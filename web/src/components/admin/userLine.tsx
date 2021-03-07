@@ -9,7 +9,7 @@ import {
   AdminAccountUpdateState,
 } from "@area-common/blocs";
 import { gray, primary, white } from "@area-common/styles";
-import { Account,User } from "@area-common/types";
+import { Account, User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import {
   Button,
@@ -21,7 +21,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { useRouter } from "next/router";
-import React, { FC, useEffect,useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { DefaultState } from "../blocbuilder/default-state";
