@@ -1,5 +1,4 @@
-export abstract class ServiceEvent {
-}
+export abstract class ServiceEvent {}
 
 export class ServiceReadEvent extends ServiceEvent {
   id: string;
