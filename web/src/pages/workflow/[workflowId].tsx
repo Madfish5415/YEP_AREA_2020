@@ -1,35 +1,32 @@
-import React, { FC, useState, useEffect } from "react";
-import AppBarComponent from "../../components/appbar/appbar";
-import {
-  makeStyles,
-  withStyles,
-  TextField,
-  Theme,
-  Fab,
-  Typography,
-  Button,
-  Box,
-} from "@material-ui/core";
 import {
   WorkflowBloc,
-  WorkflowDeleteEvent,
-  WorkflowDeleteState,
   WorkflowErrorState,
   WorkflowReadEvent,
   WorkflowReadState,
-  WorkflowUpdateEvent,
-  WorkflowUpdateState,
   WorkflowRepository,
   WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
-import { DefaultState } from "../../components/blocbuilder/default-state";
-import { ErrorState } from "../../components/blocbuilder/error-state";
+import {gray, primary} from "@area-common/styles";
+import {Workflow} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {
+  Box,
+  Button,
+  makeStyles,
+  TextField,
+  Theme,
+  withStyles,
+} from "@material-ui/core";
+import {useRouter} from "next/router";
+import React, {FC, useEffect, useState} from "react";
+import {v4 as uuidv4} from "uuid";
+
+import AppBarComponent from "../../components/appbar/appbar";
+import {DefaultState} from "../../components/blocbuilder/default-state";
+import {ErrorState} from "../../components/blocbuilder/error-state";
 import WorkflowConfigDialog from "../../components/workflow/workflowConfigDialog";
-import { Workflow } from "@area-common/types";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
-import { gray, primary } from "@area-common/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -71,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const WorkflowPage: FC = () => {
   const router = useRouter();
   let token = "";
-  const { workflowId } = router.query;
+  const {workflowId} = router.query;
   const workflowBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
@@ -109,7 +106,7 @@ const WorkflowPage: FC = () => {
       }}
       builder={(state: WorkflowState) => {
         if (state instanceof WorkflowErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error}/>;
         }
         if (state instanceof WorkflowReadState) {
           return (
@@ -119,7 +116,7 @@ const WorkflowPage: FC = () => {
             />
           );
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
@@ -148,6 +145,8 @@ const WorkflowEdit: FC<Props> = (props) => {
   const classes = useStyles();
   const [workflow, setWorkflow] = useState(props.workflow);
 
+  let name = workflow.name;
+
   const findBlobId: (id: string) => number = (id) => {
     return parseInt("0x" + id[id.length - 1]) % 10;
   };
@@ -155,16 +154,21 @@ const WorkflowEdit: FC<Props> = (props) => {
   const handleWorkflowNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setWorkflow({ ...workflow, name: event.target.value });
+    name = event.target.value;
   };
 
   const handleWorkflowChangeSubmit = () => {
-    props.changeCallback(props.workflow.id, workflow);
+    const tmpWorkflow: Workflow = {
+      ...workflow,
+      name: name
+    }
+
+    props.changeCallback(props.workflow.id, tmpWorkflow);
   };
 
   return (
     <>
-      <AppBarComponent />
+      <AppBarComponent/>
       <Box mb={5}>
         <div
           className={classes.root}
@@ -183,8 +187,8 @@ const WorkflowEdit: FC<Props> = (props) => {
               margin="normal"
               label=""
               className={classes.nameForm}
-              InputProps={{ className: classes.title }}
-              defaultValue={props.workflow.name}
+              InputProps={{className: classes.title}}
+              defaultValue={name}
               onChange={handleWorkflowNameChange}
             />
             <Button
@@ -194,7 +198,7 @@ const WorkflowEdit: FC<Props> = (props) => {
               Save
             </Button>
           </div>
-          <WorkflowConfigDialog workflow={workflow} setWorkflow={setWorkflow} />
+          <WorkflowConfigDialog workflow={workflow} setWorkflow={setWorkflow}/>
         </div>
       </Box>
     </>

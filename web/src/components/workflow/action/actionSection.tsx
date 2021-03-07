@@ -4,9 +4,6 @@ import React, {FC, useState} from "react";
 
 import AddBox from "../../containers/addBox";
 import ComponentBox from "../../containers/componentBox";
-import AddActionDialog from "./addActionDialog";
-import UpdateActionDialog from "./updateActionDialog";
-import EditNode from "../edit/editNode";
 import EditNodeBuilder from "../edit/editNode";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,33 +19,31 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
-type ContainerProps = {
-  workflow: Workflow;
-  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  action: WorkflowNode;
-};
-
 const ActionSection: FC<Props> = (props) => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
-  const actionNodes = props.workflow.nodes.filter(
-    (node) => node.label === "action"
-  );
+  const [refresh, setRefresh] = useState(false);
 
   return (
     <>
       <div className={classes.content}>
-        {actionNodes.map((node: WorkflowNode) => {
+        {props.workflow.nodes.filter(
+          (node) => node.label === "action"
+        ).map((node: WorkflowNode) => {
           return (
             <ActionContainer
               key={node.id}
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
               action={node}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
           );
         })}
-        {actionNodes.length === 0 && (
+        {props.workflow.nodes.filter(
+          (node) => node.label === "action"
+        ).length === 0 && (
           <>
             <div onClick={() => setIsOpen(true)}>
               <AddBox label={"action"}/>
@@ -58,13 +53,23 @@ const ActionSection: FC<Props> = (props) => {
               setWorkflow={props.setWorkflow}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
-              isAction={true}
+              nodeType={"action"}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
           </>
         )}
       </div>
     </>
   );
+};
+
+type ContainerProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  action: WorkflowNode;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ActionContainer: FC<ContainerProps> = (props) => {
@@ -75,12 +80,15 @@ const ActionContainer: FC<ContainerProps> = (props) => {
       <div onClick={() => setIsOpen(true)}>
         <ComponentBox label={props.action.name}/>
       </div>
-      <UpdateActionDialog
-        action={props.action}
+      <EditNodeBuilder
         workflow={props.workflow}
         setWorkflow={props.setWorkflow}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        refresh={props.refresh}
+        setRefresh={props.setRefresh}
+        nodeType={"action"}
+        currentNode={props.action}
       />
     </>
   );

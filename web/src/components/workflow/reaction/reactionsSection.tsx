@@ -4,8 +4,7 @@ import React, { FC, useState } from "react";
 
 import AddBox from "../../containers/addBox";
 import ComponentBox from "../../containers/componentBox";
-import AddReactionDialog from "./addReactionDialog";
-import UpdateReaction from "./updateReaction";
+import EditNodeBuilder from "../edit/editNode";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,44 +19,51 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
-type ContainerProps = {
-  workflow: Workflow;
-  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  reaction: WorkflowNode;
-};
-
 const ReactionsSection: FC<Props> = (props) => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
-  const reactionNodes = props.workflow.nodes.filter(
-    (node) => node.label === "reaction"
-  );
+  const [refresh, setRefresh] = useState(false);
 
   return (
     <>
       <div className={classes.content}>
-        {reactionNodes.map((node: WorkflowNode) => {
+        {props.workflow.nodes.filter(
+          (node) => node.label === "reaction"
+        ).map((node: WorkflowNode) => {
           return (
             <ReactionContainer
               key={node.id}
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
               reaction={node}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
           );
         })}
         <div onClick={() => setIsOpen(true)}>
           <AddBox label={"reaction"} />
         </div>
-        <AddReactionDialog
+        <EditNodeBuilder
           workflow={props.workflow}
           setWorkflow={props.setWorkflow}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          nodeType={"reaction"}
         />
       </div>
     </>
   );
+};
+
+type ContainerProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  reaction: WorkflowNode;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ReactionContainer: FC<ContainerProps> = (props) => {
@@ -68,12 +74,15 @@ const ReactionContainer: FC<ContainerProps> = (props) => {
       <div onClick={() => setIsOpen(true)}>
         <ComponentBox label={props.reaction.name} />
       </div>
-      <UpdateReaction
-        reaction={props.reaction}
+      <EditNodeBuilder
         workflow={props.workflow}
         setWorkflow={props.setWorkflow}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        refresh={props.refresh}
+        setRefresh={props.setRefresh}
+        nodeType={"reaction"}
+        currentNode={props.reaction}
       />
     </>
   );

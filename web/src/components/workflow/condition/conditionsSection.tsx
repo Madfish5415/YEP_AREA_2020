@@ -4,8 +4,7 @@ import React, { FC, useState } from "react";
 
 import AddBox from "../../containers/addBox";
 import ComponentBox from "../../containers/componentBox";
-import AddConditionDialog from "./addConditionDialog";
-import UpdateConditionDialog from "./updateConditionDialog";
+import EditNodeBuilder from "../edit/editNode";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,44 +19,51 @@ type Props = {
   setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
 };
 
-type ContainerProps = {
-  workflow: Workflow;
-  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
-  execution: WorkflowNode;
-};
-
 const ConditionsSection: FC<Props> = (props) => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
-  const conditionNodes = props.workflow.nodes.filter(
-    (node) => node.label !== "action" && node.label !== "reaction"
-  );
-
+  const [refresh, setRefresh] = useState(false);
+  
   return (
     <>
       <div className={classes.content}>
-        {conditionNodes.map((node: WorkflowNode) => {
+        {props.workflow.nodes.filter(
+          (node) => node.label !== "action" && node.label !== "reaction"
+        ).map((node: WorkflowNode) => {
           return (
             <ConditionContainer
               key={node.id}
               workflow={props.workflow}
               setWorkflow={props.setWorkflow}
               execution={node}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
           );
         })}
         <div onClick={() => setIsOpen(true)}>
           <AddBox label={"condition"} />
         </div>
-        <AddConditionDialog
+        <EditNodeBuilder
           workflow={props.workflow}
           setWorkflow={props.setWorkflow}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          nodeType={"other"}
         />
       </div>
     </>
   );
+};
+
+type ContainerProps = {
+  workflow: Workflow;
+  setWorkflow: React.Dispatch<React.SetStateAction<Workflow>>;
+  execution: WorkflowNode;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ConditionContainer: FC<ContainerProps> = (props) => {
@@ -68,12 +74,15 @@ const ConditionContainer: FC<ContainerProps> = (props) => {
       <div onClick={() => setIsOpen(true)}>
         <ComponentBox label={props.execution.name} />
       </div>
-      <UpdateConditionDialog
-        execution={props.execution}
+      <EditNodeBuilder
         workflow={props.workflow}
         setWorkflow={props.setWorkflow}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        refresh={props.refresh}
+        setRefresh={props.setRefresh}
+        nodeType={"other"}
+        currentNode={props.execution}
       />
     </>
   );

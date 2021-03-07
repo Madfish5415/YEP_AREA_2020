@@ -1,6 +1,7 @@
+import {StatusError} from "@area-common/types";
 import {Box, makeStyles, Theme} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
-import React, { FC } from "react";
+import React, {FC} from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -8,15 +9,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    width: "40%",
+    width: "100%",
   },
   alert: {
     margin: "1rem 0",
+    width: "40%",
   },
 }));
 
 type Props = {
-  errorLabel: string;
+  error: StatusError;
 };
 
 export const ErrorState: FC<Props> = (props) => {
@@ -25,8 +27,8 @@ export const ErrorState: FC<Props> = (props) => {
   return (
     <Box className={classes.container}>
       <Alert severity="error" className={classes.alert}>
-        {props.errorLabel}
+        {props.error.code + " " + props.error.message}
       </Alert>
     </Box>
   );
-};
+}
