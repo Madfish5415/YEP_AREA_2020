@@ -27,6 +27,9 @@ import { v4 as uuidv4 } from "uuid";
 import { ErrorState } from "../../components/blocbuilder/error-state";
 import { DefaultState } from "../blocbuilder/default-state";
 import TwitterIcon from "@material-ui/icons/Twitter";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+import { FaDiscord, FaYammer } from "react-icons/fa";
+import { SiMicrosoftoutlook } from "react-icons/si";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
@@ -130,6 +133,14 @@ const ServiceListComponent: FC<Props> = (props) => {
   const iconMap = new Map([
     ["twitter", <TwitterIcon key={"twitter"} className={classes.icon} />],
     ["github", <GitHubIcon key={"github"} className={classes.icon} />],
+    ["epitech", <ExplicitIcon key={"epitech"} className={classes.icon} />],
+    ["youtube", <YouTubeIcon key={"youtube"} className={classes.icon} />],
+    ["discord", <FaDiscord key={"discord"} className={classes.icon} />],
+    [
+      "outlook",
+      <SiMicrosoftoutlook key={"outlook"} className={classes.icon} />,
+    ],
+    ["yammer", <FaYammer key={"yammer"} className={classes.icon} />],
   ]);
 
   console.log("this is credentials :", props.credentials);
@@ -144,6 +155,30 @@ const ServiceListComponent: FC<Props> = (props) => {
             </ServiceLine>
           );
         })}
+        <ServiceLine key={"github"} label={"GitHub"}>
+          {iconMap.get("github")}
+        </ServiceLine>
+        <ServiceLine
+          key={"epitech"}
+          label={"Epitech"}
+          autologin
+          autologinLink={autologin}
+          setAutologinLink={setAutologin}
+        >
+          {iconMap.get("epitech")}
+        </ServiceLine>
+        <ServiceLine key={"youtube"} label={"YouTube"}>
+          {iconMap.get("youtube")}
+        </ServiceLine>
+        <ServiceLine key={"discord"} label={"Discord"}>
+          {iconMap.get("discord")}
+        </ServiceLine>
+        <ServiceLine key={"outlook"} label={"Outlook"}>
+          {iconMap.get("outlook")}
+        </ServiceLine>
+        <ServiceLine key={"yammer"} label={"Yammer"}>
+          {iconMap.get("yammer")}
+        </ServiceLine>
       </List>
     </>
   );
