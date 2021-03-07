@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textFieldContainer: {
     width: "75%",
+    display: "flex",
   },
 }));
 
@@ -123,6 +124,23 @@ const ServiceLine: FC<Props> = (props) => {
     }
   });
 
+  const handleEpitech = async () => {
+    await fetch(
+      `http://localhost:8080/api/authentication/services/epitech/provide`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          autologin: props.autologin,
+        }),
+      }
+    );
+    document.location.reload();
+  };
+
   const serviceLogIn = async () => {
     return new Promise<void>((resolve, reject) => {
       const cbUrl = `http://localhost:8081/authentication/services/${props.serviceId}`;
@@ -167,7 +185,11 @@ const ServiceLine: FC<Props> = (props) => {
             </Typography>
           </ListItemText>
           <ListItemSecondaryAction>
-            {props.autologin ? (
+            {props.registered ? (
+              <Button className={classes.logOutButton} onClick={serviceLogOut}>
+                Log out
+              </Button>
+            ) : props.autologin ? (
               <div className={classes.textFieldContainer}>
                 <CssTextField
                   id={props.label}
@@ -181,11 +203,10 @@ const ServiceLine: FC<Props> = (props) => {
                     >
                   ) => props.setAutologinLink!(event.target.value)}
                 />
+                <Button className={classes.logInButton} onClick={handleEpitech}>
+                  Log in
+                </Button>
               </div>
-            ) : props.registered ? (
-              <Button className={classes.logOutButton} onClick={serviceLogOut}>
-                Log out
-              </Button>
             ) : (
               <Button className={classes.logInButton} onClick={serviceLogIn}>
                 Log in
