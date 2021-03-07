@@ -17,6 +17,7 @@ type Props = {
   text: string | undefined;
   setText: (text: string) => void;
   defaultValue?: string;
+  onSubmitEditing?: any;
 };
 
 export const CustomTextInput: FC<Props> = (props) => {
@@ -27,6 +28,7 @@ export const CustomTextInput: FC<Props> = (props) => {
       onChangeText={props.setText}
       placeholderTextColor={gray.light3}
       placeholder={"..."}
+      onSubmitEditing={props.onSubmitEditing}
     />
   );
 };
