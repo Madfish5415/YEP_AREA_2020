@@ -1,25 +1,34 @@
-import React, { FC } from "react";
-import { makeStyles, Theme, Typography } from "@material-ui/core";
+import {StatusError} from "@area-common/types";
+import {Box, makeStyles, Theme} from "@material-ui/core";
+import {Alert} from "@material-ui/lab";
+import React, {FC} from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
+    display: "flex",
     justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    width: "100%",
+  },
+  alert: {
+    margin: "1rem 0",
+    width: "40%",
   },
 }));
 
 type Props = {
-  errorLabel: string;
+  error: StatusError;
 };
 
 export const ErrorState: FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <Typography>{props.errorLabel}</Typography>
-    </div>
+    <Box className={classes.container}>
+      <Alert severity="error" className={classes.alert}>
+        {props.error.code + " " + props.error.message}
+      </Alert>
+    </Box>
   );
-};
+}

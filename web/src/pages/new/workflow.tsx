@@ -1,42 +1,35 @@
-import React, { FC, useState, useEffect } from "react";
-import AppBarComponent from "../../components/appbar/appbar";
 import {
-  makeStyles,
-  withStyles,
-  Theme,
-  TextField,
-  Typography,
-  Grid,
-  Fab,
-} from "@material-ui/core";
-import {
-  WorkflowBloc,
-  WorkflowDeleteEvent,
-  WorkflowDeleteState,
-  WorkflowErrorState,
-  WorkflowReadEvent,
-  WorkflowReadState,
-  WorkflowUpdateEvent,
-  WorkflowUpdateState,
-  WorkflowRepository,
-  WorkflowState,
-  WorkflowCreateState,
-  WorkflowCreateEvent,
   UserBloc,
-  UserRepository,
-  UserReadState,
-  UserState,
   UserErrorState,
   UserReadEvent,
+  UserReadState,
+  UserRepository,
+  UserState,
+  WorkflowBloc,
+  WorkflowCreateEvent,
+  WorkflowCreateState,
+  WorkflowErrorState,
+  WorkflowRepository,
+  WorkflowState
 } from "@area-common/blocs";
-import { DefaultState } from "../../components/blocbuilder/default-state";
-import { ErrorState } from "../../components/blocbuilder/error-state";
-import { gray, primary } from "@area-common/styles";
-import { v4 as uuidv4 } from "uuid";
-import { Workflow, User } from "@area-common/types";
-import WorkflowConfig from "../../components/workflow/workflowConfig";
-import Router, { useRouter } from "next/router";
-import { BlocBuilder } from "@felangel/react-bloc";
+import {gray, primary} from "@area-common/styles";
+import {User,Workflow} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {
+  Button,
+  makeStyles,
+  TextField,
+  Theme,
+  withStyles,
+} from "@material-ui/core";
+import Router, {useRouter} from "next/router";
+import React, {FC, useEffect,useState} from "react";
+import {v4 as uuidv4} from "uuid";
+
+import AppBarComponent from "../../components/appbar/appbar";
+import {DefaultState} from "../../components/blocbuilder/default-state";
+import {ErrorState} from "../../components/blocbuilder/error-state";
+import WorkflowConfigDialog from "../../components/workflow/workflowConfigDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,21 +40,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 125,
     marginTop: 40,
   },
+  titleAndCreate: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  createButton: {
+    marginTop: 40,
+    marginRight: 30,
+    backgroundColor: primary.main,
+    color: "white",
+    fontSize: 19,
+    textTransform: "none",
+    height: 50,
+    maxWidth: 185,
+    minWidth: 185,
+    borderRadius: 50 / 2,
+    "&:hover": {
+      backgroundColor: primary.dark2,
+    },
+  },
   title: {
     color: primary.main,
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
-  },
-  saveButton: {
-    backgroundColor: primary.main,
-    fontWeight: "bold",
-    margin: "0px",
-    top: "auto",
-    right: "20px",
-    bottom: "20px",
-    left: "auto",
-    position: "fixed",
   },
 }));
 
@@ -112,9 +115,9 @@ const NewWorkflowPage: FC = () => {
       }}
       builder={(state: WorkflowState) => {
         if (state instanceof WorkflowErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error}/>;
         }
-        return <UserBlocComponent createCallback={handleWorkflowSubmit} />;
+        return <UserBlocComponent createCallback={handleWorkflowSubmit}/>;
       }}
     />
   );
@@ -147,7 +150,7 @@ const UserBlocComponent: FC<IntermediateProps> = (props) => {
       key={uuidv4()}
       builder={(state: UserState) => {
         if (state instanceof UserErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error}/>;
         }
         if (state instanceof UserReadState) {
           return (
@@ -157,7 +160,7 @@ const UserBlocComponent: FC<IntermediateProps> = (props) => {
             />
           );
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
@@ -179,6 +182,11 @@ const NewWorkflow: FC<Props> = (props) => {
     nodes: [],
     starters: [],
   });
+  let name = "Default Name";
+
+  useEffect(() => {
+    console.log("Workflow: " + JSON.stringify(newWorkflow));
+  }, [newWorkflow])
 
   const findBlobId: (id: string) => number = (id) => {
     return parseInt("0x" + id[id.length - 1]) % 10;
@@ -187,12 +195,12 @@ const NewWorkflow: FC<Props> = (props) => {
   const handleWorkflowNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setNewWorkflow({ ...newWorkflow, name: event.target.value });
+    name = event.target.value;
   };
 
   return (
     <>
-      <AppBarComponent />
+      <AppBarComponent/>
       <div
         className={classes.root}
         style={{
@@ -203,25 +211,35 @@ const NewWorkflow: FC<Props> = (props) => {
           backgroundSize: "75%",
         }}
       >
-        <CssTextField
-          id="workflowName"
-          name="name"
-          margin="normal"
-          label=""
-          placeholder="Workflow name"
-          className={classes.nameForm}
-          InputProps={{ className: classes.title }}
-          defaultValue={newWorkflow.name}
-          onChange={handleWorkflowNameChange}
-        />
-        <WorkflowConfig workflow={newWorkflow} setWorkflow={setNewWorkflow} />
-        <Fab
-          variant={"extended"}
-          className={classes.saveButton}
-          onClick={() => props.createCallback(newWorkflow)}
-        >
-          Create workflow
-        </Fab>
+        <div className={classes.titleAndCreate}>
+          <CssTextField
+            id="workflowName"
+            name="name"
+            margin="normal"
+            label=""
+            placeholder="Workflow name"
+            className={classes.nameForm}
+            InputProps={{className: classes.title}}
+            defaultValue={name}
+            onChange={handleWorkflowNameChange}
+          />
+          <Button
+            className={classes.createButton}
+            onClick={() => {
+              const tmpWorkflow: Workflow = {
+                ...newWorkflow,
+                name: name
+              }
+
+              console.log("Workflow: " + JSON.stringify(tmpWorkflow));
+
+              props.createCallback(tmpWorkflow);
+            }}
+          >
+            Create workflow
+          </Button>
+        </div>
+        <WorkflowConfigDialog workflow={newWorkflow} setWorkflow={setNewWorkflow}/>
       </div>
     </>
   );

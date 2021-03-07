@@ -1,25 +1,26 @@
-import React, { FC, useEffect } from "react";
-import AppBarComponent from "../components/appbar/appbar";
-import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
   UserBloc,
-  UserRepository,
-  UserState,
+  UserErrorState,
   UserReadEvent,
   UserReadState,
-  UserUpdateState,
+  UserRepository,
+  UserState,
   UserUpdateEvent,
-  UserErrorState,
+  UserUpdateState,
 } from "@area-common/blocs";
 import { gray, white } from "@area-common/styles";
-import { DefaultState } from "../components/blocbuilder/default-state";
-import { ErrorState } from "../components/blocbuilder/error-state";
-import SettingsInformation from "../components/settings/settingsInformation";
-import AccountSecurity from "../components/settings/accountSecurity";
 import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
+import { Button, makeStyles, Theme } from "@material-ui/core";
 import { useRouter } from "next/router";
+import React, { FC, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import AppBarComponent from "../components/appbar/appbar";
+import { DefaultState } from "../components/blocbuilder/default-state";
+import { ErrorState } from "../components/blocbuilder/error-state";
+import AccountSecurity from "../components/settings/accountSecurity";
+import SettingsInformation from "../components/settings/settingsInformation";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -94,7 +95,7 @@ const SettingsPage: FC = () => {
       }}
       builder={(state: UserState) => {
         if (state instanceof UserErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error} />;
         }
         if (state instanceof UserReadState) {
           return (
