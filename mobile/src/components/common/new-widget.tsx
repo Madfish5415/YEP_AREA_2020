@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import { gray, primary } from "@area-common/styles";
 import { useNavigation } from "@react-navigation/native";
+import { Workflow } from "@area-common/types";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,12 +22,45 @@ const styles = StyleSheet.create({
 
 type Props = {
   widget: string;
+  workflow: Workflow;
+  updateWorkflow: (workflow: Workflow) => void;
 };
 
 export const NewWidget: FC<Props> = (props) => {
   const { navigate } = useNavigation();
+
+  const navigateToEditNodePage = () => {
+    if (props.widget === "action") {
+      navigate("ActionNode", {
+        screen: "ActionNode",
+        params: {
+          workflow: props.workflow,
+          updateWorkflow: props.updateWorkflow,
+        },
+      });
+    }
+    if (props.widget === "operator") {
+      navigate("OperatorNode", {
+        screen: "OperatorNode",
+        params: {
+          workflow: props.workflow,
+          updateWorkflow: props.updateWorkflow,
+        },
+      });
+    }
+    if (props.widget === "reaction") {
+      navigate("ReactionNode", {
+        screen: "ReactionNode",
+        params: {
+          workflow: props.workflow,
+          updateWorkflow: props.updateWorkflow,
+        },
+      });
+    }
+  };
+
   return (
-    <TouchableOpacity style={styles.container} onPress={() => navigate("Home")}>
+    <TouchableOpacity style={styles.container} onPress={navigateToEditNodePage}>
       <Text style={[styles.text, { fontSize: 50 }]}>+</Text>
       <Text numberOfLines={1} style={[styles.text, { fontSize: 10 }]}>
         Add {props.widget}

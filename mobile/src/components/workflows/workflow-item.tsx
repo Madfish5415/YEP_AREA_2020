@@ -38,7 +38,10 @@ export const WorkflowItem: FC<Props> = (props) => {
         style={styles.switch}
         onValueChange={() => {
           setToggle(!toggle);
-          props.update(props.workflow, { active: !props.workflow.active });
+          props.update(props.workflow, {
+            ...props.workflow,
+            active: !props.workflow.active,
+          });
         }}
         value={toggle}
       />
