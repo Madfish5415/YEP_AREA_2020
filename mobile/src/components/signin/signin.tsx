@@ -127,8 +127,8 @@ const SignIn: FC<Props> = (props) => {
 
   return (
     <SafeAreaView>
-      <SettingsServer />
       <ScrollView>
+        <SettingsServer />
         <View style={styles.container}>
           <Title />
           {props.error ? (
