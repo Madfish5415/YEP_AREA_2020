@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   bottomGap: {
-    marginTop: 90,
+    marginTop: "35%",
     marginLeft: 125,
   },
   adminButton: {
