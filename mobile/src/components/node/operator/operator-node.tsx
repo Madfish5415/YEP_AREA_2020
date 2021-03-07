@@ -30,43 +30,43 @@ import { ErrorState } from "../../blocbuilder/error-state";
 import { DefaultState } from "../../blocbuilder/default-state";
 import { SingletonNode, Workflow, WorkflowNode } from "@area-common/types";
 import { NodeItem } from "../../common/node-item";
-import { getLocalStorage } from "../../../common/localStorage";
 import { v4 as uuidv4 } from "uuid";
 import { SaveButton } from "../../common/save-button";
 import { ParametersItem } from "../../common/parameters-item";
 import { NodeServiceAlert } from "../../common/node-service-alert";
+import { gray, white } from "@area-common/styles";
+import { OperatorNodeStackParamsList } from "../../../screens/operator-node";
 import { CustomDropDownPicker } from "../../common/dropdown-picker";
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
+  dropdownPickerContainer: {
+    width: "90%",
+    height: 30,
+  },
+  dropdownPickerStyle: {
+    borderColor: gray.light1,
+    backgroundColor: gray.light1,
+    color: white,
+  },
+  dropdownPickerLabel: {
+    color: gray.light3,
+  },
 });
 
 type ActionNodeScreenRouteParams = RouteProp<
-  ActionNodeStackParamsList,
-  "ActionNode"
+  OperatorNodeStackParamsList,
+  "OperatorNode"
 >;
 
-type ActionNodeProps = {
+type OperatorNodeProps = {
   route: ActionNodeScreenRouteParams;
 };
 
-const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
+const OperatorNodeScreen: FC<OperatorNodeProps> = (props) => {
   const { workflow, updateWorkflow, node } = props.route.params;
-  let token = "";
-  const credentialBloc = new CredentialBloc(
-    new CredentialRepository("http://localhost:8080")
-  );
-  getLocalStorage("@userToken")
-    .then((data) => {
-      if (data) {
-        token = data;
-        credentialBloc.add(new CredentialListEvent(data));
-      }
-    })
-    .catch((e) => console.log(e));
-  credentialBloc.add(new CredentialListEvent(token));
 
   const serviceBloc = new ServiceBloc(
     new ServiceRepository("http://localhost:8080")
@@ -75,42 +75,27 @@ const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
 
   return (
     <BlocBuilder
-      bloc={credentialBloc}
-      builder={(credentialState: CredentialState) => {
-        if (credentialState instanceof CredentialErrorState) {
+      bloc={serviceBloc}
+      builder={(serviceState: ServiceState) => {
+        if (serviceState instanceof ServiceErrorState) {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
-        if (credentialState instanceof CredentialListState) {
+        if (serviceState instanceof ServiceListState) {
+          const operatorsTypes: Map<string, SingletonNode[]> = new Map<
+            string,
+            SingletonNode[]
+          >();
+          serviceState.services.forEach((service) => {
+            if (service.id === "conditions") {
+              operatorsTypes.set(service.id, service.nodes);
+            }
+          });
           return (
-            <BlocBuilder
-              bloc={serviceBloc}
-              builder={(serviceState: ServiceState) => {
-                if (serviceState instanceof ServiceErrorState) {
-                  return <ErrorState errorLabel={"An error has occured"} />;
-                }
-                if (serviceState instanceof ServiceListState) {
-                  const actionsTypes: Map<string, SingletonNode[]> = new Map<
-                    string,
-                    SingletonNode[]
-                  >();
-                  serviceState.services.forEach((service) => {
-                    const nodes = service.nodes.filter(
-                      (node) => node.label === "action"
-                    );
-                    actionsTypes.set(service.id, nodes);
-                  });
-                  return (
-                    <ActionNode
-                      workflow={workflow}
-                      updateWorkflow={updateWorkflow}
-                      actionsTypes={actionsTypes}
-                      credentials={credentialState.credentials}
-                      node={node}
-                    />
-                  );
-                }
-                return <DefaultState />;
-              }}
+            <OperatorNode
+              workflow={workflow}
+              updateWorkflow={updateWorkflow}
+              operatorsTypes={operatorsTypes}
+              node={node}
             />
           );
         }
@@ -123,20 +108,19 @@ const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
 type Props = {
   workflow: Workflow;
   updateWorkflow: (workflow: Workflow) => void;
-  actionsTypes: Map<string, SingletonNode[]>;
-  credentials: string[];
+  operatorsTypes: Map<string, SingletonNode[]>;
   node?: WorkflowNode;
 };
 
 const { height } = Dimensions.get("window");
 
-const ActionNode: FC<Props> = (props) => {
+const OperatorNode: FC<Props> = (props) => {
   const [screenHeight, setScreenHeight] = useState(0);
   const [nodeName, setNodeName] = useState<string>(
-    props.node ? props.node.name : "Action"
+    props.node ? props.node.name : "Operator"
   );
   const [nextNode, setNextNode] = useState(props.node?.nextNodes?.[0] || "");
-  const [actionNode, setActionNode] = useState<Partial<WorkflowNode>>(
+  const [operatorNode, setOperatorNode] = useState<Partial<WorkflowNode>>(
     props.node
       ? props.node
       : {
@@ -144,7 +128,7 @@ const ActionNode: FC<Props> = (props) => {
           serviceId: undefined,
           nodeId: undefined,
           name: undefined,
-          label: "action",
+          label: "condition",
           parameters: undefined,
           condition: "true",
           nextNodes: [],
@@ -157,28 +141,28 @@ const ActionNode: FC<Props> = (props) => {
   const scrollEnabled = screenHeight > height - 180;
 
   const saveNode = () => {
-    if (actionNode.nodeId === undefined) {
+    if (operatorNode.nodeId === undefined) {
       NodeServiceAlert();
     } else {
-      const newActionNode = {
-        ...actionNode,
+      const newOperatorNode = {
+        ...operatorNode,
         name: nodeName,
         nextNodes: [nextNode],
       };
       const index = props.workflow.nodes.findIndex(
-        (node) => node.id === actionNode.id
+        (node) => node.id === operatorNode.id
       );
       if (index !== -1) {
         const newWorkflow = props.workflow;
         newWorkflow.nodes[index] = {
           ...newWorkflow.nodes[index],
-          ...newActionNode,
+          ...newOperatorNode,
         };
         props.updateWorkflow(newWorkflow);
       } else {
         props.updateWorkflow({
           ...props.workflow,
-          nodes: [...props.workflow.nodes, newActionNode as WorkflowNode],
+          nodes: [...props.workflow.nodes, newOperatorNode as WorkflowNode],
         });
       }
     }
@@ -188,10 +172,10 @@ const ActionNode: FC<Props> = (props) => {
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
     const newNode = {
-      ...actionNode,
+      ...operatorNode,
       condition: e.nativeEvent.text,
     };
-    setActionNode(newNode);
+    setOperatorNode(newNode);
   };
 
   return (
@@ -201,43 +185,44 @@ const ActionNode: FC<Props> = (props) => {
         scrollEnabled={scrollEnabled}
         onContentSizeChange={onContentSizeChange}
       >
-        <SectionTitle label={"Action name"} style={{ marginTop: 10 }} />
+        <SectionTitle label={"Operator's name"} style={{ marginTop: 10 }} />
         <CustomTextInput text={nodeName} setText={setNodeName} />
-        <SectionTitle label={"Actions"} style={{ marginTop: 20 }} />
-        {Array.from(props.actionsTypes).map(([serviceId, actionsTypeList]) =>
-          actionsTypeList.map((actionsType) => (
+        <SectionTitle label={"Operators"} style={{ marginTop: 20 }} />
+        {Array.from(
+          props.operatorsTypes
+        ).map(([serviceId, operatorsTypeList]) =>
+          operatorsTypeList.map((operatorsType) => (
             <NodeItem
-              key={actionsType.id}
-              node={actionsType}
-              isConnected={true /*props.credentials.includes(serviceId)*/}
-              selected={actionNode.nodeId === actionsType.id}
+              key={operatorsType.id}
+              node={operatorsType}
+              isConnected={true}
+              selected={operatorNode.nodeId === operatorsType.id}
               serviceId={serviceId}
-              setNode={setActionNode}
-              currentNode={actionNode}
+              setNode={setOperatorNode}
+              currentNode={operatorNode}
             />
           ))
         )}
-        <SectionTitle label={"Link"} style={{ marginTop: 50 }} />
+        <SectionTitle label={"Link"} style={{ marginTop: 30 }} />
         <CustomDropDownPicker
           workflow={props.workflow}
-          node={props.node}
           nextNode={nextNode}
           setNextNode={setNextNode}
         />
-        {actionNode.nodeId !== undefined ? (
-          <SectionTitle label={"Parameters"} style={{ marginTop: 50 }} />
+        {operatorNode.nodeId !== undefined ? (
+          <SectionTitle label={"Parameters"} style={{ marginTop: 30 }} />
         ) : null}
-        {Array.from(props.actionsTypes).map(([_, actionTypeList]) => {
-          const service = actionTypeList.find((action) => {
-            return action.id === actionNode.nodeId;
+        {Array.from(props.operatorsTypes).map(([_, operatorsTypeList]) => {
+          const service = operatorsTypeList.find((operator) => {
+            return operator.id === operatorNode.nodeId;
           });
           if (service?.parametersDef) {
             return Object.entries(service.parametersDef).map(
               ([valueKey, value]) => {
                 return (
                   <ParametersItem
-                    node={actionNode}
-                    setNode={setActionNode}
+                    node={operatorNode}
+                    setNode={setOperatorNode}
                     key={valueKey}
                     valueKey={valueKey}
                     variable={value}
@@ -249,9 +234,9 @@ const ActionNode: FC<Props> = (props) => {
             return null;
           }
         })}
-        <SectionTitle label={"Condition"} style={{ marginTop: 50 }} />
+        <SectionTitle label={"Condition"} style={{ marginTop: 30 }} />
         <CustomTextInput
-          text={actionNode.condition}
+          text={operatorNode.condition}
           onSubmitEditing={submitCondition}
         />
         <SaveButton onPress={saveNode} style={{ marginTop: 20 }} />
@@ -260,4 +245,4 @@ const ActionNode: FC<Props> = (props) => {
   );
 };
 
-export default ActionNodeScreen;
+export default OperatorNodeScreen;

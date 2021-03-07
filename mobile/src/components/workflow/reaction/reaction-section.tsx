@@ -45,7 +45,11 @@ export const ReactionSection: FC<Props> = (props) => {
             );
           })
         : null}
-      <NewWidget widget={"reaction"} />
+      <NewWidget
+        widget={"reaction"}
+        updateWorkflow={props.callback}
+        workflow={props.workflow}
+      />
     </ScrollView>
   );
 };

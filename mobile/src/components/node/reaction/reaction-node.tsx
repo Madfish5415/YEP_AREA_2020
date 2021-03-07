@@ -6,8 +6,6 @@ import {
   ScrollView,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
-  SafeAreaView,
-  Dimensions,
 } from "react-native";
 import { SectionTitle } from "../../common/section-title";
 import { CustomTextInput } from "../../common/text-input";
@@ -35,11 +33,25 @@ import { v4 as uuidv4 } from "uuid";
 import { SaveButton } from "../../common/save-button";
 import { ParametersItem } from "../../common/parameters-item";
 import { NodeServiceAlert } from "../../common/node-service-alert";
-import { CustomDropDownPicker } from "../../common/dropdown-picker";
+import DropDownPicker from "react-native-dropdown-picker";
+import { gray, white } from "@area-common/styles";
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
+  },
+  dropdownPickerContainer: {
+    width: "90%",
+    height: 30,
+  },
+  dropdownPickerStyle: {
+    borderColor: gray.light1,
+    backgroundColor: gray.light1,
+    color: white,
+  },
+  dropdownPickerLabel: {
+    color: gray.light3,
   },
 });
 
@@ -52,7 +64,7 @@ type ActionNodeProps = {
   route: ActionNodeScreenRouteParams;
 };
 
-const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
+const ReactionNodeScreen: FC<ActionNodeProps> = (props) => {
   const { workflow, updateWorkflow, node } = props.route.params;
   let token = "";
   const credentialBloc = new CredentialBloc(
@@ -89,21 +101,21 @@ const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
                   return <ErrorState errorLabel={"An error has occured"} />;
                 }
                 if (serviceState instanceof ServiceListState) {
-                  const actionsTypes: Map<string, SingletonNode[]> = new Map<
+                  const reactionTypes: Map<string, SingletonNode[]> = new Map<
                     string,
                     SingletonNode[]
                   >();
                   serviceState.services.forEach((service) => {
                     const nodes = service.nodes.filter(
-                      (node) => node.label === "action"
+                      (node) => node.label === "reaction"
                     );
-                    actionsTypes.set(service.id, nodes);
+                    reactionTypes.set(service.id, nodes);
                   });
                   return (
-                    <ActionNode
+                    <ReactionNode
                       workflow={workflow}
                       updateWorkflow={updateWorkflow}
-                      actionsTypes={actionsTypes}
+                      reactionTypes={reactionTypes}
                       credentials={credentialState.credentials}
                       node={node}
                     />
@@ -123,20 +135,16 @@ const ActionNodeScreen: FC<ActionNodeProps> = (props) => {
 type Props = {
   workflow: Workflow;
   updateWorkflow: (workflow: Workflow) => void;
-  actionsTypes: Map<string, SingletonNode[]>;
+  reactionTypes: Map<string, SingletonNode[]>;
   credentials: string[];
   node?: WorkflowNode;
 };
 
-const { height } = Dimensions.get("window");
-
-const ActionNode: FC<Props> = (props) => {
-  const [screenHeight, setScreenHeight] = useState(0);
+const ReactionNode: FC<Props> = (props) => {
   const [nodeName, setNodeName] = useState<string>(
-    props.node ? props.node.name : "Action"
+    props.node ? props.node.name : "Reaction"
   );
-  const [nextNode, setNextNode] = useState(props.node?.nextNodes?.[0] || "");
-  const [actionNode, setActionNode] = useState<Partial<WorkflowNode>>(
+  const [reactionNode, setReactionNode] = useState<Partial<WorkflowNode>>(
     props.node
       ? props.node
       : {
@@ -144,41 +152,35 @@ const ActionNode: FC<Props> = (props) => {
           serviceId: undefined,
           nodeId: undefined,
           name: undefined,
-          label: "action",
+          label: "reaction",
           parameters: undefined,
           condition: "true",
           nextNodes: [],
         }
   );
 
-  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
-    setScreenHeight(contentHeight);
-  };
-  const scrollEnabled = screenHeight > height - 180;
-
   const saveNode = () => {
-    if (actionNode.nodeId === undefined) {
+    if (reactionNode.nodeId === undefined) {
       NodeServiceAlert();
     } else {
-      const newActionNode = {
-        ...actionNode,
+      const newReactionNode = {
+        ...reactionNode,
         name: nodeName,
-        nextNodes: [nextNode],
       };
       const index = props.workflow.nodes.findIndex(
-        (node) => node.id === actionNode.id
+        (node) => node.id === reactionNode.id
       );
       if (index !== -1) {
         const newWorkflow = props.workflow;
         newWorkflow.nodes[index] = {
           ...newWorkflow.nodes[index],
-          ...newActionNode,
+          ...newReactionNode,
         };
         props.updateWorkflow(newWorkflow);
       } else {
         props.updateWorkflow({
           ...props.workflow,
-          nodes: [...props.workflow.nodes, newActionNode as WorkflowNode],
+          nodes: [...props.workflow.nodes, newReactionNode as WorkflowNode],
         });
       }
     }
@@ -188,76 +190,63 @@ const ActionNode: FC<Props> = (props) => {
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
     const newNode = {
-      ...actionNode,
+      ...reactionNode,
       condition: e.nativeEvent.text,
     };
-    setActionNode(newNode);
+    setReactionNode(newNode);
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        scrollEnabled={scrollEnabled}
-        onContentSizeChange={onContentSizeChange}
-      >
-        <SectionTitle label={"Action name"} style={{ marginTop: 10 }} />
-        <CustomTextInput text={nodeName} setText={setNodeName} />
-        <SectionTitle label={"Actions"} style={{ marginTop: 20 }} />
-        {Array.from(props.actionsTypes).map(([serviceId, actionsTypeList]) =>
-          actionsTypeList.map((actionsType) => (
-            <NodeItem
-              key={actionsType.id}
-              node={actionsType}
-              isConnected={true /*props.credentials.includes(serviceId)*/}
-              selected={actionNode.nodeId === actionsType.id}
-              serviceId={serviceId}
-              setNode={setActionNode}
-              currentNode={actionNode}
-            />
-          ))
-        )}
-        <SectionTitle label={"Link"} style={{ marginTop: 50 }} />
-        <CustomDropDownPicker
-          workflow={props.workflow}
-          node={props.node}
-          nextNode={nextNode}
-          setNextNode={setNextNode}
-        />
-        {actionNode.nodeId !== undefined ? (
-          <SectionTitle label={"Parameters"} style={{ marginTop: 50 }} />
-        ) : null}
-        {Array.from(props.actionsTypes).map(([_, actionTypeList]) => {
-          const service = actionTypeList.find((action) => {
-            return action.id === actionNode.nodeId;
-          });
-          if (service?.parametersDef) {
-            return Object.entries(service.parametersDef).map(
-              ([valueKey, value]) => {
-                return (
-                  <ParametersItem
-                    node={actionNode}
-                    setNode={setActionNode}
-                    key={valueKey}
-                    valueKey={valueKey}
-                    variable={value}
-                  />
-                );
-              }
-            );
-          } else {
-            return null;
-          }
-        })}
-        <SectionTitle label={"Condition"} style={{ marginTop: 50 }} />
-        <CustomTextInput
-          text={actionNode.condition}
-          onSubmitEditing={submitCondition}
-        />
-        <SaveButton onPress={saveNode} style={{ marginTop: 20 }} />
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView contentContainerStyle={styles.container}>
+      <SectionTitle label={"Reaction's name"} style={{ marginTop: 10 }} />
+      <CustomTextInput text={nodeName} setText={setNodeName} />
+      <SectionTitle label={"Reactions"} style={{ marginTop: 20 }} />
+      {Array.from(props.reactionTypes).map(([serviceId, reactionTypesList]) =>
+        reactionTypesList.map((reactionsType) => (
+          <NodeItem
+            key={reactionsType.id}
+            node={reactionsType}
+            isConnected={true /*props.credentials.includes(serviceId)*/}
+            selected={reactionNode.nodeId === reactionsType.id}
+            serviceId={serviceId}
+            setNode={setReactionNode}
+            currentNode={reactionNode}
+          />
+        ))
+      )}
+      {reactionNode.nodeId !== undefined ? (
+        <SectionTitle label={"Parameters"} style={{ marginTop: 30 }} />
+      ) : null}
+      {Array.from(props.reactionTypes).map(([_, reactionTypesList]) => {
+        const service = reactionTypesList.find((reaction) => {
+          return reaction.id === reactionNode.nodeId;
+        });
+        if (service?.parametersDef) {
+          return Object.entries(service.parametersDef).map(
+            ([valueKey, value]) => {
+              return (
+                <ParametersItem
+                  node={reactionNode}
+                  setNode={setReactionNode}
+                  key={valueKey}
+                  valueKey={valueKey}
+                  variable={value}
+                />
+              );
+            }
+          );
+        } else {
+          return null;
+        }
+      })}
+      <SectionTitle label={"Condition"} style={{ marginTop: 30 }} />
+      <CustomTextInput
+        text={reactionNode.condition}
+        onSubmitEditing={submitCondition}
+      />
+      <SaveButton onPress={saveNode} style={{ marginTop: 20 }} />
+    </ScrollView>
   );
 };
 
-export default ActionNodeScreen;
+export default ReactionNodeScreen;
