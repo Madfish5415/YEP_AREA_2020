@@ -3,6 +3,7 @@ import passport, { AuthenticateOptions } from "passport";
 
 import { AUTHENTICATION_SERVICE_ROUTE } from "../../../../constants";
 import { authenticationServiceCbRouter } from "./callback";
+import { authenticationServicePvRouter } from "./provide";
 
 export const authenticationServiceRouter = Router();
 
@@ -17,7 +18,7 @@ declare global {
 authenticationServiceRouter.use(
   AUTHENTICATION_SERVICE_ROUTE,
   (req, res, next) => {
-    req.serviceId = `${req.params.id}-service`;
+    req.serviceId = req.params.id;
 
     return next();
   }
@@ -30,8 +31,13 @@ authenticationServiceRouter.use(
 
 authenticationServiceRouter.use(
   AUTHENTICATION_SERVICE_ROUTE,
+  authenticationServicePvRouter
+);
+
+authenticationServiceRouter.use(
+  AUTHENTICATION_SERVICE_ROUTE,
   (req, res, next) => {
-    passport.authenticate(req.serviceId, {
+    passport.authenticate(`${req.serviceId}-service`, {
       callbackURL: req.query.callbackURL,
       state: req.query.callbackURL,
       session: false,

@@ -21,6 +21,8 @@ export class BaseRunner implements Runner {
     for (const node of this.nodes) {
       if (node instanceof BaseRunnerTriggerNode) {
         node.subscribeAll(node.parameters);
+      } else {
+        node.execute();
       }
     }
   }
@@ -50,7 +52,7 @@ export class BaseRunner implements Runner {
       if (node.credentials) {
         const filter = {
           userId: workflow.userId,
-          serviceId: wNode.serviceId + "-service",
+          serviceId: wNode.serviceId,
         };
 
         const credential = await credentialRepository.read(filter);

@@ -4,7 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as PaperProvider } from "react-native-paper";
 import HomeStack from "./home";
 import Theme from "../theme";
-import { Workflow } from "@area-common/types";
+import AccountSecurityStack from "./account-security";
+import AdminBoardStack from "./admin-board";
+import { Workflow, User } from "@area-common/types";
 import WorkflowStack from "./workflow";
 import SignUpScreen from "../components/signup/signup";
 import SignInScreen from "../components/signin/signin";
@@ -12,12 +14,24 @@ import WorkflowCreateStack from "./workflow-create";
 import ActionNodeStack from "./action-node";
 import OperatorNodeStack from "./operator-node";
 import ReactionNodeStack from "./reaction-node";
+import AdminUserManageStack from "./admin-user-manage";
+import AdminUserUpdateStack from "./admin-update-field";
 
 export type RootStackParamList = {
   Home: { userId: string };
   Workflow: {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  };
+  AdminUserManage: {
+    user: User;
+    updateUser: (id: string, updatedUser: Partial<User>) => void;
+    deleteUser: (id: string) => void;
+  };
+  AdminUpdateField: {
+    label: string;
+    value: string;
+    onSubmit: (value: string) => void;
   };
 };
 
@@ -66,6 +80,24 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"ReactionNode"}
             component={ReactionNodeStack}
+
+            name={"AccountSecurity"}
+            component={AccountSecurityStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminBoard"}
+            component={AdminBoardStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminUserManage"}
+            component={AdminUserManageStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminUpdateField"}
+            component={AdminUserUpdateStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

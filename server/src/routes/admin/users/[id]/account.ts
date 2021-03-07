@@ -1,4 +1,4 @@
-import { Account, APIResponse, User } from "@area-common/types";
+import { Account, APIResponse } from "@area-common/types";
 import { Router } from "express";
 
 import {
@@ -12,8 +12,7 @@ export const adminAccountRouter = Router();
 
 adminAccountRouter.use(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
   try {
-    const id = (req.user as User).id;
-    const account = await req.accountRepository.exists({ userId: id });
+    const account = await req.accountRepository.exists({ userId: req.userId });
 
     if (!account) {
       return next(ACCOUNT_NOT_EXISTS_ERROR);
@@ -27,8 +26,7 @@ adminAccountRouter.use(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
 
 adminAccountRouter.get(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
   try {
-    const id = (req.user as User).id;
-    const account = await req.accountRepository.read({ userId: id });
+    const account = await req.accountRepository.read({ userId: req.userId });
 
     const response: APIResponse = {
       status: 200,
@@ -43,7 +41,6 @@ adminAccountRouter.get(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
 
 adminAccountRouter.post(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
   try {
-    const id = (req.user as User).id;
     const partial: Partial<Account> = req.body;
     const [hasKeys] = hasAKeysOf<Account>(partial, ["email", "password"]);
 
@@ -51,7 +48,10 @@ adminAccountRouter.post(ADMIN_ACCOUNT_ROUTE, async (req, res, next) => {
       return next(BAD_REQUEST_ERROR);
     }
 
-    const account = await req.accountRepository.update({ userId: id }, partial);
+    const account = await req.accountRepository.update(
+      { userId: req.userId },
+      partial
+    );
 
     const response: APIResponse = {
       status: 200,
