@@ -1,18 +1,18 @@
-import React, { FC } from "react";
+import { gray, primary, white } from "@area-common/styles";
 import {
-  makeStyles,
-  withStyles,
-  Theme,
-  Typography,
-  ListItem,
   Button,
-  TextField,
-  ListItemText,
+  Divider,
+  ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
-  Divider,
+  ListItemText,
+  makeStyles,
+  TextField,
+  Theme,
+  Typography,
+  withStyles,
 } from "@material-ui/core";
-import { gray, white, primary } from "@area-common/styles";
+import React, { FC } from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
@@ -105,14 +105,23 @@ const ServiceLine: FC<Props> = (props) => {
 
   const serviceLogIn = async () => {
     console.log("Try to log in user");
-    const response = await fetch(
-      "http://localhost:8080/api/authentication/services/" +
-        props.serviceId +
-        "?callbackURL=http://localhost:8081/authentication/services/" +
-        props.serviceId
-    );
-    const json = await response.json();
-    console.log("response res", json);
+
+    return new Promise<void>((resolve, reject) => {
+      const cbUrl = `http://localhost:8081/authentication/services/${props.serviceId}`;
+      const url = `http://localhost:8080/api/authentication/services/${props.serviceId}`;
+      const popUp = window.open(`${url}?callbackURL=${cbUrl}`);
+
+      if (popUp) {
+        console.log("Success!");
+        window.success = function () {
+          console.log("Success!!!");
+          return resolve();
+        };
+      } else {
+        console.log("Failure!");
+        reject();
+      }
+    });
   };
 
   const serviceLogOut = () => {
