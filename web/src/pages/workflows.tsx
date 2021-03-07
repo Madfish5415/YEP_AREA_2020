@@ -10,18 +10,18 @@ import {
   WorkflowUpdateEvent,
   WorkflowUpdateState,
 } from "@area-common/blocs";
-import {gray, primary, white} from "@area-common/styles";
-import {StatusError, Workflow} from "@area-common/types";
-import {BlocBuilder} from "@felangel/react-bloc";
-import {Fab,Grid, makeStyles, Theme, Typography} from "@material-ui/core";
+import { gray, primary, white } from "@area-common/styles";
+import { StatusError, Workflow } from "@area-common/types";
+import { BlocBuilder } from "@felangel/react-bloc";
+import { Fab, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {useRouter} from "next/router";
-import React, {FC, useEffect} from "react";
-import {v4 as uuidv4} from "uuid";
+import { useRouter } from "next/router";
+import React, { FC, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import AppBarComponent from "../components/appbar/appbar";
-import {DefaultState} from "../components/blocbuilder/default-state";
-import {ErrorState} from "../components/blocbuilder/error-state";
+import { DefaultState } from "../components/blocbuilder/default-state";
+import { ErrorState } from "../components/blocbuilder/error-state";
 import WorkflowComponent from "../components/workflows/workflow";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,6 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   workflows: {
     marginTop: 25,
+    paddingLeft: 40,
+    paddingRight: 40,
     justifyContent: "center",
   },
   floatingButton: {
@@ -115,7 +117,7 @@ const WorkflowsPage: FC = () => {
             />
           );
         }
-        return <DefaultState/>;
+        return <DefaultState />;
       }}
     />
   );
@@ -132,15 +134,18 @@ const Workflows: FC<Props> = (props) => {
   const router = useRouter();
 
   const handleNewWorkflow = () => {
-    router.push({
-      pathname: "new/workflow",
-    }).then().catch((e) => console.log(e));
+    router
+      .push({
+        pathname: "new/workflow",
+      })
+      .then()
+      .catch((e) => console.log(e));
   };
 
   let body;
 
   if (props.workflows instanceof StatusError) {
-    body = (<ErrorState error={props.workflows}/>)
+    body = <ErrorState error={props.workflows} />;
   } else {
     body = (
       <Grid container spacing={5} className={classes.workflows}>
@@ -153,12 +158,13 @@ const Workflows: FC<Props> = (props) => {
             />
           </Grid>
         ))}
-      </Grid>)
+      </Grid>
+    );
   }
 
   return (
     <>
-      <AppBarComponent/>
+      <AppBarComponent />
       <div className={classes.content}>
         <Typography className={classes.title}>My Workflows</Typography>
         {body}
@@ -168,7 +174,7 @@ const Workflows: FC<Props> = (props) => {
         className={classes.floatingButton}
         onClick={handleNewWorkflow}
       >
-        <AddIcon/>
+        <AddIcon />
       </Fab>
     </>
   );
