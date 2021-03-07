@@ -62,14 +62,22 @@ export class MailNewNode extends IntervalNode<AnyObject, Mail> {
 
     if (!mailsListAPI.data.resultSizeEstimate!) return [];
 
-    const mailsAPI = await Promise.all(
-      mailsListAPI.data.messages!.map(async (mailListAPI) => {
-        return await GMAIL_CLIENT.users.messages.get({
-          userId: "me",
-          id: mailListAPI.id!,
-        });
-      })
-    );
+    const mailsAPI = [];
+
+    for (const mailListAPI of mailsListAPI.data.messages!) {
+      const mailAPI = await GMAIL_CLIENT.users.messages.get({
+        userId: "me",
+        id: mailListAPI.id!,
+      });
+
+      if (mailAPI.status >= 400) {
+        console.warn(mailAPI.statusText);
+
+        return [];
+      }
+
+      mailsAPI.push(mailAPI);
+    }
 
     const filteredMailsAPI = mailsAPI.filter((mailAPI) => {
       const date = parseInt(mailAPI.data.internalDate!);
