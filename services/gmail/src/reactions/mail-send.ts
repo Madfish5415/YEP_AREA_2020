@@ -30,7 +30,7 @@ const mailCreateRaw = (to: string, subject: string, body: string) => {
 };
 
 export class MailSendNode extends BaseNode<Parameters, void> {
-  readonly id: string = "mail-send";
+  readonly id: string = "gmail-mail-send";
   readonly name: string = "Mail Send";
   readonly description: string = "No description";
   readonly label: string = "reaction";

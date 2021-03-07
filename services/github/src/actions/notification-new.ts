@@ -9,7 +9,7 @@ type Credentials = {
 };
 
 export class NotificationNewNode extends IntervalNode<AnyObject, Notification> {
-  readonly id: string = "notification-new";
+  readonly id: string = "github-notification-new";
   readonly name: string = "Notification New";
   readonly description: string = "No description";
   readonly label: string = "action";

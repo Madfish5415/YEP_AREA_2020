@@ -228,7 +228,8 @@ const NewWorkflow: FC<Props> = (props) => {
             onClick={() => {
               const tmpWorkflow: Workflow = {
                 ...newWorkflow,
-                name: name
+                name: name,
+                starters: newWorkflow.nodes.filter((node) => node.label === "action").map((node) => node.id),
               }
 
               console.log("Workflow: " + JSON.stringify(tmpWorkflow));

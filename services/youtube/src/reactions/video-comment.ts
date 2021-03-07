@@ -13,7 +13,7 @@ type Credentials = {
 };
 
 export class VideoCommentNode extends BaseNode<Parameters, void> {
-  readonly id: string = "video-comment";
+  readonly id: string = "youtube-video-comment";
   readonly name: string = "Video Comment";
   readonly description: string = "No description";
   readonly label: string = "reaction";

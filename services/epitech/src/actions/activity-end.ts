@@ -14,7 +14,7 @@ type Credentials = {
 };
 
 export class ActivityEndNode extends IntervalNode<Parameters, Activity> {
-  readonly id: string = "activity-end";
+  readonly id: string = "epitech-activity-end";
   readonly name: string = "Activity End";
   readonly description: string = "No description";
   readonly label: string = "action";

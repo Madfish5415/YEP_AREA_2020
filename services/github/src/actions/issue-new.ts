@@ -14,7 +14,7 @@ type Credentials = {
 };
 
 export class IssueNewNode extends IntervalNode<Parameters, Issue> {
-  readonly id: string = "issue-new";
+  readonly id: string = "github-issue-new";
   readonly name: string = "Issue New";
   readonly description: string = "No description";
   readonly label: string = "action";

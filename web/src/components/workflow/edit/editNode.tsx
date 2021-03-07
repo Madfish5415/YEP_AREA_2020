@@ -165,7 +165,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
   });
 
   const [node, setNode] = useState<Partial<WorkflowNode>>(
-    { ...props.currentNode } || {
+    props.currentNode || {
       id: uuidv4(),
       condition: "true",
       nextNodes: [],
@@ -220,6 +220,11 @@ const EditNode: FC<EditNodeProps> = (props) => {
       name: nodeName,
       parameters: nodeParams,
     };
+
+    console.log("Node: " + JSON.stringify(props.currentNode));
+    console.log("Node: " + JSON.stringify(node));
+    console.log("Node: " + JSON.stringify(nodeName));
+    console.log("Node: " + JSON.stringify(newNode));
 
     if (
       !newNode.id ||

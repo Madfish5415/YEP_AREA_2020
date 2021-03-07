@@ -14,7 +14,7 @@ type Credentials = {
 };
 
 export class ProjectEndNode extends IntervalNode<Parameters, Project> {
-  readonly id: string = "project-end";
+  readonly id: string = "epitech-project-end";
   readonly name: string = "Project End";
   readonly description: string = "No description";
   readonly label: string = "action";

@@ -14,8 +14,8 @@ type Credentials = {
   tokenSecret: string;
 };
 
-export class TweetReactionNode extends BaseNode<Parameters, void> {
-  readonly id: string = "tweet-reaction";
+export class TweetSendNode extends BaseNode<Parameters, void> {
+  readonly id: string = "twitter-tweet-send";
   readonly name: string = "Tweet Reaction";
   readonly description: string = "No description";
   readonly label: string = "reaction";
