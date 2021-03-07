@@ -137,7 +137,14 @@ const ActionNode: FC<Props> = (props) => {
   const [nodeName, setNodeName] = useState<string>(
     props.node ? props.node.name : "Action"
   );
-  const [nextNode, setNextNode] = useState(props.node?.nextNodes?.[0] || "");
+  const [nextNode, setNextNode] = useState(
+    props.node !== undefined
+      ? props.node.nextNodes.length > 0
+        ? (props.workflow.nodes.find((node) => node.id === props.node?.id)
+            ?.name as string)
+        : ""
+      : ""
+  );
   const [actionNode, setActionNode] = useState<Partial<WorkflowNode>>(
     props.node
       ? props.node
@@ -162,11 +169,19 @@ const ActionNode: FC<Props> = (props) => {
     if (actionNode.nodeId === undefined) {
       NodeServiceAlert();
     } else {
-      const newActionNode = {
+      let newActionNode = {
         ...actionNode,
         name: nodeName,
-        nextNodes: [nextNode],
       };
+      if (nextNode !== "") {
+        const nextNodeId = props.workflow.nodes.find(
+          (node) => node.name === nextNode
+        )?.id as string;
+        newActionNode = {
+          ...newActionNode,
+          nextNodes: [nextNodeId],
+        };
+      }
       const index = props.workflow.nodes.findIndex(
         (node) => node.id === actionNode.id
       );

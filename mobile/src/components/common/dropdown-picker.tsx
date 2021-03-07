@@ -28,29 +28,50 @@ type Props = {
 
 export const CustomDropDownPicker: FC<Props> = (props) => {
   return props.node ? (
-    <DropDownPicker
-      items={props.workflow.nodes
-        .filter((node) => node.label !== props.node?.id)
-        .map((node) => {
-          return {
-            label: node.name,
-            value: node.name,
-          };
-        })}
-      containerStyle={styles.dropdownPickerContainer}
-      style={styles.dropdownPickerStyle}
-      itemStyle={{
-        justifyContent: "flex-start",
-      }}
-      defaultValue={props.nextNode}
-      dropDownStyle={styles.dropdownPickerStyle}
-      onChangeItem={(item) => props.setNextNode(item.value)}
-      labelStyle={styles.dropdownPickerLabel}
-    />
+    props.node.nextNodes.length > 0 ? (
+      <DropDownPicker
+        items={props.workflow.nodes
+          .filter((node) => node.id !== props.node?.id)
+          .map((node) => {
+            return {
+              label: node.name,
+              value: node.name,
+            };
+          })}
+        containerStyle={styles.dropdownPickerContainer}
+        style={styles.dropdownPickerStyle}
+        itemStyle={{
+          justifyContent: "flex-start",
+        }}
+        defaultValue={props.nextNode}
+        dropDownStyle={styles.dropdownPickerStyle}
+        onChangeItem={(item) => props.setNextNode(item.value)}
+        labelStyle={styles.dropdownPickerLabel}
+      />
+    ) : (
+      <DropDownPicker
+        items={props.workflow.nodes
+          .filter((node) => node.id !== props.node?.id)
+          .map((node) => {
+            return {
+              label: node.name,
+              value: node.name,
+            };
+          })}
+        containerStyle={styles.dropdownPickerContainer}
+        style={styles.dropdownPickerStyle}
+        itemStyle={{
+          justifyContent: "flex-start",
+        }}
+        dropDownStyle={styles.dropdownPickerStyle}
+        onChangeItem={(item) => props.setNextNode(item.value)}
+        labelStyle={styles.dropdownPickerLabel}
+      />
+    )
   ) : (
     <DropDownPicker
       items={props.workflow.nodes
-        .filter((node) => node.label !== props.node?.id)
+        .filter((node) => node.id !== props.node?.id)
         .map((node) => {
           return {
             label: node.name,
