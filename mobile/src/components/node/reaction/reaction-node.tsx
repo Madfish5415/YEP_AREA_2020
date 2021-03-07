@@ -35,11 +35,11 @@ import { SaveButton } from "../../common/save-button";
 import { ParametersItem } from "../../common/parameters-item";
 import { NodeServiceAlert } from "../../common/node-service-alert";
 import { gray, white } from "@area-common/styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // file deepcode ignore CollectionUpdatedButNeverQueried: no explicit call to reactionsTypes
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
   },
   dropdownPickerContainer: {
@@ -198,55 +198,57 @@ const ReactionNode: FC<Props> = (props) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SectionTitle label={"Reaction's name"} style={{ marginTop: 10 }} />
-      <CustomTextInput text={nodeName} setText={setNodeName} />
-      <SectionTitle label={"Reactions"} style={{ marginTop: 20 }} />
-      {Array.from(props.reactionTypes).map(([serviceId, reactionTypesList]) =>
-        reactionTypesList.map((reactionsType) => (
-          <NodeItem
-            key={reactionsType.id}
-            node={reactionsType}
-            isConnected={props.credentials.includes(serviceId)}
-            selected={reactionNode.nodeId === reactionsType.id}
-            serviceId={serviceId}
-            setNode={setReactionNode}
-            currentNode={reactionNode}
-          />
-        ))
-      )}
-      {reactionNode.nodeId !== undefined ? (
-        <SectionTitle label={"Parameters"} style={{ marginTop: 30 }} />
-      ) : null}
-      {Array.from(props.reactionTypes).map(([_, reactionTypesList]) => {
-        const service = reactionTypesList.find((reaction) => {
-          return reaction.id === reactionNode.nodeId;
-        });
-        if (service?.parametersDef) {
-          return Object.entries(service.parametersDef).map(
-            ([valueKey, value]) => {
-              return (
-                <ParametersItem
-                  node={reactionNode}
-                  setNode={setReactionNode}
-                  key={valueKey}
-                  valueKey={valueKey}
-                  variable={value}
-                />
-              );
-            }
-          );
-        } else {
-          return null;
-        }
-      })}
-      <SectionTitle label={"Condition"} style={{ marginTop: 30 }} />
-      <CustomTextInput
-        text={reactionNode.condition}
-        onSubmitEditing={submitCondition}
-      />
-      <SaveButton onPress={saveNode} style={{ marginTop: 20 }} />
-    </ScrollView>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container}>
+        <SectionTitle label={"Reaction's name"} style={{ marginTop: 10 }} />
+        <CustomTextInput text={nodeName} setText={setNodeName} />
+        <SectionTitle label={"Reactions"} style={{ marginTop: 20 }} />
+        {Array.from(props.reactionTypes).map(([serviceId, reactionTypesList]) =>
+          reactionTypesList.map((reactionsType) => (
+            <NodeItem
+              key={reactionsType.id}
+              node={reactionsType}
+              isConnected={props.credentials.includes(serviceId)}
+              selected={reactionNode.nodeId === reactionsType.id}
+              serviceId={serviceId}
+              setNode={setReactionNode}
+              currentNode={reactionNode}
+            />
+          ))
+        )}
+        {reactionNode.nodeId !== undefined ? (
+          <SectionTitle label={"Parameters"} style={{ marginTop: 30 }} />
+        ) : null}
+        {Array.from(props.reactionTypes).map(([_, reactionTypesList]) => {
+          const service = reactionTypesList.find((reaction) => {
+            return reaction.id === reactionNode.nodeId;
+          });
+          if (service?.parametersDef) {
+            return Object.entries(service.parametersDef).map(
+              ([valueKey, value]) => {
+                return (
+                  <ParametersItem
+                    node={reactionNode}
+                    setNode={setReactionNode}
+                    key={valueKey}
+                    valueKey={valueKey}
+                    variable={value}
+                  />
+                );
+              }
+            );
+          } else {
+            return null;
+          }
+        })}
+        <SectionTitle label={"Condition"} style={{ marginTop: 30 }} />
+        <CustomTextInput
+          text={reactionNode.condition}
+          onSubmitEditing={submitCondition}
+        />
+        <SaveButton onPress={saveNode} style={{ marginTop: 20 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
