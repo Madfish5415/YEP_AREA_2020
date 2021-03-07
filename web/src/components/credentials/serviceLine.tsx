@@ -14,6 +14,12 @@ import {
 } from "@material-ui/core";
 import React, { FC } from "react";
 
+declare global {
+  interface Window {
+    success: () => void;
+  }
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
   serviceName: {
