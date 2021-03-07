@@ -78,6 +78,7 @@ const WorkflowsPage: FC = () => {
   const isActiveWorkflow = (workflow: Workflow) => {
     workflowsBloc.add(
       new WorkflowUpdateEvent(token, workflow.id, {
+        ...workflow,
         active: !workflow.active,
       })
     );

@@ -61,15 +61,15 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 type Props = {
   workflow: Workflow;
   node: Partial<WorkflowNode>;
+  links: string[];
+  setLinks: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const NodeLinks: FC<Props> = (props) => {
   const classes = useStyles();
 
-  const [links, setLinks] = React.useState<string[]>(props.node?.nextNodes || []);
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setLinks(event.target.value as string[]);
+    props.setLinks(event.target.value as string[]);
   };
 
   return (
@@ -80,12 +80,12 @@ const NodeLinks: FC<Props> = (props) => {
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple
-          value={links}
+          value={props.links}
           onChange={handleChange}
           input={<Input id="select-multiple-chip"/>}
         >
           {props.workflow.nodes.filter((node) => node.id !== props.node.id).map((link) => (
-            <MenuItem key={link.name} value={link.id} style={getStyles(link.name, links, theme)} className={classes.background}>
+            <MenuItem key={link.name} value={link.id} style={getStyles(link.name, props.links, theme)} className={classes.background}>
               {link.name}
             </MenuItem>
           ))}
