@@ -30,6 +30,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import { FaDiscord, FaYammer } from "react-icons/fa";
 import { SiMicrosoftoutlook } from "react-icons/si";
+import { FormatIndentIncreaseOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
@@ -143,6 +144,15 @@ const ServiceListComponent: FC<Props> = (props) => {
     ["yammer", <FaYammer key={"yammer"} className={classes.icon} />],
   ]);
 
+  const findIfRegistered = (serviceId: string) => {
+    props.credentials.forEach((credential) => {
+      if (credential === serviceId + "-service") {
+        return true;
+      }
+    });
+    return false;
+  };
+
   console.log("this is credentials :", props.credentials);
 
   return (
@@ -150,16 +160,27 @@ const ServiceListComponent: FC<Props> = (props) => {
       <List>
         {credentialServices.map((service) => {
           return (
-            <ServiceLine key={service.id} label={service.name}>
+            <ServiceLine
+              key={service.id}
+              serviceId={service.id}
+              label={service.name}
+              registered={findIfRegistered(service.id)}
+              autologin={service.id === "epitech"}
+              autologinLink={service.id === "epitech" ? autologin : ""}
+              setAutologinLink={
+                service.id === "epitech" ? setAutologin : undefined
+              }
+            >
               {iconMap.get(service.id)}
             </ServiceLine>
           );
         })}
-        <ServiceLine key={"github"} label={"GitHub"}>
+        <ServiceLine key={"github"} serviceId={"github"} label={"GitHub"}>
           {iconMap.get("github")}
         </ServiceLine>
         <ServiceLine
           key={"epitech"}
+          serviceId={"epitech"}
           label={"Epitech"}
           autologin
           autologinLink={autologin}
@@ -167,16 +188,16 @@ const ServiceListComponent: FC<Props> = (props) => {
         >
           {iconMap.get("epitech")}
         </ServiceLine>
-        <ServiceLine key={"youtube"} label={"YouTube"}>
+        <ServiceLine key={"youtube"} serviceId={"youtube"} label={"YouTube"}>
           {iconMap.get("youtube")}
         </ServiceLine>
-        <ServiceLine key={"discord"} label={"Discord"}>
+        <ServiceLine key={"discord"} serviceId={"discord"} label={"Discord"}>
           {iconMap.get("discord")}
         </ServiceLine>
-        <ServiceLine key={"outlook"} label={"Outlook"}>
+        <ServiceLine key={"outlook"} serviceId={"outlook"} label={"Outlook"}>
           {iconMap.get("outlook")}
         </ServiceLine>
-        <ServiceLine key={"yammer"} label={"Yammer"}>
+        <ServiceLine key={"yammer"} serviceId={"yammer"} label={"Yammer"}>
           {iconMap.get("yammer")}
         </ServiceLine>
       </List>

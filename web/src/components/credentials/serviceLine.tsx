@@ -91,6 +91,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 type Props = {
+  serviceId: string;
   label: string;
   children: React.ReactNode;
   registered?: boolean;
@@ -101,6 +102,22 @@ type Props = {
 
 const ServiceLine: FC<Props> = (props) => {
   const classes = useStyles();
+
+  const serviceLogIn = async () => {
+    console.log("Try to log in user");
+    const response = await fetch(
+      "http://localhost:8080/api/authentication/services/" +
+        props.serviceId +
+        "?callbackURL=http://localhost:8081/authentication/services/" +
+        props.serviceId
+    );
+    const json = await response.json();
+    console.log("response res", json);
+  };
+
+  const serviceLogOut = () => {
+    console.log("Try to log out user");
+  };
 
   return (
     <>
@@ -129,9 +146,13 @@ const ServiceLine: FC<Props> = (props) => {
                 />
               </div>
             ) : props.registered ? (
-              <Button className={classes.logOutButton}>Log out</Button>
+              <Button className={classes.logOutButton} onClick={serviceLogOut}>
+                Log out
+              </Button>
             ) : (
-              <Button className={classes.logInButton}>Log in</Button>
+              <Button className={classes.logInButton} onClick={serviceLogIn}>
+                Log in
+              </Button>
             )}
           </ListItemSecondaryAction>
         </ListItem>
