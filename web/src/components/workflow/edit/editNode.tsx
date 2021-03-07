@@ -11,9 +11,9 @@ import {
   ServiceRepository,
   ServiceState,
 } from "@area-common/blocs";
-import { gray, primary } from "@area-common/styles";
-import { SingletonNode, Workflow, WorkflowNode } from "@area-common/types";
-import { BlocBuilder } from "@felangel/react-bloc";
+import {gray, primary} from "@area-common/styles";
+import {SingletonNode, Workflow, WorkflowNode} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
 import {
   Box,
   Button,
@@ -29,11 +29,11 @@ import {
   withStyles,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import React, { FC, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, {FC, useEffect, useState} from "react";
+import {v4 as uuidv4} from "uuid";
 
-import { DefaultState } from "../../blocbuilder/default-state";
-import { ErrorState } from "../../blocbuilder/error-state";
+import {DefaultState} from "../../blocbuilder/default-state";
+import {ErrorState} from "../../blocbuilder/error-state";
 import NodeCondition from "./conditionNode";
 import NodeLinks from "./nodeLinks";
 import NodeList from "./nodeList";
@@ -136,10 +136,8 @@ type EditNodeProps = {
 const EditNode: FC<EditNodeProps> = (props) => {
   const classes = useStyles();
 
-  const nodesTypes: Map<string, SingletonNode[]> = new Map<
-    string,
-    SingletonNode[]
-  >();
+  const nodesTypes: Map<string, SingletonNode[]> = new Map<string,
+    SingletonNode[]>();
 
   if (props.serviceState) {
     props.serviceState.services.forEach((service) => {
@@ -161,7 +159,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
       (value1) => value1.id === props.currentNode?.nodeId
     );
 
-    if (foundedNode) currentSingletonNode = [serviceId, { ...foundedNode }];
+    if (foundedNode) currentSingletonNode = [serviceId, {...foundedNode}];
   });
 
   const [node, setNode] = useState<Partial<WorkflowNode>>(
@@ -171,15 +169,14 @@ const EditNode: FC<EditNodeProps> = (props) => {
       nextNodes: [],
     }
   );
-  const [singletonNode, setSingletonNode] = useState<
-    [string, SingletonNode] | null
-  >(currentSingletonNode);
+  const [singletonNode, setSingletonNode] = useState<[string, SingletonNode] | null>(currentSingletonNode);
   const [nodeName, setNodeName] = useState<string | undefined>(
     props.currentNode?.name || undefined
   );
   const [nodeParams, setNodeParams] = useState<Record<string, string>>(
     props.currentNode?.parameters || {}
   );
+  const [links, setLinks] = React.useState<string[]>(node?.nextNodes || []);
 
   useEffect(() => {
     if (!singletonNode) return;
@@ -219,6 +216,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
       ...node,
       name: nodeName,
       parameters: nodeParams,
+      nextNodes: links,
     };
 
     console.log("Node: " + JSON.stringify(props.currentNode));
@@ -257,9 +255,34 @@ const EditNode: FC<EditNodeProps> = (props) => {
     setSingletonNode(null);
     setNodeName(undefined);
     setNodeParams({});
+    setLinks([]);
     props.setIsOpen(false);
     props.setRefresh(!props.refresh);
   };
+
+  const handleDelete = () => {
+    const newWorkflow = props.workflow;
+    const index = newWorkflow.nodes.findIndex((elem) => elem.id === props.currentNode?.id);
+
+    if (index !== -1) {
+      newWorkflow.nodes.splice(index, 1);
+      props.setWorkflow(newWorkflow);
+    }
+
+    props.setWorkflow(newWorkflow);
+
+    setNode({
+      id: uuidv4(),
+      condition: "true",
+      nextNodes: [],
+    });
+    setSingletonNode(null);
+    setNodeName(undefined);
+    setNodeParams({});
+    setLinks([]);
+    props.setIsOpen(false);
+    props.setRefresh(!props.refresh);
+  }
 
   return (
     <Dialog
@@ -270,7 +293,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
       open={props.isOpen}
       onClose={handleClose}
       PaperProps={{
-        style: { backgroundColor: gray.light1, boxShadow: "1" },
+        style: {backgroundColor: gray.light1, boxShadow: "1"},
       }}
     >
       <DialogContent>
@@ -280,7 +303,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
           margin="normal"
           label=""
           placeholder="Node name"
-          InputProps={{ className: classes.dialogTitle }}
+          InputProps={{className: classes.dialogTitle}}
           value={nodeName}
           onChange={handleNodeNameChange}
         />
@@ -289,7 +312,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
           className={classes.closeButton}
           onClick={handleClose}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
         <Box className={classes.container}>
           <Box className={classes.row}>
@@ -307,16 +330,16 @@ const EditNode: FC<EditNodeProps> = (props) => {
               <Box className={classes.parameters}>
                 {singletonNode && singletonNode[1].parametersDef
                   ? Object.entries(
-                      singletonNode[1].parametersDef
-                    ).map(([key, value]) => (
-                      <ParametersItem
-                        key={uuidv4()}
-                        params={nodeParams}
-                        setParams={setNodeParams}
-                        variableKey={key}
-                        variable={value}
-                      />
-                    ))
+                    singletonNode[1].parametersDef
+                  ).map(([key, value]) => (
+                    <ParametersItem
+                      key={uuidv4()}
+                      params={nodeParams}
+                      setParams={setNodeParams}
+                      variableKey={key}
+                      variable={value}
+                    />
+                  ))
                   : null}
               </Box>
             </Box>
@@ -325,17 +348,25 @@ const EditNode: FC<EditNodeProps> = (props) => {
             {props.nodeType !== "reaction" ? (
               <Box className={classes.column}>
                 <Typography className={classes.title}>Links</Typography>
-                <NodeLinks workflow={props.workflow} node={node} />
+                <NodeLinks workflow={props.workflow} node={node} links={links} setLinks={setLinks}/>
               </Box>
             ) : null}
             <Box className={classes.column}>
               <Typography className={classes.title}>Condition</Typography>
-              <NodeCondition node={node} setNode={setNode} />
+              <NodeCondition node={node} setNode={setNode}/>
             </Box>
           </Box>
         </Box>
       </DialogContent>
       <DialogActions>
+        {props.currentNode !== undefined ?
+          (
+          <Button className={classes.addButton} onClick={handleDelete}>
+          Delete
+          </Button>
+          ) : (null)
+        }
+
         <Button className={classes.addButton} onClick={handleUpdate}>
           Save
         </Button>
@@ -374,7 +405,7 @@ const EditNodeBuilder: FC<EditNodeBuilderProps> = (props) => {
       bloc={serviceBloc}
       builder={(serviceState: ServiceState) => {
         if (serviceState instanceof ServiceErrorState) {
-          return <ErrorState error={serviceState.error} />;
+          return <ErrorState error={serviceState.error}/>;
         }
         if (serviceState instanceof ServiceListState) {
           return (
@@ -383,7 +414,7 @@ const EditNodeBuilder: FC<EditNodeBuilderProps> = (props) => {
               bloc={credentialBloc}
               builder={(credentialState: CredentialState) => {
                 if (credentialState instanceof ServiceErrorState) {
-                  return <ErrorState error={credentialState.error} />;
+                  return <ErrorState error={credentialState.error}/>;
                 }
                 if (credentialState instanceof CredentialListState) {
                   return (
@@ -401,12 +432,12 @@ const EditNodeBuilder: FC<EditNodeBuilderProps> = (props) => {
                     />
                   );
                 }
-                return <DefaultState />;
+                return <DefaultState/>;
               }}
             />
           );
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
