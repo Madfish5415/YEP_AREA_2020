@@ -58,7 +58,7 @@ export class MailSendNode extends BaseNode<Parameters, void> {
       },
     });
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -66,5 +66,13 @@ export class MailSendNode extends BaseNode<Parameters, void> {
       },
       body: rBody,
     });
+
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }

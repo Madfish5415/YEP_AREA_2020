@@ -37,11 +37,19 @@ export class TweetReactionNode extends BaseNode<Parameters, void> {
     const url = `https://api.twitter.com/1.1/statuses/update.json?${query}`;
     const authorization = CLIENT.authHeader(url, token, tokenSecret, "POST");
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: authorization,
       },
     });
+
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }

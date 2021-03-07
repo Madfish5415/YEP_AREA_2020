@@ -54,6 +54,12 @@ export class MailNewNode extends IntervalNode<AnyObject, Mail> {
 
     this.lastDates.set(parameters, Date.now());
 
+    if (mailsListAPI.status >= 400) {
+      console.warn(mailsListAPI.statusText);
+
+      return [];
+    }
+
     if (!mailsListAPI.data.resultSizeEstimate!) return [];
 
     const mailsAPI = await Promise.all(

@@ -80,6 +80,13 @@ export class ProjectEndNode extends IntervalNode<Parameters, Project> {
       method: "GET",
     });
     const json = await response.json();
+
+    if (response.status >= 400) {
+      console.warn(json);
+
+      return [];
+    }
+
     const returnedProjects =
       this.allReturnedProjects.get(parameters) || new Map<string, boolean>();
 

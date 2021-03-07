@@ -63,8 +63,13 @@ export class VideoCommentNode extends BaseNode<Parameters, void> {
       },
       body,
     });
-    const json = await response;
 
-    console.log(json);
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }

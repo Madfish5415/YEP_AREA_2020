@@ -75,6 +75,13 @@ export class ModuleEndNode extends IntervalNode<Parameters, Module> {
       method: "GET",
     });
     const json = await response.json();
+
+    if (response.status >= 400) {
+      console.warn(json);
+
+      return [];
+    }
+
     const returnedModules =
       this.allReturnedModules.get(parameters) || new Map<string, boolean>();
 

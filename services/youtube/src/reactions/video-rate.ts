@@ -39,11 +39,19 @@ export class VideoRateNode extends BaseNode<Parameters, void> {
     });
     const url = `https://youtube.googleapis.com/youtube/v3/videos/rate?${query}`;
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }

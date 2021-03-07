@@ -71,9 +71,17 @@ export class ActivityRegisterNode extends BaseNode<Parameters, void> {
     });
     const url = `${autologin}/module/${scholarYear}/${moduleId}/${locationId}/${activityId}/project/register`;
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       body,
     });
+
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }

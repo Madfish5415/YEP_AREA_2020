@@ -90,6 +90,12 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
     });
     const channelJson = await channelResponse.json();
 
+    if (channelResponse.status > 200) {
+      console.warn(channelJson);
+
+      return [];
+    }
+
     const playlistItemsQuery = toQuery({
       playlistId: channelJson.items[0].contentDetails.relatedPlaylists.uploads,
       part: "contentDetails",
@@ -103,6 +109,12 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
       },
     });
     const playlistItemsJson = await playlistItemsResponse.json();
+
+    if (playlistItemsResponse.status > 200) {
+      console.warn(playlistItemsJson);
+
+      return [];
+    }
 
     const lastDate = this.lastDates.get(parameters) || Date.now();
 
@@ -138,6 +150,12 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
       },
     });
     const videosJson = await videosResponse.json();
+
+    if (videosResponse.status >= 400) {
+      console.warn(videosJson);
+
+      return [];
+    }
 
     const videos: Video[] = videosJson.items.map(
       (json: Any): Video => {

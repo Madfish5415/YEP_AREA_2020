@@ -70,6 +70,12 @@ export class IssueNewNode extends IntervalNode<Parameters, Issue> {
     });
     const json = await response.json();
 
+    if (response.status >= 400) {
+      console.warn(json);
+
+      return [];
+    }
+
     const lastDate = this.lastDates.get(parameters) || Date.now();
 
     this.lastDates.set(parameters, Date.now());

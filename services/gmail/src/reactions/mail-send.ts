@@ -13,11 +13,7 @@ type Credentials = {
   accessToken: string;
 };
 
-const mailCreateRaw = (
-  to: string,
-  subject: string,
-  body: string
-) => {
+const mailCreateRaw = (to: string, subject: string, body: string) => {
   const str = [
     'Content-Type: text/plain; charset="UTF-8"\n',
     "MIME-Version: 1.0\n",
@@ -63,11 +59,17 @@ export class MailSendNode extends BaseNode<Parameters, void> {
 
     OAUTH2_CLIENT.setCredentials({ access_token: accessToken });
 
-    await GMAIL_CLIENT.users.messages.send({
+    const mailSendAPI = await GMAIL_CLIENT.users.messages.send({
       userId: "me",
       requestBody: {
         raw: mailCreateRaw(receiver, title, body),
       },
     });
+
+    if (mailSendAPI.status >= 400) {
+      console.warn(mailSendAPI.statusText);
+
+      return;
+    }
   }
 }

@@ -47,7 +47,9 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
 
   private lastDates = new Map<Parameters, number>();
 
-  async execute(parameters: Parameters & Credentials): Promise<Outputs> {
+  async execute(
+    parameters: Parameters & Credentials
+  ): Promise<Outputs | Outputs[]> {
     const { username, token, tokenSecret } = parameters;
     const query = toQuery({
       screen_name: username,
@@ -63,6 +65,13 @@ export class TweetActionNode extends IntervalNode<Parameters, Outputs> {
       },
     });
     const json = await response.json();
+
+    if (response.status >= 400) {
+      console.warn(json);
+
+      return [];
+    }
+
     const lastDate = this.lastDates.get(parameters) || Date.now();
 
     this.lastDates.set(parameters, Date.now());

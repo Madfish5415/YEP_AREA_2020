@@ -80,6 +80,13 @@ export class ActivityEndNode extends IntervalNode<Parameters, Activity> {
       method: "GET",
     });
     const json = await response.json();
+
+    if (response.status >= 400) {
+      console.warn(json);
+
+      return [];
+    }
+
     const returnedActivities =
       this.allReturnedActivities.get(parameters) || new Map<string, boolean>();
 

@@ -39,7 +39,7 @@ export class GroupMessageSendNode extends BaseNode<Parameters, void> {
     });
     const url = `https://www.yammer.com/api/v1/messages.json`;
 
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -47,5 +47,13 @@ export class GroupMessageSendNode extends BaseNode<Parameters, void> {
       },
       body: rBody,
     });
+
+    if (response.status >= 400) {
+      const json = await response.json();
+
+      console.warn(json);
+
+      return;
+    }
   }
 }
