@@ -84,7 +84,7 @@ export class MailNewNode extends IntervalNode<AnyObject, Mail> {
     const mails: Mail[] = filteredMailsAPI.map(
       (mailAPI): Mail => {
         const encodedBody = mailAPI.data.payload!.parts!.find(
-          (part) => part.partId! === "0"
+          (part) => part.mimeType! === "text/plain"
         )!.body!.data!;
         const body = Buffer.from(encodedBody, "base64").toString();
 

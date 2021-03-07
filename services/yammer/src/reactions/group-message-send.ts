@@ -49,9 +49,7 @@ export class GroupMessageSendNode extends BaseNode<Parameters, void> {
     });
 
     if (response.status >= 400) {
-      const json = await response.json();
-
-      console.warn(json);
+      console.warn(response.statusText);
 
       return;
     }

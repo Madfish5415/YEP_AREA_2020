@@ -62,7 +62,7 @@ export class ModuleRegisterNode extends BaseNode<Parameters, void> {
       title,
       members,
     });
-    const url = `${autologin}/module/${scholarYear}/${moduleId}/${locationId}/register`;
+    const url = `${autologin}/module/${scholarYear}/${moduleId}/${locationId}/register?format=json`;
 
     const response = await fetch(url, {
       method: "POST",

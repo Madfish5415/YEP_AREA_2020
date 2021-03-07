@@ -160,8 +160,8 @@ export class VideoNewNode extends IntervalNode<Parameters, Video> {
     const videos: Video[] = videosJson.items.map(
       (json: Any): Video => {
         return {
-          id: channelId,
-          channelId: "",
+          id: json.id,
+          channelId: json.snippet.channelId,
           title: json.snippet.title,
           description: json.snippet.description,
           views: json.statistics.viewCount,
