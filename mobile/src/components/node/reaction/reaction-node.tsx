@@ -208,7 +208,11 @@ const ReactionNode: FC<Props> = (props) => {
             <NodeItem
               key={reactionsType.id}
               node={reactionsType}
-              isConnected={props.credentials.includes(serviceId)}
+              isConnected={
+                reactionsType.credentials
+                  ? true
+                  : props.credentials.includes(serviceId)
+              }
               selected={reactionNode.nodeId === reactionsType.id}
               serviceId={serviceId}
               setNode={setReactionNode}

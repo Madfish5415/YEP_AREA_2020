@@ -162,10 +162,13 @@ const ActionNode: FC<Props> = (props) => {
     if (actionNode.nodeId === undefined) {
       NodeServiceAlert();
     } else {
+      const nextNodeId = props.workflow.nodes.find(
+        (node) => node.name === nextNode
+      )?.id;
       const newActionNode = {
         ...actionNode,
         name: nodeName,
-        nextNodes: [nextNode],
+        nextNodes: [nextNodeId || ""],
       };
       const index = props.workflow.nodes.findIndex(
         (node) => node.id === actionNode.id
@@ -210,7 +213,11 @@ const ActionNode: FC<Props> = (props) => {
             <NodeItem
               key={actionsType.id}
               node={actionsType}
-              isConnected={props.credentials.includes(serviceId)}
+              isConnected={
+                actionsType.credentials
+                  ? true
+                  : props.credentials.includes(serviceId)
+              }
               selected={actionNode.nodeId === actionsType.id}
               serviceId={serviceId}
               setNode={setActionNode}
