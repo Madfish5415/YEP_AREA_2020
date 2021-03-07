@@ -128,6 +128,17 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
       ],
     },
   ],
+  [
+    "google",
+    {
+      issuer: "https://accounts.google.com",
+      clientId:
+        "331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng.apps.googleusercontent.com",
+      redirectUrl:
+        "com.googleusercontent.apps.331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng:/credentials",
+      scopes: ["profile"],
+    },
+  ],
 ]);
 
 const Credentials: FC = () => {
