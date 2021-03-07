@@ -18,7 +18,7 @@ type Props = {
 
 export const OperatorSection: FC<Props> = (props) => {
   const operatorsNodes = props.workflow.nodes.filter(
-    (node) => node.label === "condition"
+    (node) => node.label !== "action" && node.label !== "reaction"
   );
 
   return (

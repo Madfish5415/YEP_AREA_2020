@@ -62,6 +62,7 @@ export const NodeItem: FC<Props> = (props) => {
       ...props.currentNode,
       nodeId: props.node.id,
       serviceId: props.serviceId,
+      label: props.node.label,
     } as WorkflowNode);
   };
 
