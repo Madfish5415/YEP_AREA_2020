@@ -2,23 +2,32 @@ import {
   AuthenticationBloc,
   AuthenticationErrorState,
   AuthenticationInitialState,
-  AuthenticationRepository, AuthenticationSignInState
+  AuthenticationRepository,
+  AuthenticationSignInState,
 } from "@area-common/blocs";
-import {gray, primary} from "@area-common/styles";
-import {BlocBuilder} from "@felangel/react-bloc";
-import {Backdrop, Box, CircularProgress, createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
-import {Alert} from "@material-ui/lab";
-import {useRouter} from "next/dist/client/router";
-import React, {FC, useEffect} from "react";
+import { gray, primary } from "@area-common/styles";
+import { BlocBuilder } from "@felangel/react-bloc";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  createStyles,
+  makeStyles,
+  Theme,
+  Typography,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { useRouter } from "next/dist/client/router";
+import React, { FC, useEffect } from "react";
 
-import {SignInForm} from "../../components/authentication/signin/form";
+import { SignInForm } from "../../components/authentication/signin/form";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: gray.main,
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     formContainer: {
       display: "flex",
@@ -26,13 +35,13 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       flexDirection: "column",
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     title: {
       color: primary.main,
       fontSize: 96,
       font: "roboto",
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
     alert: {
       margin: "1rem 0",
@@ -53,7 +62,8 @@ const SigninPage: FC = () => {
 
   useEffect(() => {
     if (localStorage.getItem("jwt")) {
-      router.push("/workflows")
+      router
+        .push("/workflows")
         .then()
         .catch((e) => console.log(e));
     }
@@ -62,9 +72,7 @@ const SigninPage: FC = () => {
   return (
     <Box className={classes.root}>
       <Box className={classes.formContainer}>
-        <Typography className={classes.title}>
-          AREA 51
-        </Typography>
+        <Typography className={classes.title}>AREA 51</Typography>
         <BlocBuilder
           bloc={authBloc}
           builder={(state) => {
@@ -74,23 +82,27 @@ const SigninPage: FC = () => {
                   <Alert severity="error" className={classes.alert}>
                     {state.error.message}
                   </Alert>
-                  <SignInForm bloc={authBloc}/>
+                  <SignInForm bloc={authBloc} />
                 </Box>
               );
             }
             if (state instanceof AuthenticationInitialState) {
-              return <SignInForm bloc={authBloc}/>;
+              return <SignInForm bloc={authBloc} />;
             }
             if (state instanceof AuthenticationSignInState) {
               localStorage.setItem("jwt", state.authentication);
-              router.push("/workflows")
+              router
+                .push("/workflows")
                 .then()
                 .catch((e) => console.log(e));
             }
-            return (<Backdrop className={classes.backdrop} open={true}>
-              <CircularProgress color="inherit"/>
-            </Backdrop>);
-          }}/>
+            return (
+              <Backdrop className={classes.backdrop} open={true}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            );
+          }}
+        />
       </Box>
     </Box>
   );

@@ -75,7 +75,7 @@ type FormValues = {
 
 const SignUpScreen: FC = () => {
   const authBloc = new AuthenticationBloc(
-    new AuthenticationRepository("http://localhost:8080")
+    new AuthenticationRepository(globalThis.serverURL)
   );
   const { navigate } = useNavigation();
 

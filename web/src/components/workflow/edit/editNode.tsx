@@ -1,34 +1,39 @@
 import {
-  CredentialBloc, CredentialListEvent,
-  CredentialListState, CredentialRepository,
+  CredentialBloc,
+  CredentialListEvent,
+  CredentialListState,
+  CredentialRepository,
   CredentialState,
   ServiceBloc,
   ServiceErrorState,
   ServiceListEvent,
   ServiceListState,
   ServiceRepository,
-  ServiceState
+  ServiceState,
 } from "@area-common/blocs";
-import {gray, primary} from "@area-common/styles";
-import {SingletonNode, Workflow, WorkflowNode} from "@area-common/types";
-import {BlocBuilder} from "@felangel/react-bloc";
+import { gray, primary } from "@area-common/styles";
+import { SingletonNode, Workflow, WorkflowNode } from "@area-common/types";
+import { BlocBuilder } from "@felangel/react-bloc";
 import {
-  Box, Button,
+  Box,
+  Button,
   createStyles,
-  Dialog, DialogActions,
-  DialogContent, IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
   makeStyles,
   TextField,
   Theme,
   Typography,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import React, {FC, useEffect, useState} from "react";
-import {v4 as uuidv4} from "uuid";
+import React, { FC, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-import {DefaultState} from "../../blocbuilder/default-state";
-import {ErrorState} from "../../blocbuilder/error-state";
+import { DefaultState } from "../../blocbuilder/default-state";
+import { ErrorState } from "../../blocbuilder/error-state";
 import NodeCondition from "./conditionNode";
 import NodeLinks from "./nodeLinks";
 import NodeList from "./nodeList";
@@ -41,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       alignItems: "center",
       justifyContent: "center",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     column: {
       display: "flex",
@@ -131,20 +136,20 @@ type EditNodeProps = {
 const EditNode: FC<EditNodeProps> = (props) => {
   const classes = useStyles();
 
-  const nodesTypes: Map<string, SingletonNode[]> = new Map<string,
-    SingletonNode[]>();
+  const nodesTypes: Map<string, SingletonNode[]> = new Map<
+    string,
+    SingletonNode[]
+  >();
 
   if (props.serviceState) {
     props.serviceState.services.forEach((service) => {
-      const nodes = service.nodes.filter(
-        (elem) => {
-          if (props.nodeType === "action" || props.nodeType === "reaction") {
-            return elem.label === props.nodeType;
-          } else {
-            return elem.label !== "action" && elem.label !== "reaction";
-          }
+      const nodes = service.nodes.filter((elem) => {
+        if (props.nodeType === "action" || props.nodeType === "reaction") {
+          return elem.label === props.nodeType;
+        } else {
+          return elem.label !== "action" && elem.label !== "reaction";
         }
-      );
+      });
       nodesTypes.set(service.id, nodes);
     });
   }
@@ -152,33 +157,41 @@ const EditNode: FC<EditNodeProps> = (props) => {
   let currentSingletonNode: [string, SingletonNode] | null = null;
 
   nodesTypes.forEach((singletonNodeList, serviceId) => {
-    const foundedNode: SingletonNode | undefined = singletonNodeList.find((value1 => value1.id === props.currentNode?.nodeId));
+    const foundedNode: SingletonNode | undefined = singletonNodeList.find(
+      (value1) => value1.id === props.currentNode?.nodeId
+    );
 
-    if (foundedNode)
-      currentSingletonNode = [serviceId, {...foundedNode}];
-  })
-
-  const [node, setNode] = useState<Partial<WorkflowNode>>({...props.currentNode} || {
-    id: uuidv4(),
-    condition: "true",
-    nextNodes: []
+    if (foundedNode) currentSingletonNode = [serviceId, { ...foundedNode }];
   });
-  const [singletonNode, setSingletonNode] = useState<[string, SingletonNode] | null>(currentSingletonNode);
-  const [nodeName, setNodeName] = useState<string | undefined>(props.currentNode?.name || undefined);
-  const [nodeParams, setNodeParams] = useState<Record<string, string>>(props.currentNode?.parameters || {});
+
+  const [node, setNode] = useState<Partial<WorkflowNode>>(
+    { ...props.currentNode } || {
+      id: uuidv4(),
+      condition: "true",
+      nextNodes: [],
+    }
+  );
+  const [singletonNode, setSingletonNode] = useState<
+    [string, SingletonNode] | null
+  >(currentSingletonNode);
+  const [nodeName, setNodeName] = useState<string | undefined>(
+    props.currentNode?.name || undefined
+  );
+  const [nodeParams, setNodeParams] = useState<Record<string, string>>(
+    props.currentNode?.parameters || {}
+  );
 
   useEffect(() => {
-    if (!singletonNode)
-      return
+    if (!singletonNode) return;
 
     setNode({
       ...node,
       serviceId: singletonNode[0],
       nodeId: singletonNode[1].id,
       label: singletonNode[1].label,
-      parameters: undefined
+      parameters: undefined,
     });
-    setNodeParams({})
+    setNodeParams({});
 
     if (singletonNode === currentSingletonNode) {
       setNode({
@@ -186,20 +199,17 @@ const EditNode: FC<EditNodeProps> = (props) => {
         serviceId: singletonNode[0],
         nodeId: singletonNode[1].id,
         label: singletonNode[1].label,
-        parameters: props.currentNode?.parameters || undefined
+        parameters: props.currentNode?.parameters || undefined,
       });
-      setNodeParams(props.currentNode?.parameters || {})
+      setNodeParams(props.currentNode?.parameters || {});
     }
-
-  }, [singletonNode])
+  }, [singletonNode]);
 
   const handleClose = () => {
     props.setIsOpen(false);
   };
 
-  const handleNodeNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleNodeNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNodeName(event.target.value);
   };
 
@@ -208,12 +218,20 @@ const EditNode: FC<EditNodeProps> = (props) => {
     const newNode: Partial<WorkflowNode> = {
       ...node,
       name: nodeName,
-      parameters: nodeParams
+      parameters: nodeParams,
     };
 
-    if (!newNode.id || !newNode.serviceId || !newNode.nodeId || !newNode.name || !newNode.label || !newNode.parameters ||
-      !newNode.condition || !newNode.nextNodes) {
-      return
+    if (
+      !newNode.id ||
+      !newNode.serviceId ||
+      !newNode.nodeId ||
+      !newNode.name ||
+      !newNode.label ||
+      !newNode.parameters ||
+      !newNode.condition ||
+      !newNode.nextNodes
+    ) {
+      return;
     }
 
     const index = newWorkflow.nodes.findIndex((elem) => elem.id === newNode.id);
@@ -247,7 +265,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
       open={props.isOpen}
       onClose={handleClose}
       PaperProps={{
-        style: {backgroundColor: gray.light1, boxShadow: "1"},
+        style: { backgroundColor: gray.light1, boxShadow: "1" },
       }}
     >
       <DialogContent>
@@ -257,7 +275,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
           margin="normal"
           label=""
           placeholder="Node name"
-          InputProps={{className: classes.dialogTitle}}
+          InputProps={{ className: classes.dialogTitle }}
           value={nodeName}
           onChange={handleNodeNameChange}
         />
@@ -266,14 +284,12 @@ const EditNode: FC<EditNodeProps> = (props) => {
           className={classes.closeButton}
           onClick={handleClose}
         >
-          <CloseIcon/>
+          <CloseIcon />
         </IconButton>
         <Box className={classes.container}>
           <Box className={classes.row}>
             <Box className={classes.column}>
-              <Typography className={classes.title}>
-                Type
-              </Typography>
+              <Typography className={classes.title}>Type</Typography>
               <NodeList
                 nodesTypes={nodesTypes}
                 singletonNode={singletonNode}
@@ -282,41 +298,34 @@ const EditNode: FC<EditNodeProps> = (props) => {
               />
             </Box>
             <Box className={classes.column}>
-              <Typography className={classes.title}>
-                Parameters
-              </Typography>
+              <Typography className={classes.title}>Parameters</Typography>
               <Box className={classes.parameters}>
-                {singletonNode && singletonNode[1].parametersDef ? (
-                    Object.entries(singletonNode[1].parametersDef).map(([key, value]) => (
-                        <ParametersItem
-                          key={uuidv4()}
-                          params={nodeParams}
-                          setParams={setNodeParams}
-                          variableKey={key}
-                          variable={value}
-                        />
-                      )
-                    )
-                  )
-                  : null
-                }
+                {singletonNode && singletonNode[1].parametersDef
+                  ? Object.entries(
+                      singletonNode[1].parametersDef
+                    ).map(([key, value]) => (
+                      <ParametersItem
+                        key={uuidv4()}
+                        params={nodeParams}
+                        setParams={setNodeParams}
+                        variableKey={key}
+                        variable={value}
+                      />
+                    ))
+                  : null}
               </Box>
             </Box>
           </Box>
           <Box className={classes.row}>
-            {props.nodeType !== "reaction" ?
+            {props.nodeType !== "reaction" ? (
               <Box className={classes.column}>
-                <Typography className={classes.title}>
-                  Links
-                </Typography>
-                <NodeLinks workflow={props.workflow} node={node}/>
-              </Box> : null
-            }
+                <Typography className={classes.title}>Links</Typography>
+                <NodeLinks workflow={props.workflow} node={node} />
+              </Box>
+            ) : null}
             <Box className={classes.column}>
-              <Typography className={classes.title}>
-                Condition
-              </Typography>
-              <NodeCondition node={node} setNode={setNode}/>
+              <Typography className={classes.title}>Condition</Typography>
+              <NodeCondition node={node} setNode={setNode} />
             </Box>
           </Box>
         </Box>
@@ -328,7 +337,7 @@ const EditNode: FC<EditNodeProps> = (props) => {
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 type EditNodeBuilderProps = {
   workflow: Workflow;
@@ -352,8 +361,7 @@ const EditNodeBuilder: FC<EditNodeBuilderProps> = (props) => {
     new CredentialRepository("http://localhost:8080")
   );
 
-  if (token)
-    credentialBloc.add(new CredentialListEvent(token));
+  if (token) credentialBloc.add(new CredentialListEvent(token));
 
   return (
     <BlocBuilder
@@ -361,38 +369,42 @@ const EditNodeBuilder: FC<EditNodeBuilderProps> = (props) => {
       bloc={serviceBloc}
       builder={(serviceState: ServiceState) => {
         if (serviceState instanceof ServiceErrorState) {
-          return <ErrorState error={serviceState.error}/>;
+          return <ErrorState error={serviceState.error} />;
         }
         if (serviceState instanceof ServiceListState) {
-          return <BlocBuilder
-            key={uuidv4()}
-            bloc={credentialBloc}
-            builder={(credentialState: CredentialState) => {
-              if (credentialState instanceof ServiceErrorState) {
-                return <ErrorState error={credentialState.error}/>;
-              }
-              if (credentialState instanceof CredentialListState) {
-                return (<EditNode
-                  workflow={props.workflow}
-                  setWorkflow={props.setWorkflow}
-                  isOpen={props.isOpen}
-                  setIsOpen={props.setIsOpen}
-                  refresh={props.refresh}
-                  setRefresh={props.setRefresh}
-                  nodeType={props.nodeType}
-                  serviceState={serviceState as ServiceListState}
-                  credentialState={credentialState as CredentialListState}
-                  currentNode={props.currentNode}
-                />);
-              }
-              return <DefaultState/>;
-            }}
-          />
+          return (
+            <BlocBuilder
+              key={uuidv4()}
+              bloc={credentialBloc}
+              builder={(credentialState: CredentialState) => {
+                if (credentialState instanceof ServiceErrorState) {
+                  return <ErrorState error={credentialState.error} />;
+                }
+                if (credentialState instanceof CredentialListState) {
+                  return (
+                    <EditNode
+                      workflow={props.workflow}
+                      setWorkflow={props.setWorkflow}
+                      isOpen={props.isOpen}
+                      setIsOpen={props.setIsOpen}
+                      refresh={props.refresh}
+                      setRefresh={props.setRefresh}
+                      nodeType={props.nodeType}
+                      serviceState={serviceState as ServiceListState}
+                      credentialState={credentialState as CredentialListState}
+                      currentNode={props.currentNode}
+                    />
+                  );
+                }
+                return <DefaultState />;
+              }}
+            />
+          );
         }
-        return <DefaultState/>;
+        return <DefaultState />;
       }}
     />
   );
-}
+};
 
 export default EditNodeBuilder;

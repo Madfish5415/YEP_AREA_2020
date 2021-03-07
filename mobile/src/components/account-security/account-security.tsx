@@ -47,7 +47,7 @@ type Props = {
 
 const AccountSecurityBloc: FC<AccountSecurityProps> = (props) => {
   const accountBloc = new AccountBloc(
-    new AccountRepository("http://localhost:8080")
+    new AccountRepository(globalThis.serverURL)
   );
   const { navigate } = useNavigation();
   const { user, updateCallback } = props.route.params;

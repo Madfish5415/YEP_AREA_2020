@@ -44,7 +44,7 @@ type WorkflowCreateProps = {
 };
 
 const WorkflowCreateScreen: FC<WorkflowCreateProps> = (props) => {
-  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  const userBloc = new UserBloc(new UserRepository(globalThis.serverURL));
   const { navigate } = useNavigation();
   getLocalStorage("@userToken")
     .then((data) => {

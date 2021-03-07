@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 });
 
 const SettingsScreen: FC = () => {
-  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  const userBloc = new UserBloc(new UserRepository(globalThis.serverURL));
   const { navigate } = useNavigation();
 
   getLocalStorage("@userToken")

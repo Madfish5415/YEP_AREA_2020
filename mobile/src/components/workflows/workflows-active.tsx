@@ -48,7 +48,7 @@ const WorkflowsActiveScreen: FC = () => {
   const { navigate } = useNavigation();
   let token = "";
   const workflowsBloc = new WorkflowBloc(
-      new WorkflowRepository("http://localhost:8080")
+    new WorkflowRepository(globalThis.serverURL)
   );
   useIsFocused();
   getLocalStorage("@userToken")

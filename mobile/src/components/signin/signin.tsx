@@ -28,7 +28,10 @@ import { AuthenticationRepository } from "@area-common/blocs";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { SignIn as SignInType, StatusError } from "@area-common/types";
 import { setLocalStorage } from "../../common/localStorage";
-import { v4 } from "uuid";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SettingsServer from "../common/settings-server";
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +67,7 @@ type FormValues = {
 
 const SignInScreen: FC = () => {
   const authBloc = new AuthenticationBloc(
-    new AuthenticationRepository("http://localhost:8080")
+    new AuthenticationRepository(globalThis.serverURL)
   );
   const { navigate } = useNavigation();
 
@@ -74,7 +77,7 @@ const SignInScreen: FC = () => {
   useIsFocused();
   return (
     <BlocBuilder
-      key={v4()}
+      key={uuidv4()}
       bloc={authBloc}
       builder={(state) => {
         if (state instanceof AuthenticationErrorState) {
@@ -91,7 +94,7 @@ const SignInScreen: FC = () => {
             .then((_) => navigate("Home"))
             .catch((e) => console.log(e));
         }
-        return <Text>Bite</Text>;
+        return <Text>Loading</Text>;
       }}
     />
   );
@@ -120,59 +123,64 @@ const SignIn: FC<Props> = (props) => {
   }, [register]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Title />
-      {props.error ? (
-        <Text style={styles.onErrorText}>{props.error.message}</Text>
-      ) : null}
-      <ItemForm
-        label={"Email"}
-        formId={"email"}
-        placeholder={"example@gmail.com"}
-        setter={setValue}
-      />
-      <ItemForm
-        style={{ marginTop: 15 }}
-        label={"Password"}
-        formId={"password"}
-        placeholder={"..."}
-        setter={setValue}
-      />
-      <PrimaryButton
-        style={{ marginTop: 20 }}
-        label={"Sign In"}
-        submitFunction={handleSubmit(onSubmit)}
-      />
-      <TouchableOpacity
-        style={styles.createAccountContainer}
-        onPress={() => navigate("SignUp")}
-      >
-        <Text style={[fonts.main, { color: white }]}>First time?</Text>
-        <Text style={[fonts.main, { color: primary.main }]}> Sign Up</Text>
-      </TouchableOpacity>
-      <View style={styles.divider} />
-      <ExternalSignInButton
-        externalServiceName={"GitHub"}
-        externalServiceColor={white}
-        externalServiceIcon={
-          <AntDesign name="github" size={18} color={white} />
-        }
-        submitFunction={() => alert("Todo !")}
-      />
-      <ExternalSignInButton
-        style={{ marginTop: 15 }}
-        externalServiceName={"Office 365"}
-        externalServiceColor={"#D53A00"}
-        externalServiceIcon={
-          <MaterialCommunityIcons
-            name="microsoft-office"
-            size={18}
-            color={"#D53A00"}
+    <SafeAreaView>
+      <SettingsServer />
+      <ScrollView>
+        <View style={styles.container}>
+          <Title />
+          {props.error ? (
+            <Text style={styles.onErrorText}>{props.error.message}</Text>
+          ) : null}
+          <ItemForm
+            label={"Email"}
+            formId={"email"}
+            placeholder={"example@gmail.com"}
+            setter={setValue}
           />
-        }
-        submitFunction={() => alert("Todo !")}
-      />
-    </ScrollView>
+          <ItemForm
+            style={{ marginTop: 15 }}
+            label={"Password"}
+            formId={"password"}
+            placeholder={"..."}
+            setter={setValue}
+          />
+          <PrimaryButton
+            style={{ marginTop: 20 }}
+            label={"Sign In"}
+            submitFunction={handleSubmit(onSubmit)}
+          />
+          <TouchableOpacity
+            style={styles.createAccountContainer}
+            onPress={() => navigate("SignUp")}
+          >
+            <Text style={[fonts.main, { color: white }]}>First time?</Text>
+            <Text style={[fonts.main, { color: primary.main }]}> Sign Up</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <ExternalSignInButton
+            externalServiceName={"GitHub"}
+            externalServiceColor={white}
+            externalServiceIcon={
+              <AntDesign name="github" size={18} color={white} />
+            }
+            submitFunction={() => alert("Todo !")}
+          />
+          <ExternalSignInButton
+            style={{ marginTop: 15 }}
+            externalServiceName={"Office 365"}
+            externalServiceColor={"#D53A00"}
+            externalServiceIcon={
+              <MaterialCommunityIcons
+                name="microsoft-office"
+                size={18}
+                color={"#D53A00"}
+              />
+            }
+            submitFunction={() => alert("Todo !")}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 export default SignInScreen;

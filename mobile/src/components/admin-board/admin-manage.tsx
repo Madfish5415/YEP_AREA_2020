@@ -56,7 +56,7 @@ type AdminManageProps = {
 
 const AdminManageBloc: FC<AdminManageProps> = (props) => {
   const adminAccountBloc = new AdminAccountBloc(
-    new AdminAccountRepository("http://localhost:8080")
+    new AdminAccountRepository(globalThis.serverURL)
   );
   const { navigate } = useNavigation();
   getLocalStorage("@userToken")
