@@ -107,8 +107,10 @@ const ServiceLine: FC<Props> = (props) => {
       <div className={classes.content}>
         <ListItem>
           <ListItemIcon>{props.children}</ListItemIcon>
-          <ListItemText className={classes.serviceName}>
-            {props.label}
+          <ListItemText>
+            <Typography className={classes.serviceName}>
+              {props.label}
+            </Typography>
           </ListItemText>
           <ListItemSecondaryAction>
             {props.autologin ? (
