@@ -12,7 +12,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { gray, primary, utils, white } from "@area-common/styles";
 import { PrimaryButton } from "../../common/primary-button";
 import { useTheme } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ExternalSignInButton } from "./external-signin-button";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -31,6 +31,7 @@ import { setLocalStorage } from "../../common/localStorage";
 import { oAuthConfigMap } from "../credentials/credentials";
 import { AuthConfiguration } from "react-native-app-auth";
 import { oAuthSignIn } from "../../common/oAuthLogin";
+import { v4 } from "uuid";
 
 const styles = StyleSheet.create({
   container: {
@@ -73,9 +74,10 @@ const SignInScreen: FC = () => {
   const SignInUser = (signin: SignInType) => {
     authBloc.add(new AuthenticationSignInEvent(signin));
   };
-
+  useIsFocused();
   return (
     <BlocBuilder
+      key={v4()}
       bloc={authBloc}
       builder={(state) => {
         if (state instanceof AuthenticationErrorState) {
@@ -92,7 +94,7 @@ const SignInScreen: FC = () => {
             .then((_) => navigate("Home"))
             .catch((e) => console.log(e));
         }
-        return <Text>Loading</Text>;
+        return <Text>Bite</Text>;
       }}
     />
   );

@@ -16,7 +16,7 @@ export const DeleteAlert: (
       {
         text: "Cancel",
         onPress: () => null,
-        style: "cancel",
+        style: "destructive",
       },
     ],
     { cancelable: false }

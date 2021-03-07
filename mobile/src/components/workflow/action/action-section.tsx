@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   workflow: Workflow;
+  callback: (workflow: Workflow) => void;
 };
 
 export const ActionSection: FC<Props> = (props) => {
@@ -24,9 +25,17 @@ export const ActionSection: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       {actionsNodes.length > 0 ? (
-        <Action item={actionsNodes[0]} />
+        <Action
+          item={actionsNodes[0]}
+          updateWorkflow={props.callback}
+          workflow={props.workflow}
+        />
       ) : (
-        <NewWidget widget={"action"} />
+        <NewWidget
+          widget={"action"}
+          updateWorkflow={props.callback}
+          workflow={props.workflow}
+        />
       )}
     </View>
   );

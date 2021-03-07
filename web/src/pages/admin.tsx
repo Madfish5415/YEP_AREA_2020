@@ -1,22 +1,23 @@
-import React, { FC, useEffect } from "react";
-import AppBarComponent from "../components/appbar/appbar";
-import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
   UserBloc,
-  UserRepository,
-  UserState,
+  UserErrorState,
   UserReadEvent,
   UserReadState,
-  UserErrorState,
+  UserRepository,
+  UserState,
 } from "@area-common/blocs";
-import { gray, white } from "@area-common/styles";
-import { DefaultState } from "../components/blocbuilder/default-state";
-import { ErrorState } from "../components/blocbuilder/error-state";
-import { User } from "@area-common/types";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
+import {gray} from "@area-common/styles";
+import {User} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {makeStyles, Theme, Typography} from "@material-ui/core";
+import {useRouter} from "next/router";
+import React, {FC, useEffect} from "react";
+import {v4 as uuidv4} from "uuid";
+
 import UserList from "../components/admin/userList";
+import AppBarComponent from "../components/appbar/appbar";
+import {DefaultState} from "../components/blocbuilder/default-state";
+import {ErrorState} from "../components/blocbuilder/error-state";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -56,12 +57,12 @@ const AdminPage: FC = () => {
       key={uuidv4()}
       builder={(state: UserState) => {
         if (state instanceof UserErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error}/>;
         }
         if (state instanceof UserReadState) {
-          return <Admin user={(state as UserReadState).user} />;
+          return <Admin user={(state as UserReadState).user}/>;
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
@@ -81,10 +82,10 @@ const Admin: FC<Props> = (props) => {
 
   return (
     <>
-      <AppBarComponent />
+      <AppBarComponent/>
       <div className={classes.content}>
         <Typography className={classes.userTitle}>Users</Typography>
-        <UserList user={props.user} />
+        <UserList user={props.user}/>
       </div>
     </>
   );
