@@ -13,7 +13,13 @@
   },
   "dependencies": {
     "@area-service/conditions": "*",
+    "@area-service/epitech": "*",
+    "@area-service/github": "*",
+    "@area-service/gmail": "*",
+    "@area-service/outlook": "*",
     "@area-service/twitter": "*",
+    "@area-service/yammer": "*",
+    "@area-service/youtube": "*",
     "@types/jsonwebtoken": "^8.5.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",

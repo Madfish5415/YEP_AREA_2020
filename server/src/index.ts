@@ -1,6 +1,12 @@
-import { Service } from "@area-common/types";
-import { ConditionsService } from "@area-service/conditions";
-import { TwitterService } from "@area-service/twitter";
+import {Service} from "@area-common/types";
+import {ConditionsService} from "@area-service/conditions";
+import {EpitechService} from "@area-service/epitech";
+import {GitHubService} from "@area-service/github";
+import {GmailService} from "@area-service/gmail";
+import {TwitterService} from "@area-service/twitter";
+import {YammerService} from "@area-service/yammer";
+import {YouTubeService} from "@area-service/youtube";
+import {OutlookService} from "@area-service/outlook";
 
 import {
   DATABASE_HOSTNAME,
@@ -11,8 +17,8 @@ import {
   HOSTNAME,
   PORT,
 } from "./constants";
-import { Core } from "./core";
-import { Database } from "./database";
+import {Core} from "./core";
+import {Database} from "./database";
 
 async function main() {
   const database = new Database({
@@ -22,7 +28,7 @@ async function main() {
     user: DATABASE_USER,
     password: DATABASE_PASSWORD,
   });
-  const services: Service[] = [new ConditionsService(), new TwitterService()];
+  const services: Service[] = [new ConditionsService(), new EpitechService(), new GitHubService(), new GmailService(), new OutlookService(), new TwitterService(), new YammerService(), new YouTubeService()];
   const core = new Core(HOSTNAME, PORT, database, services);
 
   process.on("SIGINT", () => core.stop());

@@ -48,7 +48,7 @@ const WorkflowsActiveScreen: FC = () => {
   const { navigate } = useNavigation();
   let token = "";
   const workflowsBloc = new WorkflowBloc(
-    new WorkflowRepository("http://localhost:8080")
+    new WorkflowRepository(globalThis.serverURL)
   );
   useIsFocused();
   getLocalStorage("@userToken")
@@ -61,6 +61,19 @@ const WorkflowsActiveScreen: FC = () => {
       }
     })
     .catch((e) => console.log(e));
+
+  const updateWorkflow = (
+    workflow: Workflow,
+    updatedWorkflow: Partial<Workflow>
+  ) => {
+    workflowsBloc.add(
+      new WorkflowUpdateEvent(token, workflow.id, updatedWorkflow)
+    );
+  };
+
+  const createWorkflow = (workflow: Workflow) => {
+    workflowsBloc.add(new WorkflowCreateEvent(token, workflow));
+  };
 
   return (
     <BlocBuilder
@@ -79,8 +92,8 @@ const WorkflowsActiveScreen: FC = () => {
           return (
             <WorkflowsActive
               workflows={state.workflows}
-              bloc={workflowsBloc}
-              token={token}
+              updateWorkflow={updateWorkflow}
+              createWorkflow={createWorkflow}
             />
           );
         }
@@ -92,8 +105,11 @@ const WorkflowsActiveScreen: FC = () => {
 
 type Props = {
   workflows: Workflow[];
-  bloc: WorkflowBloc;
-  token: string;
+  updateWorkflow: (
+    workflow: Workflow,
+    partialWorkflow: Partial<Workflow>
+  ) => void;
+  createWorkflow: (workflow: Workflow) => void;
 };
 
 const { height } = Dimensions.get("window");
@@ -109,19 +125,6 @@ const WorkflowsActive: FC<Props> = (props) => {
 
   const scrollEnabled = screenHeight > height - 180;
 
-  const updateWorkflow = (
-    workflow: Workflow,
-    updatedWorkflow: Partial<Workflow>
-  ) => {
-    props.bloc.add(
-      new WorkflowUpdateEvent(props.token, workflow.id, updatedWorkflow)
-    );
-  };
-
-  const createWorkflow = (workflow: Workflow) => {
-    props.bloc.add(new WorkflowCreateEvent(props.token, workflow));
-  };
-
   return (
     <SafeAreaView>
       <ScrollView
@@ -133,7 +136,7 @@ const WorkflowsActive: FC<Props> = (props) => {
           <WorkflowItem
             key={workflow.id}
             workflow={workflow}
-            update={updateWorkflow}
+            update={props.updateWorkflow}
           />
         ))}
         <TouchableOpacity
@@ -141,7 +144,7 @@ const WorkflowsActive: FC<Props> = (props) => {
           onPress={() =>
             navigate("WorkflowCreate", {
               screen: "WorkflowCreate",
-              params: { callback: createWorkflow },
+              params: { callback: props.createWorkflow },
             })
           }
         >

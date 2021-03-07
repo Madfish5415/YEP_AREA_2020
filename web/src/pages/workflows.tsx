@@ -1,9 +1,3 @@
-import React, { FC, useEffect, useState } from "react";
-import AppBarComponent from "../components/appbar/appbar";
-import WorkflowComponent from "../components/workflows/workflow";
-import { makeStyles, Theme, Typography, Grid, Fab } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import { gray, primary } from "@area-common/styles";
 import {
   WorkflowBloc,
   WorkflowDeleteEvent,
@@ -11,17 +5,24 @@ import {
   WorkflowErrorState,
   WorkflowListEvent,
   WorkflowListState,
-  WorkflowUpdateEvent,
-  WorkflowUpdateState,
   WorkflowRepository,
   WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
-import { DefaultState } from "../components/blocbuilder/default-state";
-import { ErrorState } from "../components/blocbuilder/error-state";
-import { Workflow } from "@area-common/types";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
+import {gray, primary, white} from "@area-common/styles";
+import {StatusError, Workflow} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {Fab,Grid, makeStyles, Theme, Typography} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import {useRouter} from "next/router";
+import React, {FC, useEffect} from "react";
+import {v4 as uuidv4} from "uuid";
+
+import AppBarComponent from "../components/appbar/appbar";
+import {DefaultState} from "../components/blocbuilder/default-state";
+import {ErrorState} from "../components/blocbuilder/error-state";
+import WorkflowComponent from "../components/workflows/workflow";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   floatingButton: {
     backgroundColor: primary.main,
-    color: gray.main,
+    color: white,
     margin: "0px",
     top: "auto",
     right: "20px",
@@ -97,7 +98,13 @@ const WorkflowsPage: FC = () => {
       }}
       builder={(state: WorkflowState) => {
         if (state instanceof WorkflowErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return (
+            <Workflows
+              workflows={(state as WorkflowErrorState).error}
+              deleteCallback={deleteWorkflow}
+              isActiveCallback={isActiveWorkflow}
+            />
+          );
         }
         if (state instanceof WorkflowListState) {
           return (
@@ -108,14 +115,14 @@ const WorkflowsPage: FC = () => {
             />
           );
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
 };
 
 type Props = {
-  workflows: Workflow[];
+  workflows: Workflow[] | StatusError;
   deleteCallback: (workflow: Workflow) => void;
   isActiveCallback: (workflow: Workflow) => void;
 };
@@ -130,29 +137,38 @@ const Workflows: FC<Props> = (props) => {
     }).then().catch((e) => console.log(e));
   };
 
+  let body;
+
+  if (props.workflows instanceof StatusError) {
+    body = (<ErrorState error={props.workflows}/>)
+  } else {
+    body = (
+      <Grid container spacing={5} className={classes.workflows}>
+        {props.workflows.map((workflow) => (
+          <Grid item key={workflow.id}>
+            <WorkflowComponent
+              workflow={workflow}
+              deleteCallback={props.deleteCallback}
+              isActiveCallback={props.isActiveCallback}
+            />
+          </Grid>
+        ))}
+      </Grid>)
+  }
+
   return (
     <>
-      <AppBarComponent />
+      <AppBarComponent/>
       <div className={classes.content}>
         <Typography className={classes.title}>My Workflows</Typography>
-        <Grid container spacing={5} className={classes.workflows}>
-          {props.workflows.map((workflow) => (
-            <Grid item key={workflow.id}>
-              <WorkflowComponent
-                workflow={workflow}
-                deleteCallback={props.deleteCallback}
-                isActiveCallback={props.isActiveCallback}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {body}
       </div>
       <Fab
         color="inherit"
         className={classes.floatingButton}
         onClick={handleNewWorkflow}
       >
-        <AddIcon />
+        <AddIcon/>
       </Fab>
     </>
   );

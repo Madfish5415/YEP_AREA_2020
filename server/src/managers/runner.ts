@@ -30,7 +30,12 @@ export class RunnerManager {
     const activeWorkflows = allWorkflows.filter((workflow) => workflow.active);
 
     for (const workflow of activeWorkflows) {
-      await this.createRunner(workflow);
+      try {
+        await this.createRunner(workflow);
+      } catch (e) {
+        console.error(e);
+        console.error(`Runner for workflow ${workflow.id} can't be started`);
+      }
     }
   }
 

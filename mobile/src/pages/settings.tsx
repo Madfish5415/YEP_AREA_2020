@@ -3,7 +3,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../components/settings/settings";
 import { Appbar, useTheme } from "react-native-paper";
 
-const Stack = createStackNavigator();
+export type SettingsStackParamsList = {};
+
+const Stack = createStackNavigator<SettingsStackParamsList>();
 
 const SettingsAppBar = () => {
   const { colors, fonts } = useTheme();
