@@ -135,15 +135,17 @@ const Settings: FC<Props> = (props) => {
         important={false}
         style={{ marginTop: 20 }}
       />
-      <View style={styles.logoutContainer}>
-        <StandardButton
-          label={"Admin board"}
-          callback={() => navigate("AdminBoard", { screen: "AdminBoard" })}
-          important={true}
-          style={{ marginBottom: 20 }}
-        />
-        <StandardButton label={"Log out"} callback={null} important={true} />
-      </View>
+      {props.user.administrator ? (
+        <View style={styles.logoutContainer}>
+          <StandardButton
+            label={"Admin board"}
+            callback={() => navigate("AdminBoard", { screen: "AdminBoard" })}
+            important={true}
+            style={{ marginBottom: 20 }}
+          />
+          <StandardButton label={"Log out"} callback={null} important={true} />
+        </View>
+      ) : null}
     </View>
   );
 };

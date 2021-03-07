@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Appbar, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import AdminBoardScreen from "../components/admin-board/admin-board";
+import AdminBoardBloc from "../components/admin-board/admin-board";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +20,7 @@ const AppBar = () => {
 const AdminBoardStack: FC = () => {
   return (
     <Stack.Navigator screenOptions={{ header: AppBar }}>
-      <Stack.Screen name={"AdminBoard"} component={AdminBoardScreen} />
+      <Stack.Screen name={"AdminBoard"} component={AdminBoardBloc} />
     </Stack.Navigator>
   );
 };
