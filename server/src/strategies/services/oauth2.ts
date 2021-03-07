@@ -25,9 +25,11 @@ export class OAuth2ServiceStrategy extends Strategy {
         done: VerifyCallback
       ) => {
         try {
+          user = req.user as User;
+
           const filter = {
             userId: user.id,
-            serviceId: req.params.id,
+            serviceId: req.serviceId,
           };
           const value = {
             accessToken,
@@ -47,7 +49,7 @@ export class OAuth2ServiceStrategy extends Strategy {
             });
           }
 
-          return done(null);
+          return done(null, user);
         } catch (e) {
           return done(e);
         }

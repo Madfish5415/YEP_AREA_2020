@@ -1,4 +1,4 @@
-import {StatusError, User} from "@area-common/types";
+import { StatusError, User } from "@area-common/types";
 
 type GuillaumeChapeau = User;
 
