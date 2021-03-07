@@ -19,6 +19,9 @@ import { useForm } from "react-hook-form";
 import { emailRegex } from "../../../constants/regexs";
 import { SignInSignUp } from "./buttons/signup";
 import { useRouter } from "next/router";
+import { GitHub } from "@material-ui/icons";
+import { SiMicrosoftoffice } from "react-icons/si";
+import { FcGoogle } from "react-icons/fc";
 
 const useStyle = makeStyles({
   container: {
@@ -27,6 +30,23 @@ const useStyle = makeStyles({
   },
   form: {
     margin: "1rem 0",
+  },
+  partyButton: {
+    textTransform: "none",
+    fontWeight: "bold",
+    fontSize: 16,
+    backgroundColor: gray.light1,
+    "&:hover": {
+      backgroundColor: gray.light2,
+    },
+  },
+  officeButton: {},
+  officeIcon: {
+    color: "#D53A00",
+  },
+  officeText: {
+    fontWeight: "bold",
+    color: "#D53A00",
   },
 });
 
@@ -153,18 +173,35 @@ export const SignInForm: React.FC<Props> = (props) => {
               <SignInSignUp />
             </Grid>
             <Grid item xs={12}>
-              <Button onClick={() => handlePartySignIn("github")}>
+              <Button
+                fullWidth
+                className={classes.partyButton}
+                onClick={() => handlePartySignIn("github")}
+                startIcon={<GitHub />}
+              >
                 Connect with GitHub
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Button onClick={() => handlePartySignIn("microsoft")}>
-                {"Connect with "}
-                <Typography>Office 365</Typography>
+              <Button
+                fullWidth
+                className={classes.partyButton}
+                onClick={() => handlePartySignIn("microsoft")}
+                startIcon={<SiMicrosoftoffice className={classes.officeIcon} />}
+              >
+                Connect with&nbsp;
+                <Typography className={classes.officeText}>
+                  Office 365
+                </Typography>
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Button onClick={() => handlePartySignIn("google")}>
+              <Button
+                fullWidth
+                className={classes.partyButton}
+                onClick={() => handlePartySignIn("google")}
+                startIcon={<FcGoogle />}
+              >
                 Connect with Google
               </Button>
             </Grid>

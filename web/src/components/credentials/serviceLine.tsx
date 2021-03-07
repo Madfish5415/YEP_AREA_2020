@@ -45,6 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: white,
     textTransform: "none",
     fontSize: 14,
+    marginLeft: 20,
+    marginTop: 5,
     backgroundColor: primary.main,
     "&:hover": {
       backgroundColor: primary.dark2,
@@ -56,8 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 28,
   },
   textFieldContainer: {
-    width: "75%",
+    width: "100%",
     display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
