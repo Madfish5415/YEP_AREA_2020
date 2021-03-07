@@ -160,7 +160,8 @@ const WorkflowEdit: FC<Props> = (props) => {
   const handleWorkflowChangeSubmit = () => {
     const tmpWorkflow: Workflow = {
       ...workflow,
-      name: name
+      name: name,
+      starters: workflow.nodes.filter((node) => node.label === "action").map((node) => node.id),
     }
 
     props.changeCallback(props.workflow.id, tmpWorkflow);
