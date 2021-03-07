@@ -11,11 +11,4 @@ export class ServiceReadEvent extends ServiceEvent {
 }
 
 export class ServiceListEvent extends ServiceEvent {
-  id: string;
-
-  constructor(id: string) {
-    super();
-
-    this.id = id;
-  }
 }

@@ -13,6 +13,9 @@ import AdminBoardStack from "./admin-board";
 import { Workflow, User } from "@area-common/types";
 import WorkflowStack from "./workflow";
 import WorkflowCreateStack from "./workflow-create";
+import ActionNodeStack from "./action-node";
+import OperatorNodeStack from "./operator-node";
+import ReactionNodeStack from "./reaction-node";
 import AdminUserManageStack from "./admin-user-manage";
 import AdminUserUpdateStack from "./admin-update-field";
 
@@ -82,6 +85,19 @@ const RootStack: FC = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name={"ActionNode"}
+            component={ActionNodeStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"OperatorNode"}
+            component={OperatorNodeStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"ReactionNode"}
+            component={ReactionNodeStack}
+
             name={"AccountSecurity"}
             component={AccountSecurityStack}
             options={{ headerShown: false }}

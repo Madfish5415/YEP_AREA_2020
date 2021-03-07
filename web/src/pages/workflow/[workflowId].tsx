@@ -1,32 +1,32 @@
-import React, { FC, useState, useEffect } from "react";
-import AppBarComponent from "../../components/appbar/appbar";
-import {
-  makeStyles,
-  withStyles,
-  TextField,
-  Theme,
-  Fab,
-} from "@material-ui/core";
 import {
   WorkflowBloc,
-  WorkflowDeleteEvent,
-  WorkflowDeleteState,
   WorkflowErrorState,
   WorkflowReadEvent,
   WorkflowReadState,
-  WorkflowUpdateEvent,
-  WorkflowUpdateState,
   WorkflowRepository,
   WorkflowState,
+  WorkflowUpdateEvent,
+  WorkflowUpdateState,
 } from "@area-common/blocs";
-import { DefaultState } from "../../components/blocbuilder/default-state";
-import { ErrorState } from "../../components/blocbuilder/error-state";
-import WorkflowConfig from "../../components/workflow/workflowConfig";
-import { Workflow } from "@area-common/types";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
-import { gray, primary } from "@area-common/styles";
+import {gray, primary} from "@area-common/styles";
+import {Workflow} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {
+  Box,
+  Button,
+  makeStyles,
+  TextField,
+  Theme,
+  withStyles,
+} from "@material-ui/core";
+import {useRouter} from "next/router";
+import React, {FC, useEffect, useState} from "react";
+import {v4 as uuidv4} from "uuid";
+
+import AppBarComponent from "../../components/appbar/appbar";
+import {DefaultState} from "../../components/blocbuilder/default-state";
+import {ErrorState} from "../../components/blocbuilder/error-state";
+import WorkflowConfigDialog from "../../components/workflow/workflowConfigDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,28 +37,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 125,
     marginTop: 40,
   },
+  titleAndSave: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  saveButton: {
+    marginTop: 40,
+    marginRight: 30,
+    backgroundColor: primary.main,
+    color: "white",
+    fontSize: 15,
+    textTransform: "none",
+    height: 50,
+    maxWidth: 75,
+    minWidth: 75,
+    borderRadius: 50 / 2,
+    "&:hover": {
+      backgroundColor: primary.dark2,
+    },
+  },
   title: {
     color: primary.main,
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
   },
-  saveButton: {
-    backgroundColor: primary.main,
-    fontWeight: "bold",
-    margin: "0px",
-    top: "auto",
-    right: "20px",
-    bottom: "20px",
-    left: "auto",
-    position: "fixed",
-  },
 }));
 
 const WorkflowPage: FC = () => {
   const router = useRouter();
   let token = "";
-  const { workflowId } = router.query;
+  const {workflowId} = router.query;
   const workflowBloc = new WorkflowBloc(
     new WorkflowRepository("http://localhost:8080")
   );
@@ -96,7 +106,7 @@ const WorkflowPage: FC = () => {
       }}
       builder={(state: WorkflowState) => {
         if (state instanceof WorkflowErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error}/>;
         }
         if (state instanceof WorkflowReadState) {
           return (
@@ -106,7 +116,7 @@ const WorkflowPage: FC = () => {
             />
           );
         }
-        return <DefaultState />;
+        return <DefaultState/>;
       }}
     />
   );
@@ -135,6 +145,8 @@ const WorkflowEdit: FC<Props> = (props) => {
   const classes = useStyles();
   const [workflow, setWorkflow] = useState(props.workflow);
 
+  let name = workflow.name;
+
   const findBlobId: (id: string) => number = (id) => {
     return parseInt("0x" + id[id.length - 1]) % 10;
   };
@@ -142,45 +154,53 @@ const WorkflowEdit: FC<Props> = (props) => {
   const handleWorkflowNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setWorkflow({ ...workflow, name: event.target.value });
+    name = event.target.value;
   };
 
   const handleWorkflowChangeSubmit = () => {
-    props.changeCallback(props.workflow.id, workflow);
+    const tmpWorkflow: Workflow = {
+      ...workflow,
+      name: name
+    }
+
+    props.changeCallback(props.workflow.id, tmpWorkflow);
   };
 
   return (
     <>
-      <AppBarComponent />
-      <div
-        className={classes.root}
-        style={{
-          background:
-            "url(/assets/images/blob" +
-            findBlobId(props.workflow.id) +
-            "_bg.svg) no-repeat center",
-          backgroundSize: "75%",
-        }}
-      >
-        <CssTextField
-          id="workflowName"
-          name="name"
-          margin="normal"
-          label=""
-          className={classes.nameForm}
-          InputProps={{ className: classes.title }}
-          defaultValue={props.workflow.name}
-          onChange={handleWorkflowNameChange}
-        />
-        <WorkflowConfig workflow={workflow} setWorkflow={setWorkflow} />
-        <Fab
-          variant={"extended"}
-          className={classes.saveButton}
-          onClick={handleWorkflowChangeSubmit}
+      <AppBarComponent/>
+      <Box mb={5}>
+        <div
+          className={classes.root}
+          style={{
+            background:
+              "url(/assets/images/blob" +
+              findBlobId(props.workflow.id) +
+              "_bg.svg) no-repeat center",
+            backgroundSize: "75%",
+          }}
         >
-          Save changes
-        </Fab>
-      </div>
+          <div className={classes.titleAndSave}>
+            <CssTextField
+              id="workflowName"
+              name="name"
+              margin="normal"
+              label=""
+              className={classes.nameForm}
+              InputProps={{className: classes.title}}
+              defaultValue={name}
+              onChange={handleWorkflowNameChange}
+            />
+            <Button
+              className={classes.saveButton}
+              onClick={handleWorkflowChangeSubmit}
+            >
+              Save
+            </Button>
+          </div>
+          <WorkflowConfigDialog workflow={workflow} setWorkflow={setWorkflow}/>
+        </div>
+      </Box>
     </>
   );
 };

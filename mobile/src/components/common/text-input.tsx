@@ -15,8 +15,9 @@ const styles = StyleSheet.create({
 
 type Props = {
   text: string | undefined;
-  setText: (text: string) => void;
+  setText?: (text: string) => void;
   defaultValue?: string;
+  placeholder?: string;
   onSubmitEditing?: any;
 };
 
@@ -27,8 +28,8 @@ export const CustomTextInput: FC<Props> = (props) => {
       defaultValue={props.text}
       onChangeText={props.setText}
       placeholderTextColor={gray.light3}
-      placeholder={"..."}
-      onSubmitEditing={props.onSubmitEditing}
+      placeholder={props.placeholder ? props.placeholder : "..."}
+      onSubmitEditing={props.onSubmitEditing ? props.onSubmitEditing : null}
     />
   );
 };
