@@ -54,7 +54,7 @@ const ServiceList: FC = () => {
         .catch((e) => console.log(e));
     } else {
       token = tmp;
-      servicesBloc.add(new ServiceListEvent(token));
+      servicesBloc.add(new ServiceListEvent());
     }
   });
 
@@ -64,7 +64,7 @@ const ServiceList: FC = () => {
       key={uuidv4()}
       builder={(state: ServiceState) => {
         if (state instanceof ServiceErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error} />;
         }
         if (state instanceof ServiceListState) {
           return <CredentialBlocComponent services={state.services} />;
@@ -104,7 +104,7 @@ const CredentialBlocComponent: FC<IntermediateProps> = (props) => {
       key={uuidv4()}
       builder={(state: CredentialState) => {
         if (state instanceof CredentialErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error} />;
         }
         if (state instanceof CredentialListState) {
           return (
