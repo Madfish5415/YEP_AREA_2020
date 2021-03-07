@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     backgroundColor: gray.light1,
     paddingHorizontal: 10,
     color: white,
+    paddingVertical: 0,
   },
 });
 
