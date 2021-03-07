@@ -36,5 +36,3 @@ export class UserDeleteEvent extends UserEvent {
     this.authorization = authorization;
   }
 }
-
-export class UserListEvent extends UserEvent {}

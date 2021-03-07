@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import {
   makeStyles,
   Theme,
@@ -8,16 +8,16 @@ import {
   List,
 } from "@material-ui/core";
 import {
-  UserBloc,
-  UserRepository,
-  UserState,
-  UserUpdateState,
-  UserUpdateEvent,
-  UserErrorState,
-  UserListEvent,
-  UserListState,
-  UserDeleteState,
-  UserDeleteEvent,
+  AdminUserRepository,
+  AdminUserBloc,
+  AdminUserListEvent,
+  AdminUserListState,
+  AdminUserState,
+  AdminUserUpdateEvent,
+  AdminUserUpdateState,
+  AdminUserDeleteEvent,
+  AdminUserDeleteState,
+  AdminUserErrorState,
 } from "@area-common/blocs";
 import { gray, white } from "@area-common/styles";
 import { DefaultState } from "../blocbuilder/default-state";
@@ -26,6 +26,7 @@ import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
 import { v4 as uuidv4 } from "uuid";
 import UserLine from "./userLine";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -41,41 +42,56 @@ type Props = {
 };
 
 const UserList: FC<Props> = (props) => {
-  const usersBloc = new UserBloc(new UserRepository(""));
-  usersBloc.add(new UserListEvent());
+  const router = useRouter();
+  let token = "";
+  const adminUsersBloc = new AdminUserBloc(
+    new AdminUserRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      adminUsersBloc.add(new AdminUserListEvent(token));
+    }
+  });
 
   const updateUser = (id: string, updatedUser: Partial<User>) => {
-    usersBloc.add(new UserUpdateEvent(id, updatedUser));
+    adminUsersBloc.add(new AdminUserUpdateEvent(token, id, updatedUser));
   };
 
   const deleteUser = (id: string) => {
-    usersBloc.add(new UserDeleteEvent(id));
+    adminUsersBloc.add(new AdminUserDeleteEvent(token, id));
   };
 
   return (
     <BlocBuilder
-      bloc={usersBloc}
+      bloc={adminUsersBloc}
       key={uuidv4()}
-      condition={(_, current: UserState) => {
-        if (current instanceof UserUpdateState) {
-          usersBloc.add(new UserListEvent());
+      condition={(_, current: AdminUserState) => {
+        if (current instanceof AdminUserUpdateState) {
+          adminUsersBloc.add(new AdminUserListEvent(token));
         }
-        if (current instanceof UserDeleteState) {
-          usersBloc.add(new UserListEvent());
+        if (current instanceof AdminUserDeleteState) {
+          adminUsersBloc.add(new AdminUserListEvent(token));
         }
         return true;
       }}
-      builder={(state: UserState) => {
-        if (state instanceof UserErrorState) {
+      builder={(state: AdminUserState) => {
+        if (state instanceof AdminUserErrorState) {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
-        if (state instanceof UserListState) {
+        if (state instanceof AdminUserListState) {
           return (
             <UserListComponent
               user={props.user}
               updateUser={updateUser}
               deleteUser={deleteUser}
-              users={(state as UserListState).users}
+              users={(state as AdminUserListState).users}
             />
           );
         }
@@ -94,25 +110,23 @@ type CompProps = {
 
 const UserListComponent: FC<CompProps> = (props) => {
   const classes = useStyles();
+  const otherUsers = props.users.filter((user) => user.id !== props.user.id);
 
   return (
-    <>
-      <div className={classes.content}>
-        <List>
-          {props.users.map(
-            (user) =>
-              user.id !== props.user.id && (
-                <UserLine
-                  key={user.id}
-                  user={user}
-                  updateUser={props.updateUser}
-                  deleteUser={props.deleteUser}
-                />
-              )
-          )}
-        </List>
-      </div>
-    </>
+    <div className={classes.content}>
+      <List>
+        {otherUsers.map((user) => {
+          return (
+            <UserLine
+              key={user.id}
+              user={user}
+              updateUser={props.updateUser}
+              deleteUser={props.deleteUser}
+            />
+          );
+        })}
+      </List>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
@@ -62,11 +62,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const SettingsPage: FC = () => {
-  const userBloc = new UserBloc(new UserRepository(""));
-  userBloc.add(new UserReadEvent("3dcf9a69-e258-4449-a41d-cea7f6ca3fa9"));
+  const router = useRouter();
+  let token = "";
+  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      userBloc.add(new UserReadEvent(token));
+    }
+  });
 
-  const updateUser = (id: string, user: Partial<User>) => {
-    userBloc.add(new UserUpdateEvent(id, user));
+  const updateUser = (user: Partial<User>) => {
+    userBloc.add(new UserUpdateEvent(token, user));
   };
 
   return (
@@ -75,9 +88,7 @@ const SettingsPage: FC = () => {
       key={uuidv4()}
       condition={(_, current: UserState) => {
         if (current instanceof UserUpdateState) {
-          userBloc.add(
-            new UserReadEvent("3dcf9a69-e258-4449-a41d-cea7f6ca3fa9")
-          );
+          userBloc.add(new UserReadEvent(token));
         }
         return true;
       }}
@@ -101,15 +112,19 @@ const SettingsPage: FC = () => {
 
 type Props = {
   user: User;
-  updateUser: (id: string, user: Partial<User>) => void;
+  updateUser: (user: Partial<User>) => void;
 };
 
 const Settings: FC<Props> = (props) => {
-  const classes = useStyles();
   const router = useRouter();
+  const classes = useStyles();
 
   const handleLogOut = () => {
-    console.log("User logged out");
+    localStorage.removeItem("jwt");
+    router
+      .push("/authentication/signin")
+      .then()
+      .catch((e) => console.log(e));
   };
 
   const handleAdminBoard = () => {

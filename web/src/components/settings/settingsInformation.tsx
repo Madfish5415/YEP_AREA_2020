@@ -28,22 +28,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   user: User;
-  updateUser: (id: string, user: Partial<User>) => void;
+  updateUser: (user: Partial<User>) => void;
 };
 
 const SettingsInformation: FC<Props> = (props) => {
   const classes = useStyles();
 
   const handleNameChange = (newValue: string) => {
-    props.updateUser(props.user.id, { username: newValue });
+    props.updateUser({ username: newValue });
   };
 
   const handleFirstNameChange = (newValue: string) => {
-    props.updateUser(props.user.id, { firstName: newValue });
+    props.updateUser({ firstName: newValue });
   };
 
   const handleLastNameChange = (newValue: string) => {
-    props.updateUser(props.user.id, { lastName: newValue });
+    props.updateUser({ lastName: newValue });
   };
 
   return (

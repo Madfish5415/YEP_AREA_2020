@@ -8,9 +8,13 @@ import SignInScreen from "./signin";
 import SignUpScreen from "./signup";
 import EpitechCredentialsStack from "./epitech-credentials";
 import OAuthCredentialsStack from "./oauth-credentials";
-import { Workflow } from "@area-common/types";
+import AccountSecurityStack from "./account-security";
+import AdminBoardStack from "./admin-board";
+import { Workflow, User } from "@area-common/types";
 import WorkflowStack from "./workflow";
 import WorkflowCreateStack from "./workflow-create";
+import AdminUserManageStack from "./admin-user-manage";
+import AdminUserUpdateStack from "./admin-update-field";
 
 export type RootStackParamList = {
   Home: { userId: string };
@@ -22,6 +26,16 @@ export type RootStackParamList = {
   Workflow: {
     workflow: Workflow;
     callback: (workflow: Workflow, updatedWorkflow: Partial<Workflow>) => void;
+  };
+  AdminUserManage: {
+    user: User;
+    updateUser: (id: string, updatedUser: Partial<User>) => void;
+    deleteUser: (id: string) => void;
+  };
+  AdminUpdateField: {
+    label: string;
+    value: string;
+    onSubmit: (value: string) => void;
   };
 };
 
@@ -65,6 +79,26 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"WorkflowCreate"}
             component={WorkflowCreateStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AccountSecurity"}
+            component={AccountSecurityStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminBoard"}
+            component={AdminBoardStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminUserManage"}
+            component={AdminUserManageStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"AdminUpdateField"}
+            component={AdminUserUpdateStack}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

@@ -11,7 +11,13 @@ import { adminAccountRouter } from "./account";
 
 export const adminUserRouter = Router();
 
-adminUserRouter.use(ADMIN_USER_ROUTE, adminAccountRouter);
+declare global {
+  namespace Express {
+    interface Request {
+      userId: string;
+    }
+  }
+}
 
 adminUserRouter.use(ADMIN_USER_ROUTE, async (req, res, next) => {
   try {
@@ -22,11 +28,15 @@ adminUserRouter.use(ADMIN_USER_ROUTE, async (req, res, next) => {
       return next(USER_NOT_EXISTS_ERROR);
     }
 
+    req.userId = id;
+
     return next();
   } catch (e) {
     return next(e);
   }
 });
+
+adminUserRouter.use(ADMIN_USER_ROUTE, adminAccountRouter);
 
 adminUserRouter.get(ADMIN_USER_ROUTE, async (req, res, next) => {
   try {

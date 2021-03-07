@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import AppBarComponent from "../components/appbar/appbar";
 import { makeStyles, Theme, Typography, Grid, Button } from "@material-ui/core";
 import {
@@ -7,8 +7,6 @@ import {
   UserState,
   UserReadEvent,
   UserReadState,
-  UserUpdateState,
-  UserUpdateEvent,
   UserErrorState,
 } from "@area-common/blocs";
 import { gray, white } from "@area-common/styles";
@@ -36,8 +34,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AdminPage: FC = () => {
-  const userBloc = new UserBloc(new UserRepository(""));
-  userBloc.add(new UserReadEvent("3dcf9a69-e258-4449-a41d-cea7f6ca3fa9"));
+  const router = useRouter();
+  let token = "";
+  const userBloc = new UserBloc(new UserRepository("http://localhost:8080"));
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      userBloc.add(new UserReadEvent(token));
+    }
+  });
 
   return (
     <BlocBuilder
