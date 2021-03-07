@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Appbar, useTheme } from "react-native-paper";
-import AdminUserManageBloc from "../components/admin-board/admin-manage";
+import AdminManageBloc from "../components/admin-board/admin-manage";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "./rootstack";
 import { User } from "@area-common/types";
@@ -52,7 +52,7 @@ const AdminUserManageStack: FC<AdminUserProps> = (props) => {
     >
       <Stack.Screen
         name={"AdminUserManage"}
-        component={AdminUserManageBloc}
+        component={AdminManageBloc}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

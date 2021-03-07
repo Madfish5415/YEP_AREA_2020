@@ -48,6 +48,7 @@ const AdminBoardBloc: FC = () => {
           adminUserBloc.add(
             new AdminUserUpdateEvent(userToken, id, updatedUser)
           );
+          adminUserBloc.add(new AdminUserListEvent(userToken));
         } else {
           navigate("SignIn");
         }
@@ -60,13 +61,14 @@ const AdminBoardBloc: FC = () => {
       .then((userToken) => {
         if (userToken) {
           adminUserBloc.add(new AdminUserDeleteEvent(userToken, id));
+          adminUserBloc.add(new AdminUserListEvent(userToken));
+          navigate("AdminBoard");
         } else {
           navigate("SignIn");
         }
       })
       .catch((error) => console.log(error));
   };
-  console.log(deleteUser);
   return (
     <BlocBuilder
       bloc={adminUserBloc}
@@ -96,7 +98,6 @@ type Props = {
 };
 
 const AdminBoardScreen: FC<Props> = (props) => {
-  console.log("props.deleteuser", props.deleteUser);
   return (
     <View style={styles.container}>
       <SectionTitle label={"Users"} style={{ marginTop: 10 }} />

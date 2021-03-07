@@ -59,7 +59,6 @@ const AdminManageBloc: FC<AdminManageProps> = (props) => {
     new AdminAccountRepository("http://localhost:8080")
   );
   const { navigate } = useNavigation();
-
   getLocalStorage("@userToken")
     .then((userToken) => {
       if (userToken) {
@@ -77,12 +76,9 @@ const AdminManageBloc: FC<AdminManageProps> = (props) => {
       .then((userToken) => {
         if (userToken) {
           adminAccountBloc.add(
-            new AdminAccountUpdateEvent(
-              userToken,
-              props.route.params.user.id,
-              account
-            )
+            new AdminAccountUpdateEvent(userToken, id, account)
           );
+          adminAccountBloc.add(new AdminAccountReadEvent(userToken, id));
         } else {
           navigate("SignIn");
         }
