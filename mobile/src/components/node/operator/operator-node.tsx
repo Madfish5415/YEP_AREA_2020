@@ -115,7 +115,15 @@ const OperatorNode: FC<Props> = (props) => {
   const [nodeName, setNodeName] = useState<string>(
     props.node ? props.node.name : "Operator"
   );
-  const [nextNode, setNextNode] = useState(props.node?.nextNodes?.[0] || "");
+  const [nextNode, setNextNode] = useState(
+    props.node !== undefined
+      ? props.node.nextNodes.length > 0
+        ? (props.workflow.nodes.find(
+            (node) => node.id === props.node?.nextNodes[0]
+          )?.name as string)
+        : ""
+      : ""
+  );
   const [operatorNode, setOperatorNode] = useState<Partial<WorkflowNode>>(
     props.node
       ? props.node
@@ -140,11 +148,19 @@ const OperatorNode: FC<Props> = (props) => {
     if (operatorNode.nodeId === undefined) {
       NodeServiceAlert();
     } else {
-      const newOperatorNode = {
+      let newOperatorNode = {
         ...operatorNode,
         name: nodeName,
-        nextNodes: [nextNode],
       };
+      if (nextNode !== "") {
+        const nextNodeId = props.workflow.nodes.find(
+          (node) => node.name === nextNode
+        )?.id as string;
+        newOperatorNode = {
+          ...newOperatorNode,
+          nextNodes: [nextNodeId],
+        };
+      }
       const index = props.workflow.nodes.findIndex(
         (node) => node.id === operatorNode.id
       );
