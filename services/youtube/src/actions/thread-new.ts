@@ -96,8 +96,8 @@ export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
     const threads: Thread[] = filteredThreadsJson.map(
       (json: Any): Thread => {
         return {
-          id: channelId,
-          channelId: "",
+          id: json.id,
+          channelId: json.snippet.channelId,
           author: json.snippet.authorDisplayName,
           text: json.snippet.textDisplay,
         };
