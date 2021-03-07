@@ -129,7 +129,6 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
 ]);
 
 const Credentials: FC = () => {
-  const [officeLoggedIn, setOfficeLoggedIn] = useState(false);
   const [githubLoggedIn, setGithubLoggedIn] = useState(false);
   const [youtubeLoggedIn, setYoutubeLoggedIn] = useState(false);
   const [epitechLoggedIn, setEpitechLoggedIn] = useState(false);
@@ -141,9 +140,12 @@ const Credentials: FC = () => {
   const focused = useIsFocused();
   useEffect(() => {
     async function getLoggedIn() {
-      setOfficeLoggedIn(false);
+      setEpitechLoggedIn(false);
       setGithubLoggedIn(false);
       setYoutubeLoggedIn(false);
+      setYammerLoggedIn(false);
+      setOutlookLoggedIn(false);
+      setGmailLoggedIn(false);
       const data = await getLocalStorage("@userToken");
       if (data) {
         const response = await fetch(
@@ -158,11 +160,9 @@ const Credentials: FC = () => {
         if (json && json.data) {
           console.log(json.data);
           json.data.forEach((service: string) => {
-            if (service.startsWith("microsoft")) {
-              setOfficeLoggedIn(true);
-            } else if (service.startsWith("github")) {
+            if (service.startsWith("github")) {
               setGithubLoggedIn(true);
-            } else if (service.startsWith("google")) {
+            } else if (service.startsWith("youtube")) {
               setYoutubeLoggedIn(true);
             } else if (service.startsWith("epitech")) {
               setEpitechLoggedIn(true);
@@ -183,22 +183,6 @@ const Credentials: FC = () => {
   }, [focused]);
   return (
     <View style={styles.container}>
-      <Service
-        name={"Office 365"}
-        serviceId={"microsoft"}
-        icon={
-          <MaterialCommunityIcons
-            size={50}
-            name={"microsoft-office"}
-            color={primary.main}
-          />
-        }
-        isEpitech={false}
-        isLoggedIn={officeLoggedIn}
-        oAuthConfig={oAuthConfigMap.get("office365")}
-        serviceName={"microsoft"}
-        setConnected={setOfficeLoggedIn}
-      />
       <Service
         name={"Github"}
         serviceId={"github"}
