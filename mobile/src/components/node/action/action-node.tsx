@@ -140,8 +140,9 @@ const ActionNode: FC<Props> = (props) => {
   const [nextNode, setNextNode] = useState(
     props.node !== undefined
       ? props.node.nextNodes.length > 0
-        ? (props.workflow.nodes.find((node) => node.id === props.node?.id)
-            ?.name as string)
+        ? (props.workflow.nodes.find(
+            (node) => node.id === props.node?.nextNodes[0]
+          )?.name as string)
         : ""
       : ""
   );

@@ -116,7 +116,7 @@ const WorkflowCreate: FC<Props> = (props) => {
       (node) => node.label === "reaction"
     );
     if (actionsWorkflow.length > 0 && reactionsWorkflow.length > 0) {
-      props.callback(workflow);
+      props.callback({ ...workflow, starters: [actionsWorkflow[0].id] });
       SaveAlert("create");
       navigate("Home", { screen: "Workflows" });
     } else {
