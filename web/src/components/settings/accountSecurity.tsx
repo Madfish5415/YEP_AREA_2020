@@ -1,23 +1,24 @@
-import React, { FC, useState, useEffect } from "react";
-import { makeStyles, Theme, Typography, Button } from "@material-ui/core";
-import { gray, primary, white } from "@area-common/styles";
-import { User, Account } from "@area-common/types";
-import SettingsTextInput from "./settingsTextInput";
 import {
   AccountBloc,
-  AccountRepository,
-  AccountState,
+  AccountErrorState,
   AccountReadEvent,
   AccountReadState,
-  AccountUpdateState,
+  AccountRepository,
+  AccountState,
   AccountUpdateEvent,
-  AccountErrorState,
+  AccountUpdateState,
 } from "@area-common/blocs";
-import { DefaultState } from "../blocbuilder/default-state";
-import { ErrorState } from "../blocbuilder/error-state";
-import { BlocBuilder } from "@felangel/react-bloc";
-import { useRouter } from "next/router";
-import { v4 as uuidv4 } from "uuid";
+import {gray, primary, white} from "@area-common/styles";
+import {Account, StatusError,User} from "@area-common/types";
+import {BlocBuilder} from "@felangel/react-bloc";
+import {Button,makeStyles, Theme, Typography} from "@material-ui/core";
+import {useRouter} from "next/router";
+import React, {FC, useEffect,useState} from "react";
+import {v4 as uuidv4} from "uuid";
+
+import {DefaultState} from "../blocbuilder/default-state";
+import {ErrorState} from "../blocbuilder/error-state";
+import SettingsTextInput from "./settingsTextInput";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -101,29 +102,37 @@ const AccountSecurity: FC<Props> = (props) => {
           ) {
             return (
               <ErrorState
-                errorLabel={"This user is connected with an external service"}
+                error={new StatusError(state.error.code, {
+                  name: "ACCOUNT_NOT_EXISTS",
+                  message: "This user is connected with an external service"
+                })}
               />
             );
           }
-          return <ErrorState errorLabel={"An error has occured"} />;
+        return <ErrorState error={state.error}/>;
         }
         if (state instanceof AccountReadState) {
-          return (
-            <AccountSecurityComponent
-              user={props.user}
-              updateUser={props.updateUser}
-              account={(state as AccountReadState).account}
-              updateAccount={updateAccount}
-            />
-          );
+        return (
+            <
+          AccountSecurityComponent
+          user = {props.user}
+          updateUser = {props.updateUser}
+          account = {(state as AccountReadState).account
         }
-        return <DefaultState />;
-      }}
-    />
-  );
+          updateAccount = {updateAccount}
+          />
+        );
+      }
+return <DefaultState/>;
+}
+}
+/>
+)
+;
 };
 
-type ComponentProps = {
+type ComponentProps =
+{
   user: User;
   updateUser: (user: Partial<User>) => void;
   account: Account;
@@ -131,13 +140,13 @@ type ComponentProps = {
 };
 
 const AccountSecurityComponent: FC<ComponentProps> = (props) => {
-  const classes = useStyles();
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+const classes = useStyles();
+const [newPassword, setNewPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handlePasswordChange = () => {
-    if (newPassword !== "" && newPassword === confirmPassword) {
-      console.log("new password ", newPassword);
+const handlePasswordChange = () => {
+if (newPassword !== "" && newPassword === confirmPassword) {
+console.log("new password ", newPassword);
       // props.updateAccount({
       //   email: props.account.email,
       //   password: newPassword,

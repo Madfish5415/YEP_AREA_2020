@@ -1,32 +1,29 @@
-import React, { FC, useEffect } from "react";
 import {
-  makeStyles,
-  Theme,
-  Typography,
-  Grid,
-  Button,
-  List,
-} from "@material-ui/core";
-import {
-  AdminUserRepository,
   AdminUserBloc,
-  AdminUserListEvent,
-  AdminUserListState,
-  AdminUserState,
-  AdminUserUpdateEvent,
-  AdminUserUpdateState,
   AdminUserDeleteEvent,
   AdminUserDeleteState,
   AdminUserErrorState,
+  AdminUserListEvent,
+  AdminUserListState,
+  AdminUserRepository,
+  AdminUserState,
+  AdminUserUpdateEvent,
+  AdminUserUpdateState,
 } from "@area-common/blocs";
-import { gray, white } from "@area-common/styles";
-import { DefaultState } from "../blocbuilder/default-state";
-import { ErrorState } from "../blocbuilder/error-state";
 import { User } from "@area-common/types";
 import { BlocBuilder } from "@felangel/react-bloc";
-import { v4 as uuidv4 } from "uuid";
-import UserLine from "./userLine";
+import {
+  List,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 import { useRouter } from "next/router";
+import React, { FC, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import { DefaultState } from "../blocbuilder/default-state";
+import { ErrorState } from "../blocbuilder/error-state";
+import UserLine from "./userLine";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -83,7 +80,7 @@ const UserList: FC<Props> = (props) => {
       }}
       builder={(state: AdminUserState) => {
         if (state instanceof AdminUserErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error} />;
         }
         if (state instanceof AdminUserListState) {
           return (

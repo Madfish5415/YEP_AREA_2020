@@ -68,7 +68,7 @@ const NodeList: FC<Props> = (props) => {
     <List className={classes.list}>
       {Array.from(props.nodesTypes).map(([serviceId, nodesTypeList]) =>
         nodesTypeList.map((nodesType) => {
-          if (props.credentialState.credentials.find(credential => credential === serviceId) !== undefined) {
+          if (props.credentialState.credentials.find(credential => credential === serviceId) !== undefined || nodesType.credentials !== true) {
             return (
               <ListItem
                 key={nodesType.id}
@@ -99,12 +99,12 @@ const NodeList: FC<Props> = (props) => {
                 <ListItemText
                   primary={
                     <Typography className={classes.primary}>
-                      nodesType.name
+                      {nodesType.name}
                     </Typography>
                   }
                   secondary={
                     <Typography className={classes.secondary}>
-                      nodesType.description
+                      {nodesType.description}
                     </Typography>
                   }
                 />
