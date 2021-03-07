@@ -24,8 +24,6 @@ CredentialSchema.pre("save", function (next) {
 
 CredentialSchema.post("init", function () {
   this.value = AES.decrypt(this.value, AES_SECRET).toString(crypto.enc.Utf8);
-
-  console.log(this.value);
 });
 
 export const CredentialModel = model("Credential", CredentialSchema);
