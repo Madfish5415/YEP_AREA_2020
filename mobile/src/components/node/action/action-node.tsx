@@ -194,7 +194,6 @@ const ActionNode: FC<Props> = (props) => {
     };
     setActionNode(newNode);
   };
-
   return (
     <SafeAreaView>
       <ScrollView

@@ -8,7 +8,6 @@ import SignInScreen from "./signin";
 import SignUpScreen from "./signup";
 import EpitechCredentialsStack from "./epitech-credentials";
 import OAuthCredentialsStack from "./oauth-credentials";
-import { Workflow } from "@area-common/types";
 import AccountSecurityStack from "./account-security";
 import AdminBoardStack from "./admin-board";
 import { Workflow, User } from "@area-common/types";
@@ -98,7 +97,9 @@ const RootStack: FC = () => {
           <Stack.Screen
             name={"ReactionNode"}
             component={ReactionNodeStack}
-
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name={"AccountSecurity"}
             component={AccountSecurityStack}
             options={{ headerShown: false }}

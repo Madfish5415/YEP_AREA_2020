@@ -190,7 +190,7 @@ const Credentials: FC = () => {
       />
       <Service
         name={"Youtube"}
-        serviceId={"google"}
+        serviceId={"youtube"}
         icon={
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }

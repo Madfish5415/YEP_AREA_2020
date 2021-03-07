@@ -166,7 +166,14 @@ const SignIn: FC<Props> = (props) => {
             externalServiceIcon={
               <AntDesign name="github" size={18} color={white} />
             }
-            submitFunction={() => alert("Todo !")}
+            submitFunction={() => {
+              oAuthSignIn(
+                oAuthConfigMap.get("github") as AuthConfiguration,
+                "github"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
           />
           <ExternalSignInButton
             style={{ marginTop: 15 }}
@@ -179,7 +186,30 @@ const SignIn: FC<Props> = (props) => {
                 color={"#D53A00"}
               />
             }
-            submitFunction={() => alert("Todo !")}
+            submitFunction={async () => {
+              await oAuthSignIn(
+                oAuthConfigMap.get("office365") as AuthConfiguration,
+                "microsoft"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
+          />
+          <ExternalSignInButton
+            style={{ marginTop: 15 }}
+            externalServiceName={"Google"}
+            externalServiceColor={white}
+            externalServiceIcon={
+              <AntDesign name="google" size={18} color={white} />
+            }
+            submitFunction={() => {
+              oAuthSignIn(
+                oAuthConfigMap.get("google") as AuthConfiguration,
+                "google"
+              )
+                .then(() => navigate("Home"))
+                .catch();
+            }}
           />
         </View>
       </ScrollView>
