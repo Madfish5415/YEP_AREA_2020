@@ -25,9 +25,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
-    maxWidth: "100%",
+    marginLeft: "10%",
+    width: "80%",
+    height: "100%"
   },
+  list: {
+    display: "flex",
+    width: "100%",
+    height: "100%"
+  }
 }));
 
 type Props = {
@@ -107,7 +113,7 @@ const UserListComponent: FC<CompProps> = (props) => {
 
   return (
     <div className={classes.content}>
-      <List>
+      <List className={classes.list}>
         {otherUsers.map((user) => {
           return (
             <UserLine

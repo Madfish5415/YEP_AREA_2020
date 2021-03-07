@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
     },
     parameters: {
-      display: "flex",
+      display: "block",
       alignItems: "center",
       justifyContent: "center",
       width: "100%",

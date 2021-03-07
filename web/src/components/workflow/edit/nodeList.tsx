@@ -17,10 +17,11 @@ import React, {FC} from "react";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     list: {
-      display: "flex",
+      display: "block",
       alignItems: "center",
       justifyContent: "center",
       width: "80%",
+      height: "100%",
       maxHeight: 300,
       overflow: "auto",
       flexDirection: "column",
