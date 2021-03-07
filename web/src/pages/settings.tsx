@@ -35,8 +35,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 25,
     justifyContent: "center",
   },
+  bottomGap: {
+    marginTop: 90,
+    marginLeft: 125,
+  },
+  adminButton: {
+    backgroundColor: gray.main,
+    "&:hover": {
+      backgroundColor: gray.light1,
+    },
+    color: white,
+    textTransform: "none",
+    width: 200,
+  },
   logOutButton: {
-    marginTop: 140,
+    marginTop: 20,
     marginLeft: 125,
     backgroundColor: gray.main,
     "&:hover": {
@@ -114,6 +127,10 @@ const Settings: FC<Props> = (props) => {
       .catch((e) => console.log(e));
   };
 
+  const handleAdminBoard = () => {
+    router.push("/admin");
+  };
+
   return (
     <>
       <AppBarComponent />
@@ -131,6 +148,16 @@ const Settings: FC<Props> = (props) => {
             user={props.user}
             updateUser={props.updateUser}
           />
+          <div className={classes.bottomGap}>
+            {props.user.administrator ? (
+              <Button
+                className={classes.adminButton}
+                onClick={handleAdminBoard}
+              >
+                Admin board
+              </Button>
+            ) : null}
+          </div>
           <Button className={classes.logOutButton} onClick={handleLogOut}>
             Log out
           </Button>
