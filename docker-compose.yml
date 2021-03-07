@@ -24,6 +24,18 @@ services:
       - "PORT=8080"
       - "DATABASE_HOSTNAME=mongo"
       - "DATABASE_PORT=27017"
+      - "DISCORD_CLIENT_ID=817871699730890802"
+      - "DISCORD_CLIENT_SECRET=593RcNO_Qqk-hpyKBeuvVbEvi_vMu0Rb"
+      - "GITHUB_CLIENT_ID=9e4c0a9f9c64edd6ca65"
+      - "GITHUB_CLIENT_SECRET=d71c72ec620667412938582f18ff22f5918e6fca"
+      - "GOOGLE_CLIENT_ID=331406027335-qlp9tgmmb6uu2egbea6a5pv91jp54tdi.apps.googleusercontent.com"
+      - "GOOGLE_CLIENT_SECRET=ZPb9bmMFgM5omm-IGVZYVwDO"
+      - "MICROSOFT_CLIENT_ID=84ebbe53-62dd-48a4-a2da-f5696a7773ce"
+      - "MICROSOFT_CLIENT_SECRET=DCGzTfE9_vs125zLmpQAn79A_~LQv6w~Ko"
+      - "TWITTER_CONSUMER_KEY=BsAFtxyYLQyXAFcbklJg6x6iD"
+      - "TWITTER_CONSUMER_SECRET=XfX4wW3UdZAJ1E4WXQLlfShZtYXozJZKhcUkSi7LcdJXL3qIkQ"
+      - "AES_SECRET=secret"
+      - "AUTHORIZE_SECRET=secret"
     ports:
       - "8080:8080"
   client_mobile:
