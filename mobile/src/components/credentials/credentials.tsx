@@ -56,9 +56,9 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
     {
       issuer: "https://accounts.google.com",
       clientId:
-        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
+        "331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng.apps.googleusercontent.com",
       redirectUrl:
-        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
+        "com.googleusercontent.apps.331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng:/credentials",
       scopes: [
         "https://www.googleapis.com/auth/youtube",
         "https://www.googleapis.com/auth/youtube.force-ssl",
@@ -119,9 +119,9 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
     {
       issuer: "https://accounts.google.com",
       clientId:
-        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
+        "331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng.apps.googleusercontent.com",
       redirectUrl:
-        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
+        "com.googleusercontent.apps.331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng:/credentials",
       scopes: [
         "https://www.googleapis.com/auth/gmail.readonly",
         "https://www.googleapis.com/auth/gmail.send",

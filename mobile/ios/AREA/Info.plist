@@ -33,11 +33,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal </string>			
+			<string>com.googleusercontent.apps.331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal</string>
-        <string>627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com://credentials</string>
+				<string>com.googleusercontent.apps.331406027335-2uht55lpcbhhs0opf6lvmbkt66di0dng://credentials</string>
 			</array>
 		</dict>
 	</array>
