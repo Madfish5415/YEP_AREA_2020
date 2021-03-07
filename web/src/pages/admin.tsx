@@ -23,11 +23,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     backgroundColor: gray.main,
     height: "100%",
-    marginLeft: 125,
+    width: "100%",
     marginTop: 40,
   },
   userTitle: {
     color: gray.light2,
+    marginLeft: "9%",
     fontSize: 30,
     textDecoration: "underline",
     textUnderlinePosition: "under",
@@ -76,7 +77,7 @@ const Admin: FC<Props> = (props) => {
   const classes = useStyles();
   const router = useRouter();
 
-  if (props.user.administrator === false) {
+  if (!props.user.administrator) {
     router.push("/settings");
   }
 
