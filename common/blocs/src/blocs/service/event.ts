@@ -10,4 +10,5 @@ export class ServiceReadEvent extends ServiceEvent {
   }
 }
 
-export class ServiceListEvent extends ServiceEvent {}
+export class ServiceListEvent extends ServiceEvent {
+}
