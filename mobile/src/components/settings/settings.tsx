@@ -27,6 +27,7 @@ import { CustomTextInput } from "../common/text-input";
 import { StandardButton } from "../common/standard-button";
 import { getLocalStorage } from "../../common/localStorage";
 import { Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -98,6 +99,10 @@ const Settings: FC<Props> = (props) => {
   const [lastName, setLastName] = useState(props.user.username);
   const { navigate } = useNavigation();
 
+  const handleLogout = async () => {
+    await AsyncStorage.clear();
+    navigate("SignIn");
+  };
   return (
     <View style={styles.container}>
       <SectionTitle label={"Username"} style={{ marginTop: 5 }} />
@@ -143,9 +148,13 @@ const Settings: FC<Props> = (props) => {
             important={true}
             style={{ marginBottom: 20 }}
           />
-          <StandardButton label={"Log out"} callback={null} important={true} />
         </View>
       ) : null}
+      <StandardButton
+        label={"Log out"}
+        callback={handleLogout}
+        important={true}
+      />
     </View>
   );
 };
