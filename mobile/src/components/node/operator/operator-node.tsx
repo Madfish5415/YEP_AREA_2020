@@ -125,7 +125,7 @@ const OperatorNode: FC<Props> = (props) => {
           nodeId: undefined,
           name: undefined,
           label: "condition",
-          parameters: undefined,
+          parameters: {},
           condition: "true",
           nextNodes: [],
         }

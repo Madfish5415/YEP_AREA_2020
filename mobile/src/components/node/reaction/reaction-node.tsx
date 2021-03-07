@@ -154,7 +154,7 @@ const ReactionNode: FC<Props> = (props) => {
           nodeId: undefined,
           name: undefined,
           label: "reaction",
-          parameters: undefined,
+          parameters: {},
           condition: "true",
           nextNodes: [],
         }

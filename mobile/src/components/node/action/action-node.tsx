@@ -147,7 +147,7 @@ const ActionNode: FC<Props> = (props) => {
           nodeId: undefined,
           name: undefined,
           label: "action",
-          parameters: undefined,
+          parameters: {},
           condition: "true",
           nextNodes: [],
         }
