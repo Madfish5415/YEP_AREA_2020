@@ -59,7 +59,7 @@ const NodeCondition: FC<Props> = (props) => {
           name="condition"
           variant="outlined"
           fullWidth
-          value={props.node.condition || "true"}
+          value={props.node.condition}
           onChange={handleParameterChange}
           color={"primary"}
           margin={"dense"}
