@@ -13,6 +13,12 @@ import {
   ServiceListEvent,
   ServiceListState,
   ServiceErrorState,
+  CredentialBloc,
+  CredentialRepository,
+  CredentialState,
+  CredentialListEvent,
+  CredentialErrorState,
+  CredentialListState,
 } from "@area-common/blocs";
 import { useRouter } from "next/router";
 import { Service } from "@area-common/types";
@@ -39,7 +45,7 @@ const ServiceList: FC = () => {
     const tmp = localStorage.getItem("jwt");
     if (!tmp) {
       router
-        .push("/authentiation/signin")
+        .push("/authentication/signin")
         .then()
         .catch((e) => console.log(e));
     } else {
@@ -57,7 +63,52 @@ const ServiceList: FC = () => {
           return <ErrorState errorLabel={"An error has occured"} />;
         }
         if (state instanceof ServiceListState) {
-          return <ServiceListComponent services={state.services} />;
+          return <CredentialBlocComponent services={state.services} />;
+        }
+        return <DefaultState />;
+      }}
+    />
+  );
+};
+
+type IntermediateProps = {
+  services: Service[];
+};
+
+const CredentialBlocComponent: FC<IntermediateProps> = (props) => {
+  const router = useRouter();
+  let token = "";
+  const credentialsBloc = new CredentialBloc(
+    new CredentialRepository("http://localhost:8080")
+  );
+  useEffect(() => {
+    const tmp = localStorage.getItem("jwt");
+    if (!tmp) {
+      router
+        .push("/authentication/signin")
+        .then()
+        .catch((e) => console.log(e));
+    } else {
+      token = tmp;
+      credentialsBloc.add(new CredentialListEvent(token));
+    }
+  });
+
+  return (
+    <BlocBuilder
+      bloc={credentialsBloc}
+      key={uuidv4()}
+      builder={(state: CredentialState) => {
+        if (state instanceof CredentialErrorState) {
+          return <ErrorState errorLabel={"An error has occured"} />;
+        }
+        if (state instanceof CredentialListState) {
+          return (
+            <ServiceListComponent
+              services={props.services}
+              credentials={state.credentials}
+            />
+          );
         }
         return <DefaultState />;
       }}
@@ -67,6 +118,7 @@ const ServiceList: FC = () => {
 
 type Props = {
   services: Service[];
+  credentials: string[];
 };
 
 const ServiceListComponent: FC<Props> = (props) => {
@@ -79,6 +131,8 @@ const ServiceListComponent: FC<Props> = (props) => {
     ["twitter", <TwitterIcon key={"twitter"} className={classes.icon} />],
     ["github", <GitHubIcon key={"github"} className={classes.icon} />],
   ]);
+
+  console.log("this is credentials :", props.credentials);
 
   return (
     <>
