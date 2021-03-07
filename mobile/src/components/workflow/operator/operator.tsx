@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Workflow, WorkflowNode } from "@area-common/types";
 import { Text } from "react-native-paper";
-import { gray, primary, secondary } from "@area-common/styles";
+import { gray, primary } from "@area-common/styles";
 import { OperatorAlert } from "./operator-alert";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,11 +28,23 @@ type Props = {
 };
 
 export const Operator: FC<Props> = (props) => {
+  const { navigate } = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
       onLongPress={() =>
         OperatorAlert(props.item, props.workflow, props.callback)
+      }
+      onPress={() =>
+        navigate("OperatorNode", {
+          screen: "OperatorNode",
+          params: {
+            node: props.item,
+            workflow: props.workflow,
+            updateWorkflow: props.callback,
+          },
+        })
       }
     >
       <Text numberOfLines={1} style={[styles.text, { fontSize: 18 }]}>

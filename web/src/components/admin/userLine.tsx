@@ -1,31 +1,32 @@
-import React, { FC, useState, useEffect } from "react";
-import {
-  makeStyles,
-  Theme,
-  Button,
-  Divider,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from "@material-ui/core";
 import {
   AdminAccountBloc,
-  AdminAccountState,
-  AdminAccountRepository,
-  AdminAccountUpdateEvent,
   AdminAccountErrorState,
   AdminAccountReadEvent,
   AdminAccountReadState,
+  AdminAccountRepository,
+  AdminAccountState,
+  AdminAccountUpdateEvent,
   AdminAccountUpdateState,
 } from "@area-common/blocs";
 import { gray, primary, white } from "@area-common/styles";
-import { User, Account } from "@area-common/types";
-import UpdateUserDialog from "./updateUserDialog";
+import { Account,User } from "@area-common/types";
+import { BlocBuilder } from "@felangel/react-bloc";
+import {
+  Button,
+  Divider,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
+import { useRouter } from "next/router";
+import React, { FC, useEffect,useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { DefaultState } from "../blocbuilder/default-state";
 import { ErrorState } from "../blocbuilder/error-state";
-import { useRouter } from "next/router";
-import { v4 as uuidv4 } from "uuid";
-import { BlocBuilder } from "@felangel/react-bloc";
+import UpdateUserDialog from "./updateUserDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   content: {
@@ -92,7 +93,7 @@ const UserLine: FC<IntermediateProps> = (props) => {
       }}
       builder={(state: AdminAccountState) => {
         if (state instanceof AdminAccountErrorState) {
-          return <ErrorState errorLabel={"An error has occured"} />;
+          return <ErrorState error={state.error} />;
         }
         if (state instanceof AdminAccountReadState) {
           return (

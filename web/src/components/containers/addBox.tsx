@@ -12,27 +12,33 @@ import { Add } from "@material-ui/icons";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
+      display: "flex",
       marginTop: 40,
-      marginBottom: 40,
       width: 200,
       height: 120,
       borderRadius: 22,
       backgroundColor: primary.main,
       justifyContent: "center",
       alignItems: "center",
+      flexDirection: "column",
     },
     icon: {
       marginTop: 30,
       display: "flex",
+      flexGrow: 1,
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
       fontSize: 50,
+      color: gray.main,
     },
     boxTitle: {
+      display: "flex",
+      flexGrow: 1,
       textAlign: "center",
       fontSize: 15,
       fontWeight: "bold",
+      color: gray.main,
     },
   })
 );
