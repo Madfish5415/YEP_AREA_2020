@@ -29,7 +29,7 @@ import { DefaultState } from "../blocbuilder/default-state";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import { FaDiscord, FaYammer } from "react-icons/fa";
-import { SiMicrosoftoutlook } from "react-icons/si";
+import { SiMicrosoftoutlook, SiGmail } from "react-icons/si";
 import { FormatIndentIncreaseOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -142,6 +142,7 @@ const ServiceListComponent: FC<Props> = (props) => {
       <SiMicrosoftoutlook key={"outlook"} className={classes.icon} />,
     ],
     ["yammer", <FaYammer key={"yammer"} className={classes.icon} />],
+    ["gmail", <SiGmail key={"gmail"} className={classes.icon} />],
   ]);
 
   const findIfRegistered = (serviceId: string) => {
@@ -174,31 +175,6 @@ const ServiceListComponent: FC<Props> = (props) => {
             </ServiceLine>
           );
         })}
-        {/* <ServiceLine key={"github"} serviceId={"github"} label={"GitHub"}>
-          {iconMap.get("github")}
-        </ServiceLine>
-        <ServiceLine
-          key={"epitech"}
-          serviceId={"epitech"}
-          label={"Epitech"}
-          autologin
-          autologinLink={autologin}
-          setAutologinLink={setAutologin}
-        >
-          {iconMap.get("epitech")}
-        </ServiceLine>
-        <ServiceLine key={"youtube"} serviceId={"youtube"} label={"YouTube"}>
-          {iconMap.get("youtube")}
-        </ServiceLine>
-        <ServiceLine key={"discord"} serviceId={"discord"} label={"Discord"}>
-          {iconMap.get("discord")}
-        </ServiceLine>
-        <ServiceLine key={"outlook"} serviceId={"outlook"} label={"Outlook"}>
-          {iconMap.get("outlook")}
-        </ServiceLine>
-        <ServiceLine key={"yammer"} serviceId={"yammer"} label={"Yammer"}>
-          {iconMap.get("yammer")}
-        </ServiceLine> */}
       </List>
     </>
   );
