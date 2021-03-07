@@ -50,14 +50,17 @@ export type ConfigProps = {
 
 export const oAuthConfigMap = new Map<string, AuthConfiguration>([
   [
-    "google",
+    "youtube",
     {
       issuer: "https://accounts.google.com",
       clientId:
         "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
       redirectUrl:
         "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
-      scopes: ["https://www.googleapis.com/auth/youtube", "profile"],
+      scopes: [
+        "https://www.googleapis.com/auth/youtube",
+        "https://www.googleapis.com/auth/youtube.force-ssl",
+      ],
     },
   ],
   [
@@ -67,7 +70,7 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
         "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials",
       clientId: "8581958e9dae37e30f77",
       clientSecret: "9ed0766602121c709c8c3275034316fba97b42b1",
-      scopes: ["identity"],
+      scopes: ["identity", "repo", "notifications"],
       serviceConfiguration: {
         authorizationEndpoint: "https://github.com/login/oauth/authorize",
         tokenEndpoint: "https://github.com/login/oauth/access_token",
@@ -88,18 +91,39 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
     },
   ],
   [
-    "discord",
+    "yammer",
     {
+      issuer:
+        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/v2.0",
+      clientId: "dff89b78-9082-4107-ba9f-8b32f432f4fc",
       redirectUrl:
         "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
-      clientId: "816619410512936970",
-      clientSecret: "tkXI9mzjHAekWRYn5_T_VmTXV5YlL6_9",
-      scopes: ["identify"],
-      serviceConfiguration: {
-        authorizationEndpoint: "https://discord.com/api/oauth2/authorize",
-        tokenEndpoint: "https://discord.com/api/oauth2/token",
-        revocationEndpoint: "https://discord.com/api/oauth2/token/revoke",
-      },
+      scopes: ["https://api.yammer.com/user_impersonation"],
+    },
+  ],
+  [
+    "outlook",
+    {
+      issuer:
+        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/v2.0",
+      clientId: "dff89b78-9082-4107-ba9f-8b32f432f4fc",
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal://credentials/",
+      scopes: ["openid", "user.read"],
+    },
+  ],
+  [
+    "gmail",
+    {
+      issuer: "https://accounts.google.com",
+      clientId:
+        "627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal.apps.googleusercontent.com",
+      redirectUrl:
+        "com.googleusercontent.apps.627450745253-6vmsbn8e4197u7s6vhv3idd03f6t6jal:/credentials",
+      scopes: [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.send",
+      ],
     },
   ],
 ]);
@@ -107,9 +131,11 @@ export const oAuthConfigMap = new Map<string, AuthConfiguration>([
 const Credentials: FC = () => {
   const [officeLoggedIn, setOfficeLoggedIn] = useState(false);
   const [githubLoggedIn, setGithubLoggedIn] = useState(false);
-  const [discordLoggedIn, setDiscordLoggedIn] = useState(false);
   const [youtubeLoggedIn, setYoutubeLoggedIn] = useState(false);
   const [epitechLoggedIn, setEpitechLoggedIn] = useState(false);
+  const [yammerLoggedIn, setYammerLoggedIn] = useState(false);
+  const [outlookLoggedIn, setOutlookLoggedIn] = useState(false);
+  const [gmailLoggedIn, setGmailLoggedIn] = useState(false);
 
   const { navigate } = useNavigation();
   const focused = useIsFocused();
@@ -117,7 +143,6 @@ const Credentials: FC = () => {
     async function getLoggedIn() {
       setOfficeLoggedIn(false);
       setGithubLoggedIn(false);
-      setDiscordLoggedIn(false);
       setYoutubeLoggedIn(false);
       const data = await getLocalStorage("@userToken");
       if (data) {
@@ -131,17 +156,22 @@ const Credentials: FC = () => {
         );
         const json = await response.json();
         if (json && json.data) {
+          console.log(json.data);
           json.data.forEach((service: string) => {
             if (service.startsWith("microsoft")) {
               setOfficeLoggedIn(true);
             } else if (service.startsWith("github")) {
               setGithubLoggedIn(true);
-            } else if (service.startsWith("discord")) {
-              setDiscordLoggedIn(true);
             } else if (service.startsWith("google")) {
               setYoutubeLoggedIn(true);
             } else if (service.startsWith("epitech")) {
               setEpitechLoggedIn(true);
+            } else if (service.startsWith("yammer")) {
+              setYammerLoggedIn(true);
+            } else if (service.startsWith("outlook")) {
+              setOutlookLoggedIn(true);
+            } else if (service.startsWith("gmail")) {
+              setGmailLoggedIn(true);
             }
           });
         }
@@ -180,24 +210,15 @@ const Credentials: FC = () => {
         setConnected={setGithubLoggedIn}
       />
       <Service
-        name={"Discord"}
-        serviceId={"discord"}
-        icon={<Fontisto size={50} name={"discord"} color={primary.main} />}
-        isEpitech={false}
-        isLoggedIn={discordLoggedIn}
-        oAuthConfig={oAuthConfigMap.get("discord")}
-        setConnected={setDiscordLoggedIn}
-      />
-      <Service
         name={"Youtube"}
-        serviceId={"google"}
+        serviceId={"youtube"}
         icon={
           <FontAwesome size={50} name={"youtube-play"} color={primary.main} />
         }
         isEpitech={false}
         isLoggedIn={youtubeLoggedIn}
-        oAuthConfig={oAuthConfigMap.get("google")}
-        serviceName={"google"}
+        oAuthConfig={oAuthConfigMap.get("youtube")}
+        serviceName={"youtube"}
         setConnected={setYoutubeLoggedIn}
       />
       <Service
@@ -207,6 +228,54 @@ const Credentials: FC = () => {
         isLoggedIn={epitechLoggedIn}
         isEpitech={true}
         setConnected={setEpitechLoggedIn}
+      />
+      <Service
+        name={"Yammer"}
+        serviceId={"yammer"}
+        icon={
+          <MaterialCommunityIcons
+            size={50}
+            name={"microsoft-yammer"}
+            color={primary.main}
+          />
+        }
+        isEpitech={false}
+        isLoggedIn={yammerLoggedIn}
+        oAuthConfig={oAuthConfigMap.get("yammer")}
+        serviceName={"yammer"}
+        setConnected={setYammerLoggedIn}
+      />
+      <Service
+        name={"Outlook"}
+        serviceId={"outlook"}
+        icon={
+          <MaterialCommunityIcons
+            size={50}
+            name={"microsoft-outlook"}
+            color={primary.main}
+          />
+        }
+        isEpitech={false}
+        isLoggedIn={outlookLoggedIn}
+        oAuthConfig={oAuthConfigMap.get("outlook")}
+        serviceName={"outlook"}
+        setConnected={setOutlookLoggedIn}
+      />
+      <Service
+        name={"Gmail"}
+        serviceId={"gmail"}
+        icon={
+          <MaterialCommunityIcons
+            size={50}
+            name={"gmail"}
+            color={primary.main}
+          />
+        }
+        isEpitech={false}
+        isLoggedIn={gmailLoggedIn}
+        oAuthConfig={oAuthConfigMap.get("gmail")}
+        serviceName={"gmail"}
+        setConnected={setGmailLoggedIn}
       />
     </View>
   );
