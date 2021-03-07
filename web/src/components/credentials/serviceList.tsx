@@ -174,7 +174,7 @@ const ServiceListComponent: FC<Props> = (props) => {
             </ServiceLine>
           );
         })}
-        <ServiceLine key={"github"} serviceId={"github"} label={"GitHub"}>
+        {/* <ServiceLine key={"github"} serviceId={"github"} label={"GitHub"}>
           {iconMap.get("github")}
         </ServiceLine>
         <ServiceLine
@@ -198,7 +198,7 @@ const ServiceListComponent: FC<Props> = (props) => {
         </ServiceLine>
         <ServiceLine key={"yammer"} serviceId={"yammer"} label={"Yammer"}>
           {iconMap.get("yammer")}
-        </ServiceLine>
+        </ServiceLine> */}
       </List>
     </>
   );

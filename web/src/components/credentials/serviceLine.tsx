@@ -135,6 +135,7 @@ const ServiceLine: FC<Props> = (props) => {
         console.log("Success!");
         window.success = function () {
           console.log("Success!!!");
+          document.location.reload();
           return resolve();
         };
       } else {
@@ -154,6 +155,7 @@ const ServiceLine: FC<Props> = (props) => {
         method: "DELETE",
       }
     );
+    document.location.reload();
   };
 
   return (
