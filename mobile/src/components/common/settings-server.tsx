@@ -49,8 +49,6 @@ const styles = StyleSheet.create({
 });
 
 const SettingsServer = () => {
-  let serverURL = "";
-
   const [isModalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(globalThis.serverURL);
 
