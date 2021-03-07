@@ -21,7 +21,7 @@ type Outputs = {
 export class TweetNewNode extends IntervalNode<Parameters, Outputs> {
   readonly id: string = "twitter-tweet-new";
   readonly name: string = "Tweet New";
-  readonly description: string = "No description";
+  readonly description: string = "From Twitter";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     username: {

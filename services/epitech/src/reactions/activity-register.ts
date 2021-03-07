@@ -18,7 +18,7 @@ type Credentials = {
 export class ActivityRegisterNode extends BaseNode<Parameters, void> {
   readonly id: string = "epitech-activity-register";
   readonly name: string = "Activity Register";
-  readonly description: string = "No description";
+  readonly description: string = "From Epitech";
   readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     scholarYear: {

@@ -16,7 +16,7 @@ type Credentials = {
 export class IssueNewNode extends IntervalNode<Parameters, Issue> {
   readonly id: string = "github-issue-new";
   readonly name: string = "Issue New";
-  readonly description: string = "No description";
+  readonly description: string = "From GitHub";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     owner: {

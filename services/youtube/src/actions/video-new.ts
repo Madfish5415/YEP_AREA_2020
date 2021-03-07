@@ -15,7 +15,7 @@ type Credentials = {
 export class VideoNewNode extends IntervalNode<Parameters, Video> {
   readonly id: string = "youtube-video-new";
   readonly name: string = "Video New";
-  readonly description: string = "No description";
+  readonly description: string = "From YouTube";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     channelId: {

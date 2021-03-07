@@ -15,7 +15,7 @@ type Credentials = {
 export class ThreadNewNode extends IntervalNode<Parameters, Thread> {
   readonly id: string = "youtube-thread-new";
   readonly name: string = "Thread New";
-  readonly description: string = "No description";
+  readonly description: string = "From YouTube";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     channelId: {

@@ -14,7 +14,7 @@ type Credentials = {
 export class VideoRateNode extends BaseNode<Parameters, void> {
   readonly id: string = "youtube-video-rate";
   readonly name: string = "Video Rate";
-  readonly description: string = "No description";
+  readonly description: string = "From YouTube";
   readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     videoId: {

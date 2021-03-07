@@ -15,7 +15,7 @@ type Credentials = {
 export class GroupMessageNewNode extends IntervalNode<Parameters, Message> {
   readonly id: string = "yammer-group-message-new";
   readonly name: string = "Group Message New";
-  readonly description: string = "No description";
+  readonly description: string = "From Yammer";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     groupId: {

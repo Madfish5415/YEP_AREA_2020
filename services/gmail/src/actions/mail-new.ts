@@ -11,7 +11,7 @@ type Credentials = {
 export class MailNewNode extends IntervalNode<AnyObject, Mail> {
   readonly id: string = "gmail-mail-new";
   readonly name: string = "Mail New";
-  readonly description: string = "No description";
+  readonly description: string = "From Gmail";
   readonly label: string = "action";
   readonly parametersDef = undefined;
   readonly outputsDef: Record<keyof Mail, Variable> = {

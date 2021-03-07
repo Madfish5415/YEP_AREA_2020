@@ -16,7 +16,7 @@ type Credentials = {
 export class PullRequestNewNode extends IntervalNode<Parameters, PullRequest> {
   readonly id: string = "github-pull-request-new";
   readonly name: string = "Pull Request New";
-  readonly description: string = "No description";
+  readonly description: string = "From GitHub";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     owner: {

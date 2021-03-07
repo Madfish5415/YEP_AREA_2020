@@ -11,7 +11,7 @@ type Credentials = {
 export class NotificationNewNode extends IntervalNode<AnyObject, Notification> {
   readonly id: string = "github-notification-new";
   readonly name: string = "Notification New";
-  readonly description: string = "No description";
+  readonly description: string = "From GitHub";
   readonly label: string = "action";
   readonly parametersDef = undefined;
   readonly outputsDef: Record<keyof Notification, Variable> = {

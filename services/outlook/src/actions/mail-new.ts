@@ -11,7 +11,7 @@ type Credentials = {
 export class MailNewNode extends IntervalNode<AnyObject, Mail> {
   readonly id: string = "outlook-mail-new";
   readonly name: string = "Mail New";
-  readonly description: string = "No description";
+  readonly description: string = "From Outlook";
   readonly label: string = "action";
   readonly parametersDef = undefined;
   readonly outputsDef: Record<keyof Mail, Variable> = {

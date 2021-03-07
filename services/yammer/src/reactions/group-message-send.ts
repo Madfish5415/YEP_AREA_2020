@@ -14,7 +14,7 @@ type Credentials = {
 export class GroupMessageSendNode extends BaseNode<Parameters, void> {
   readonly id: string = "yammer-group-message-send";
   readonly name: string = "Group Message Send";
-  readonly description: string = "No description";
+  readonly description: string = "From Yammer";
   readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     groupId: {

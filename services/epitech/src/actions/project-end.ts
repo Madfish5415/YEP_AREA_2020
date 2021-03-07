@@ -16,7 +16,7 @@ type Credentials = {
 export class ProjectEndNode extends IntervalNode<Parameters, Project> {
   readonly id: string = "epitech-project-end";
   readonly name: string = "Project End";
-  readonly description: string = "No description";
+  readonly description: string = "From Epitech";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     endsIn: {

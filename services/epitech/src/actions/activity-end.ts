@@ -16,12 +16,12 @@ type Credentials = {
 export class ActivityEndNode extends IntervalNode<Parameters, Activity> {
   readonly id: string = "epitech-activity-end";
   readonly name: string = "Activity End";
-  readonly description: string = "No description";
+  readonly description: string = "From Epitech";
   readonly label: string = "action";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     endsIn: {
       name: "Ends in",
-      description: "No description",
+      description: "From Epitech",
       type: Type.NUMBER,
     },
   };

@@ -15,7 +15,7 @@ type Credentials = {
 export class MailSendNode extends BaseNode<Parameters, void> {
   readonly id: string = "outlook-mail-send";
   readonly name: string = "Mail Send";
-  readonly description: string = "No description";
+  readonly description: string = "From Outlook";
   readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     receiver: {

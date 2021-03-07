@@ -16,8 +16,8 @@ type Credentials = {
 
 export class TweetSendNode extends BaseNode<Parameters, void> {
   readonly id: string = "twitter-tweet-send";
-  readonly name: string = "Tweet Reaction";
-  readonly description: string = "No description";
+  readonly name: string = "Tweet Send";
+  readonly description: string = "From Twitter";
   readonly label: string = "reaction";
   readonly parametersDef: Record<keyof Parameters, Variable> = {
     content: {
