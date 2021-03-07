@@ -15,6 +15,12 @@ import {
 import React, { FC, useEffect } from "react";
 import { useRouter } from "next/router";
 
+declare global {
+  interface Window {
+    success: () => void;
+  }
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   content: {},
   serviceName: {
